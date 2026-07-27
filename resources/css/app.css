@@ -1,0 +1,416 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* الوضع الليلي بكلاس .dark على عنصر html (متزامن مع localStorage وقاعدة البيانات) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* هوية منطقة الطالب — أزرق بسطتهالك */
+    --color-brand-50: #eef4ff;
+    --color-brand-100: #dbe7fe;
+    --color-brand-200: #bfd4fe;
+    --color-brand-300: #93b6fd;
+    --color-brand-400: #608efa;
+    --color-brand-500: #3d6ef6;
+    --color-brand-600: #2754eb;
+    --color-brand-700: #1f41d8;
+    --color-brand-800: #2037af;
+    --color-brand-900: #20338a;
+    --color-brand-950: #182154;
+
+    /* هوية الواجهة العامة — أحمر خالد صقر */
+    --color-flame-50: #fef3f2;
+    --color-flame-100: #fee5e2;
+    --color-flame-200: #fecfca;
+    --color-flame-300: #fcaca4;
+    --color-flame-400: #f87b6f;
+    --color-flame-500: #ef4f41;
+    --color-flame-600: #e73224;
+    --color-flame-700: #c2271a;
+    --color-flame-800: #a02419;
+    --color-flame-900: #84241c;
+    --color-flame-950: #480e09;
+
+    /* الأخضر — شريط الكروت وخط التقدم */
+    --color-mint-100: #dcfce9;
+    --color-mint-200: #bbf7d2;
+    --color-mint-300: #86efab;
+    --color-mint-400: #4ade7f;
+    --color-mint-500: #22c55c;
+    --color-mint-600: #16a349;
+
+    /* أسطح الوضع الليلي — كحلي بسطتهالك */
+    --color-night-700: #22304d;
+    --color-night-800: #16203a;
+    --color-night-850: #121b31;
+    --color-night-900: #0e1627;
+    --color-night-950: #0a101e;
+}
+
+body {
+    @apply bg-slate-50 text-slate-800 antialiased dark:bg-night-950 dark:text-slate-200;
+}
+
+/* أساسات مسجلة كـ utilities حتى يعمل @apply عليها في تايلويند v4 */
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
+        focus:outline-none focus:ring-2 focus:ring-brand-500/40 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@utility card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
+        dark:border-night-700/60 dark:bg-night-900;
+}
+
+@utility card-pad {
+    @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm
+        dark:border-night-700/60 dark:bg-night-900 sm:p-6;
+}
+
+@utility badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+}
+
+@layer components {
+    /* أزرار */
+    .btn-primary {
+        @apply btn bg-brand-500 text-white shadow-sm hover:bg-brand-600 active:scale-[.98];
+    }
+
+    .btn-secondary {
+        @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-100
+            dark:border-night-700 dark:bg-night-800 dark:text-slate-200 dark:hover:bg-night-700;
+    }
+
+    .btn-danger {
+        @apply btn bg-rose-600 text-white hover:bg-rose-700;
+    }
+
+    .btn-success {
+        @apply btn bg-emerald-600 text-white hover:bg-emerald-700;
+    }
+
+    /* زر تحميل ملف اكسيل — تركواز بسطتهالك */
+    .btn-excel {
+        @apply btn bg-teal-600 px-6 py-3 text-white shadow-sm hover:bg-teal-700 active:scale-[.98];
+    }
+
+    /* أزرار الواجهة العامة الحمراء */
+    .btn-flame {
+        @apply btn bg-flame-600 text-white shadow-sm hover:bg-flame-700 active:scale-[.98];
+    }
+
+    .btn-flame-outline {
+        @apply btn border-2 border-flame-600 bg-white text-flame-600 hover:bg-flame-50
+            dark:border-flame-500 dark:bg-transparent dark:text-flame-400 dark:hover:bg-flame-500/10;
+    }
+
+    .btn-sm {
+        @apply px-3 py-1.5 text-xs;
+    }
+
+    /* نماذج */
+    .label {
+        @apply mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300;
+    }
+
+    .input {
+        @apply block w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-800
+            placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30
+            dark:border-night-700 dark:bg-night-950 dark:text-slate-100;
+    }
+
+    /* حقل بخط سفلي فقط — نمط شحن الكود في بسطتهالك */
+    .input-underline {
+        @apply block w-full border-0 border-b-2 border-slate-300 bg-transparent px-2 py-3 text-center text-base
+            font-bold tracking-widest text-slate-800 placeholder:font-semibold placeholder:tracking-normal
+            placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-0
+            dark:border-night-700 dark:text-slate-100 dark:placeholder:text-slate-500;
+    }
+
+    .error {
+        @apply mt-1 text-xs font-medium text-rose-600 dark:text-rose-400;
+    }
+
+    /* شارات الحالة */
+    .badge-green {
+        @apply badge bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300;
+    }
+
+    .badge-red {
+        @apply badge bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300;
+    }
+
+    .badge-amber {
+        @apply badge bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300;
+    }
+
+    .badge-sky {
+        @apply badge bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300;
+    }
+
+    .badge-gray {
+        @apply badge bg-slate-100 text-slate-600 dark:bg-night-800 dark:text-slate-300;
+    }
+
+    /* جداول */
+    .table-box {
+        @apply card overflow-x-auto;
+    }
+
+    .table {
+        @apply w-full min-w-max text-right text-sm;
+    }
+
+    .table thead th {
+        @apply border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-500
+            dark:border-night-700/60 dark:bg-night-950/60 dark:text-slate-300;
+    }
+
+    .table tbody td {
+        @apply border-b border-slate-100 px-4 py-3 align-middle dark:border-night-800;
+    }
+
+    .table tbody tr:hover {
+        @apply bg-slate-50/70 dark:bg-night-850;
+    }
+
+    .table tbody tr:nth-child(odd) {
+        @apply dark:bg-night-850/60;
+    }
+
+    /* روابط الهيدر العلوي */
+    .side-link {
+        @apply flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-600 transition
+            hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-night-800 dark:hover:text-white;
+    }
+
+    .side-link-active {
+        @apply bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700
+            dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/10 dark:hover:text-brand-300;
+    }
+
+    /* القائمة الجانبية لمنطقة الطالب — أزرار متراصة بنمط بسطتهالك */
+    .dash-link {
+        @apply block w-full rounded-lg border border-slate-200 bg-white px-4 py-3.5 text-right text-sm font-bold
+            text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-600
+            dark:border-night-700/40 dark:bg-night-850 dark:text-slate-100 dark:hover:border-brand-500/40 dark:hover:text-white;
+    }
+
+    .dash-link-active {
+        @apply border-brand-500 bg-brand-500 text-white shadow-md shadow-brand-500/25 hover:border-brand-500
+            hover:text-white dark:border-brand-500 dark:bg-brand-500 dark:text-white dark:hover:border-brand-500;
+    }
+
+    /* شارة عنوان الصفحة — النمط الكبسولي في بسطتهالك */
+    .page-pill {
+        @apply mx-auto flex w-fit items-center gap-3 rounded-full border border-slate-200 bg-white py-2 pl-2 pr-6
+            text-xl font-black text-slate-900 shadow-sm dark:border-night-700/60 dark:bg-night-850 dark:text-white;
+    }
+
+    .page-pill-icon {
+        @apply grid size-11 shrink-0 place-items-center rounded-full bg-brand-500 text-white;
+    }
+
+    /* كبسولة المحفظة في الهيدر */
+    .wallet-pill {
+        @apply flex items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-4 text-sm font-extrabold
+            text-slate-800 transition hover:border-brand-400 dark:border-night-700 dark:bg-white dark:text-night-900;
+    }
+
+    /* بطاقة إحصائية */
+    .stat-card {
+        @apply card-pad flex flex-col gap-1;
+    }
+
+    .stat-value {
+        @apply text-2xl font-extrabold text-slate-900 dark:text-white;
+    }
+
+    .stat-label {
+        @apply text-sm font-medium text-slate-500 dark:text-slate-400;
+    }
+
+    /* كروت "ليه تشترك معانا؟" — أحمر برقم كبير وشريط أخضر سفلي */
+    .why-card {
+        @apply relative overflow-hidden rounded-2xl border-b-[6px] border-mint-400 bg-flame-600 p-6 text-white
+            shadow-md transition duration-300 hover:-translate-y-1.5 hover:shadow-xl min-h-[220px];
+    }
+
+    .why-card::before {
+        content: '';
+        position: absolute;
+        top: 1.25rem;
+        left: 1.25rem;
+        width: 3.5rem;
+        height: 3rem;
+        background-image: radial-gradient(rgb(72 14 9 / 55%) 2.5px, transparent 3px);
+        background-size: 15px 15px;
+    }
+}
+
+/* مفتاح الوضع الليلي/النهاري — كبسولة شمس/قمر منزلقة كما في المراجع */
+.theme-pill {
+    direction: ltr;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 4.75rem;
+    height: 2.375rem;
+    padding: 0 0.4rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 2px solid var(--color-flame-600);
+    background: #fff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-pill .theme-pill-knob {
+    position: absolute;
+    top: 50%;
+    left: 0.25rem;
+    width: 1.625rem;
+    height: 1.625rem;
+    border-radius: 9999px;
+    background: var(--color-flame-600);
+    transform: translateY(-50%);
+    transition: transform 0.35s cubic-bezier(0.45, 1.45, 0.55, 1), background-color 0.3s ease;
+}
+
+.dark .theme-pill .theme-pill-knob {
+    transform: translate(2.35rem, -50%);
+}
+
+.theme-pill svg {
+    position: relative;
+    z-index: 1;
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.theme-pill .theme-pill-sun {
+    color: #fff;
+}
+
+.theme-pill .theme-pill-moon {
+    color: var(--color-flame-600);
+}
+
+.dark .theme-pill {
+    background: var(--color-night-800);
+    border-color: var(--color-night-700);
+}
+
+.dark .theme-pill .theme-pill-sun {
+    color: #94a3b8;
+}
+
+.dark .theme-pill .theme-pill-moon {
+    color: #fff;
+}
+
+/* نسخة منطقة الطالب — أزرق/سماوي بسطتهالك */
+.theme-pill-sky {
+    border-color: var(--color-brand-500);
+}
+
+.theme-pill-sky .theme-pill-knob {
+    background: var(--color-brand-500);
+}
+
+.theme-pill-sky .theme-pill-moon {
+    color: var(--color-brand-500);
+}
+
+.dark .theme-pill-sky {
+    background: var(--color-night-800);
+    border-color: var(--color-night-700);
+}
+
+.dark .theme-pill-sky .theme-pill-knob {
+    background: var(--color-brand-500);
+}
+
+/* شريط تقدم التمرير أسفل الهيدر */
+.scroll-progress {
+    position: absolute;
+    bottom: -3px;
+    right: 0;
+    height: 3px;
+    width: var(--scroll-progress, 0%);
+    border-radius: 9999px;
+    background: linear-gradient(to left, var(--color-mint-500), var(--color-mint-300));
+    transition: width 0.1s linear;
+    pointer-events: none;
+}
+
+.scroll-progress-sky {
+    background: linear-gradient(to left, #22d3ee, var(--color-brand-500));
+}
+
+/* حلقة إحصائية دائرية (دونات) — احصائيات كورساتك في بسطتهالك */
+.donut {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 11rem;
+    height: 11rem;
+    border-radius: 9999px;
+    background: conic-gradient(var(--donut-color, #a855f7) calc(var(--donut-value, 0) * 1%), rgb(148 163 184 / 18%) 0);
+}
+
+.donut-inner {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    width: calc(100% - 2.5rem);
+    height: calc(100% - 2.5rem);
+    border-radius: 9999px;
+    background: #fff;
+}
+
+.dark .donut-inner {
+    background: var(--color-night-950);
+}
+
+/* العلامة المائية فوق الفيديو — تتحرك عشوائياً بشفافية متغيرة */
+.watermark {
+    position: absolute;
+    z-index: 30;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgb(255 255 255 / 85%);
+    text-shadow: 0 0 6px rgb(0 0 0 / 80%);
+    transition: top 1.2s ease, right 1.2s ease, opacity 1.2s ease;
+    will-change: top, right, opacity;
+}
+
+/* حاوية الفيديو */
+.player-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #000;
+}
+
+.player-frame iframe,
+.player-frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
