@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 // ------------------------------------------------------------------ عام (زوار)
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// الصفحة الرئيسية للزوار فقط — المستخدم المسجل يتحول تلقائياً للوحته (طالب/أدمن/قيد المراجعة)
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->middleware('guest')->name('home');
 Route::get('/courses', [App\Http\Controllers\HomeController::class, 'courses'])->name('courses.index');
 Route::get('/courses/{course:slug}', [App\Http\Controllers\HomeController::class, 'course'])->name('courses.show');
 Route::get('/books', [App\Http\Controllers\HomeController::class, 'books'])->name('books.index');
@@ -29,9 +30,8 @@ Route::middleware('auth')->group(function () {
 // ------------------------------------------------------------------ الطالب (بعد التفعيل)
 Route::middleware(['auth', 'approved'])->prefix('me')->name('student.')->group(function () {
     Route::get('/', [App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+    // الملف الشخصي للعرض فقط — تعديل البيانات وكلمة المرور من لوحة التحكم حصرياً
     Route::get('/user', [App\Http\Controllers\Student\ProfileController::class, 'show'])->name('profile');
-    Route::put('/user', [App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/user/password', [App\Http\Controllers\Student\ProfileController::class, 'password'])->name('profile.password');
 
     // المحفظة وكود السنتر
     Route::get('/wallet', [App\Http\Controllers\Student\WalletController::class, 'index'])->name('wallet');
@@ -93,6 +93,7 @@ Route::middleware(['auth', 'role:super_admin|assistant'])->prefix('admin')->name
     // المستخدمون والموافقات
     Route::get('/users', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [App\Http\Controllers\Admin\UsersController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/id-photo', [App\Http\Controllers\Admin\UsersController::class, 'idPhoto'])->name('users.idphoto');
     Route::post('/users/{user}/approve', [App\Http\Controllers\Admin\UsersController::class, 'approve'])->name('users.approve');
     Route::post('/users/{user}/reject', [App\Http\Controllers\Admin\UsersController::class, 'reject'])->name('users.reject');
     Route::post('/users/{user}/ban', [App\Http\Controllers\Admin\UsersController::class, 'ban'])->name('users.ban');

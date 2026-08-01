@@ -27,6 +27,28 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // زائر غير مسجل حاول يدخل صفحة محمية => صفحة الدخول برسالة واضحة
+        $middleware->redirectGuestsTo(function (Request $request) {
+            if (! $request->expectsJson()) {
+                session()->flash('error', 'سجل دخولك الأول علشان توصل للصفحة دي.');
+            }
+
+            return route('login');
+        });
+
+        // مستخدم مسجل حاول يفتح صفحة للزوار (الرئيسية/الدخول/التسجيل) => وجهته الصحيحة
+        $middleware->redirectUsersTo(function (Request $request) {
+            $user = $request->user();
+
+            if ($user->isStaff()) {
+                return route('admin.dashboard');
+            }
+
+            return $user->isApproved()
+                ? route('student.dashboard')
+                : route('account.pending');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

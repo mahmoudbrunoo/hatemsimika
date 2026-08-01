@@ -95,12 +95,13 @@
             <div class="card-pad">
                 <h2 class="mb-4 text-lg font-extrabold text-slate-900 dark:text-white">صورة البطاقة / الكارنيه</h2>
                 @if ($user->id_photo_path)
-                    <a href="{{ \Illuminate\Support\Facades\Storage::url($user->id_photo_path) }}" target="_blank" rel="noopener"
+                    {{-- الصورة تُعرض عبر مسار محمي للإدارة فقط — الملف في تخزين خاص بلا رابط عام --}}
+                    <a href="{{ route('admin.users.idphoto', $user) }}" target="_blank" rel="noopener"
                        title="اضغط لفتح الصورة بالحجم الكامل">
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($user->id_photo_path) }}" alt="صورة بطاقة {{ $user->name }}"
+                        <img src="{{ route('admin.users.idphoto', $user) }}" alt="صورة بطاقة {{ $user->name }}"
                              class="max-h-80 w-full rounded-xl border border-slate-200 object-contain dark:border-slate-800">
                     </a>
-                    <a href="{{ \Illuminate\Support\Facades\Storage::url($user->id_photo_path) }}" target="_blank" rel="noopener"
+                    <a href="{{ route('admin.users.idphoto', $user) }}" target="_blank" rel="noopener"
                        class="btn-secondary btn-sm mt-3">فتح الصورة بالحجم الكامل</a>
                 @else
                     <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">لم يتم رفع صورة بطاقة.</p>

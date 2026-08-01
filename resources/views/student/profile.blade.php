@@ -31,17 +31,12 @@
             <span class="{{ $statusBadge }}">{{ $user->statusLabel() }}</span>
         </div>
 
+        {{-- بيانات أساسية للعرض فقط — باقي البيانات والمستندات محفوظة لدى الإدارة --}}
         <dl class="mt-6 grid gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ([
+                ['الاسم', $user->name, null],
                 ['البريد الإلكتروني', $user->email, 'ltr'],
                 ['رقم الموبايل', $user->phone, 'ltr'],
-                ['رقم موبايل الأب', $user->father_phone, 'ltr'],
-                ['رقم موبايل الأم', $user->mother_phone, 'ltr'],
-                ['المحافظة', $user->governorate, null],
-                ['المدرسة', $user->school, null],
-                ['الصف الدراسي', $user->yearLabel(), null],
-                ['النوع', $user->gender === 'male' ? 'ذكر' : ($user->gender === 'female' ? 'أنثى' : null), null],
-                ['الرقم القومي', $user->national_id, 'ltr'],
             ] as [$dt, $dd, $dir])
                 <div>
                     <dt class="text-xs font-bold text-slate-400 dark:text-slate-500">{{ $dt }}</dt>
@@ -52,12 +47,10 @@
             @endforeach
         </dl>
 
-        @if ($user->id_photo_path)
-            <div class="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
-                <p class="label">صورة البطاقة / الكارنيه المسجلة</p>
-                <img src="{{ Storage::url($user->id_photo_path) }}" alt="صورة البطاقة" class="max-h-56 rounded-xl border border-slate-200 object-contain dark:border-slate-800">
-            </div>
-        @endif
+        <div class="mt-6 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-800 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-300">
+            <svg class="mt-0.5 size-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p>بياناتك محفوظة ومؤمنة — لو محتاج تعدل أي بيانات أو تغير كلمة المرور، كلم الدعم الفني وهنظبطها لك فوراً.</p>
+        </div>
     </div>
 
     {{-- تنبيه الاستعلام عن الرصيد — كما في المرجع --}}
@@ -134,91 +127,4 @@
         </div>
     </div>
 
-    {{-- تعديل البيانات --}}
-    <div class="card-pad mt-6">
-        <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">تعديل بياناتي</h2>
-        <p class="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
-            تقدر تعدل البيانات دي بنفسك — باقي البيانات (الاسم والموبايل والصف) بيتعدلوا عن طريق الدعم.
-        </p>
-
-        <form method="POST" action="{{ route('student.profile.update') }}" enctype="multipart/form-data" class="mt-5 grid gap-5 sm:grid-cols-2">
-            @csrf
-            @method('PUT')
-
-            <div>
-                <label for="email" class="label">البريد الإلكتروني</label>
-                <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}"
-                       class="input" dir="ltr" autocomplete="email" required>
-                @error('email')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="school" class="label">المدرسة</label>
-                <input id="school" name="school" type="text" value="{{ old('school', $user->school) }}"
-                       class="input" placeholder="اسم مدرستك">
-                @error('school')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="father_phone" class="label">رقم موبايل الأب</label>
-                <input id="father_phone" name="father_phone" type="tel" value="{{ old('father_phone', $user->father_phone) }}"
-                       class="input" dir="ltr" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX">
-                @error('father_phone')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="mother_phone" class="label">رقم موبايل الأم</label>
-                <input id="mother_phone" name="mother_phone" type="tel" value="{{ old('mother_phone', $user->mother_phone) }}"
-                       class="input" dir="ltr" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX">
-                @error('mother_phone')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="sm:col-span-2">
-                <label for="avatar" class="label">الصورة الشخصية</label>
-                <input id="avatar" name="avatar" type="file" accept="image/*"
-                       class="input cursor-pointer p-2 file:ml-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-brand-700 dark:file:bg-brand-500/10 dark:file:text-brand-300">
-                <p class="mt-1 text-xs font-medium text-slate-400 dark:text-slate-500">JPG أو PNG أو WEBP — بحد أقصى 2 ميجا</p>
-                @error('avatar')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="sm:col-span-2">
-                <button type="submit" class="btn-primary">حفظ التعديلات</button>
-            </div>
-        </form>
-    </div>
-
-    {{-- تغيير كلمة المرور --}}
-    <div class="card-pad mt-6">
-        <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">تغيير كلمة المرور</h2>
-
-        <form method="POST" action="{{ route('student.profile.password') }}" class="mt-5 grid gap-5 sm:grid-cols-3">
-            @csrf
-            @method('PUT')
-
-            <div>
-                <label for="current_password" class="label">كلمة المرور الحالية</label>
-                <input id="current_password" name="current_password" type="password"
-                       class="input" placeholder="••••••••" autocomplete="current-password" required>
-                @error('current_password')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="password" class="label">كلمة المرور الجديدة</label>
-                <input id="password" name="password" type="password"
-                       class="input" placeholder="8 أحرف على الأقل" autocomplete="new-password" required>
-                @error('password')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="password_confirmation" class="label">تأكيد كلمة المرور</label>
-                <input id="password_confirmation" name="password_confirmation" type="password"
-                       class="input" placeholder="اكتبها تاني" autocomplete="new-password" required>
-                @error('password_confirmation')<p class="error">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="sm:col-span-3">
-                <button type="submit" class="btn-primary">تغيير كلمة المرور</button>
-            </div>
-        </form>
-    </div>
 @endsection

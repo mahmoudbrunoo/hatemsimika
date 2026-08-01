@@ -39,7 +39,14 @@ class User extends Authenticatable
 
     protected $guarded = [];
 
-    protected $hidden = ['password', 'remember_token'];
+    // الحقول الحساسة لا تظهر أبداً في أي تحويل JSON/مصفوفة (ردود API أو @js في الواجهة)
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'id_photo_path',
+        'national_id',
+        'current_session_id',
+    ];
 
     protected function casts(): array
     {

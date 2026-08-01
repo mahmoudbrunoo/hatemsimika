@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Rules\EgyptianPhone;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -50,39 +48,8 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
-    {
-        $user = $request->user();
-
-        $data = $request->validate([
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'father_phone' => ['nullable', new EgyptianPhone, 'different:phone'],
-            'mother_phone' => ['nullable', new EgyptianPhone, 'different:phone'],
-            'school' => ['nullable', 'string', 'max:255'],
-            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-        ]);
-
-        if ($request->hasFile('avatar')) {
-            $data['avatar_path'] = $request->file('avatar')->store('avatars', 'public');
-        }
-
-        unset($data['avatar']);
-        $user->update($data);
-
-        return back()->with('status', 'تم تحديث البيانات بنجاح.');
-    }
-
-    public function password(Request $request): RedirectResponse
-    {
-        $data = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $request->user()->update(['password' => Hash::make($data['password'])]);
-
-        return back()->with('status', 'تم تغيير كلمة المرور بنجاح.');
-    }
+    // ملحوظة أمنية: تعديل بيانات الطالب وكلمة مروره حصري للوحة التحكم —
+    // لا توجد أي نقاط نهاية لتعديل الملف الشخصي من جانب الطالب عمداً.
 
     /** مزامنة الوضع الليلي/النهاري مع قاعدة البيانات */
     public function theme(Request $request): JsonResponse

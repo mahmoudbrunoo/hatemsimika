@@ -10,7 +10,9 @@ use App\Services\EnrollmentService;
 use App\Services\WalletService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
@@ -47,6 +49,23 @@ class UsersController extends Controller
             'user' => $user,
             'courses' => Course::orderBy('academic_year')->orderBy('position')->get(),
         ]);
+    }
+
+    /**
+     * عرض صورة البطاقة للإدارة فقط — الملف مخزن في قرص خاص بلا رابط عام.
+     * يدعم الملفات القديمة التي رُفعت سابقاً على القرص العام لحين نقلها.
+     */
+    public function idPhoto(User $user): Response
+    {
+        abort_unless($user->id_photo_path, 404);
+
+        foreach (['local', 'public'] as $disk) {
+            if (Storage::disk($disk)->exists($user->id_photo_path)) {
+                return Storage::disk($disk)->response($user->id_photo_path);
+            }
+        }
+
+        abort(404);
     }
 
     /** الموافقة على الحساب بعد مراجعة صورة البطاقة والبيانات */

@@ -21,8 +21,9 @@ class RegisterController extends Controller
     {
         $data = $request->validated();
 
+        // تخزين خاص (غير متاح برابط عام) — تشوفه الإدارة فقط عبر مسار محمي
         $data['id_photo_path'] = $request->file('id_photo')
-            ->store('id-photos', 'public');
+            ->store('id-photos', 'local');
 
         unset($data['id_photo']);
 
