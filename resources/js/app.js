@@ -145,12 +145,52 @@ Alpine.data('examTimer', (seconds, formId) => ({
     },
 }));
 
-// ------------------------------------------------------------------ الشات بوت الذكي (الأسئلة الشائعة)
-Alpine.data('chatbot', (url, welcome) => ({
+// ------------------------------------------------------------------ الشات بوت التفاعلي
+// شجرة أسئلة بالأزرار (بلا حدود للتداخل) + بحث بالكلمات المفتاحية للرسائل المكتوبة.
+Alpine.data('chatbot', ({ url, welcome, tree }) => ({
     open: false,
     sending: false,
     draft: '',
     messages: [{ from: 'bot', text: welcome }],
+    stack: [], // مستويات سابقة للرجوع خطوة خطوة
+    options: tree, // الأزرار المعروضة حالياً
+
+    // اختيار زر: نعرض الرد/الرابط ثم ننزل للفروع إن وجدت
+    choose(option) {
+        this.messages.push({ from: 'me', text: option.label });
+
+        const link = option.link_url ? { url: option.link_url, label: option.link_label } : null;
+
+        if (option.response) {
+            this.messages.push({ from: 'bot', html: option.response, link });
+        } else if (link) {
+            this.messages.push({ from: 'bot', text: link.label || option.label, link });
+        }
+
+        if (option.children.length) {
+            this.stack.push(this.options);
+            this.options = option.children;
+            if (!option.response && !link) {
+                this.messages.push({ from: 'bot', text: 'اختار من الأسئلة دي 👇' });
+            }
+        } else if (!option.response && !link) {
+            this.messages.push({ from: 'bot', text: 'معنديش تفاصيل إضافية هنا — جرب خيار تاني أو اكتب سؤالك تحت.' });
+        }
+
+        this.scroll();
+    },
+
+    back() {
+        if (this.stack.length === 0) return;
+        this.options = this.stack.pop();
+        this.scroll();
+    },
+
+    home() {
+        this.stack = [];
+        this.options = tree;
+        this.scroll();
+    },
 
     async send() {
         const text = this.draft.trim();
@@ -169,6 +209,10 @@ Alpine.data('chatbot', (url, welcome) => ({
         }
 
         this.sending = false;
+        this.scroll();
+    },
+
+    scroll() {
         this.$nextTick(() => {
             const box = this.$refs.box;
             if (box) box.scrollTop = box.scrollHeight;

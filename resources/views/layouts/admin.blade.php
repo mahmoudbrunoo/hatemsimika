@@ -31,6 +31,7 @@
                 <p class="px-3.5 pb-1 pt-4 text-xs font-bold text-slate-400">النظام</p>
                 <a href="{{ route('admin.settings.index') }}" class="side-link {{ request()->routeIs('admin.settings.*') ? 'side-link-active' : '' }}">محتوى الموقع</a>
                 <a href="{{ route('admin.faqs.index') }}" class="side-link {{ request()->routeIs('admin.faqs.*') ? 'side-link-active' : '' }}">الأسئلة الشائعة</a>
+                <a href="{{ route('admin.chatbot.index') }}" class="side-link {{ request()->routeIs('admin.chatbot.*') ? 'side-link-active' : '' }}">الشات بوت التفاعلي</a>
                 <a href="{{ route('admin.audit.index') }}" class="side-link {{ request()->routeIs('admin.audit.*') ? 'side-link-active' : '' }}">سجل التدقيق</a>
             </nav>
         </aside>

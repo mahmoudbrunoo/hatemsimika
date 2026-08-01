@@ -150,6 +150,11 @@ Route::middleware(['auth', 'role:super_admin|assistant'])->prefix('admin')->name
     Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
     Route::resource('faqs', App\Http\Controllers\Admin\FaqsController::class)->only(['index', 'store', 'update', 'destroy']);
 
+    // شجرة الشات بوت التفاعلي (أسئلة رئيسية وفرعية بلا حدود)
+    Route::resource('chatbot', App\Http\Controllers\Admin\ChatbotOptionsController::class)
+        ->only(['index', 'store', 'update', 'destroy'])
+        ->parameters(['chatbot' => 'option']);
+
     // سجل التدقيق
     Route::get('/audit', [App\Http\Controllers\Admin\AuditLogsController::class, 'index'])->name('audit.index');
 });

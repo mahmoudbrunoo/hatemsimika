@@ -42,6 +42,9 @@ class DatabaseSeeder extends Seeder
         // ------------------------------------------------------------ محتوى الموقع القابل للتعديل
         $this->call(SiteSettingsSeeder::class);
 
+        // ------------------------------------------------------------ شجرة الشات بوت التفاعلي الأولية
+        $this->call(ChatbotOptionsSeeder::class);
+
         $this->command?->info('السوبر أدمن: admin@simika.com / Admin@12345 — غيّر كلمة المرور في الإنتاج.');
     }
 }

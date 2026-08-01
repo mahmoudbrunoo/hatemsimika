@@ -103,11 +103,20 @@
 
                             </div>
 
-                            <div class="flex">
+                            <div class="flex flex-wrap items-center gap-4">
                                 <button type="submit"
                                         class="smooth rounded-md border-2 border-yellow-400 bg-yellow-400 px-4 py-3 text-white hover:bg-transparent hover:text-yellow-400 dark:border-yellow-500 dark:bg-yellow-500 dark:hover:bg-transparent dark:hover:text-yellow-500">
                                     تسجيل الدخول
                                 </button>
+
+                                {{-- زر فيديو شرح التسجيل — يظهر فقط لو الأدمن ضبط الرابط --}}
+                                @if (setting('auth.video_url'))
+                                    <a href="{{ setting('auth.video_url') }}" target="_blank" rel="noopener"
+                                       class="smooth inline-flex items-center gap-2 rounded-md border-2 border-red-500 px-4 py-3 font-bold text-red-500 hover:bg-red-500 hover:text-white dark:text-red-400 dark:hover:bg-red-500 dark:hover:text-white">
+                                        <svg class="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                                        {{ setting('auth.video_label', 'شاهد طريقة التسجيل') }}
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </form>

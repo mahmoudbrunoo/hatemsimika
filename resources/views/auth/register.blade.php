@@ -135,6 +135,15 @@
 
                 <div class="sm:col-span-2">
                     <button type="submit" class="btn-primary w-full py-3 text-base">إنشاء الحساب</button>
+
+                    {{-- زر فيديو شرح التسجيل — يظهر فقط لو الأدمن ضبط الرابط --}}
+                    @if (setting('auth.video_url'))
+                        <a href="{{ setting('auth.video_url') }}" target="_blank" rel="noopener"
+                           class="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-red-500 py-3 text-base font-bold text-red-500 transition hover:bg-red-500 hover:text-white dark:text-red-400 dark:hover:bg-red-500 dark:hover:text-white">
+                            <svg class="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                            {{ setting('auth.video_label', 'شاهد طريقة التسجيل') }}
+                        </a>
+                    @endif
                 </div>
             </form>
         </div>
