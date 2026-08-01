@@ -35,10 +35,12 @@ class DailyActivity extends Model
             throw new InvalidArgumentException("عمود نشاط غير معروف: {$field}");
         }
 
+        $table = (new static)->getTable();
+
         static::upsert(
             [['user_id' => $userId, 'activity_date' => now()->toDateString(), $field => $amount]],
             ['user_id', 'activity_date'],
-            [$field => DB::raw("{$field} + {$amount}")],
+            [$field => DB::raw("\"{$table}\".\"{$field}\" + {$amount}")],
         );
     }
 }
