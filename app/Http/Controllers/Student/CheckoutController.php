@@ -4,18 +4,23 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ManualPaymentRequest;
+use App\Models\AuditLog;
 use App\Models\Book;
 use App\Models\Coupon;
 use App\Models\Course;
+use App\Models\User;
 use App\Services\CheckoutService;
+use App\Services\EnrollmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
-    public function __construct(protected CheckoutService $checkout)
-    {
+    public function __construct(
+        protected CheckoutService $checkout,
+        protected EnrollmentService $enrollment,
+    ) {
     }
 
     public function course(Request $request, Course $course): View|RedirectResponse
@@ -26,7 +31,28 @@ class CheckoutController extends Controller
             return redirect()->route('student.learn.course', $course);
         }
 
+        // الكورسات المجانية لا تمر على شاشة الدفع — تفعيل فوري
+        if ($course->effectivePrice() <= 0) {
+            return $this->grantFreeEnrollment($request->user(), $course);
+        }
+
         return view('student.checkout', ['item' => $course, 'type' => 'course']);
+    }
+
+    /** اشتراك مباشر في كورس مجاني بدون المرور على الدفع */
+    public function enrollFree(Request $request, Course $course): RedirectResponse
+    {
+        abort_unless($course->is_published, 404);
+
+        if ($request->user()->isEnrolledIn($course)) {
+            return redirect()->route('student.learn.course', $course);
+        }
+
+        if ($course->effectivePrice() > 0) {
+            return redirect()->route('student.checkout.course', $course);
+        }
+
+        return $this->grantFreeEnrollment($request->user(), $course);
     }
 
     public function book(Request $request, Book $book): View
@@ -41,6 +67,11 @@ class CheckoutController extends Controller
         $item = $type === 'course'
             ? Course::published()->findOrFail($id)
             : Book::where('is_published', true)->findOrFail($id);
+
+        // كورس مجاني وصل لمسار الدفع بأي شكل: تفعيل مباشر بدون أوردر
+        if ($item instanceof Course && $item->effectivePrice() <= 0) {
+            return $this->grantFreeEnrollment($request->user(), $item);
+        }
 
         $coupon = null;
 
@@ -78,5 +109,16 @@ class CheckoutController extends Controller
 
         return redirect()->route('student.invoices')
             ->with('status', 'تم استلام طلبك — جاري مراجعة إيصال الدفع وسيتم التفعيل خلال ساعات.');
+    }
+
+    /** تفعيل اشتراك كورس مجاني وتسجيله ثم التوجيه لمحتوى الكورس */
+    private function grantFreeEnrollment(User $user, Course $course): RedirectResponse
+    {
+        $this->enrollment->enroll($user, $course, 'free');
+
+        AuditLog::record('enrollment.free', $course, ['course' => $course->title], $user->id);
+
+        return redirect()->route('student.learn.course', $course)
+            ->with('status', 'تم الاشتراك في الكورس المجاني بنجاح — بالتوفيق!');
     }
 }

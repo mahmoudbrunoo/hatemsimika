@@ -29,7 +29,7 @@ class SettingsController extends Controller
         foreach (SiteSetting::all() as $setting) {
             if (isset($files[$setting->key]) && $files[$setting->key] !== null) {
                 $request->validate([
-                    "settings_files.{$setting->key}" => ['image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+                    "settings_files.{$setting->key}" => ['image:allow_svg', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
                 ]);
 
                 $setting->update(['value' => $files[$setting->key]->store('settings', 'public')]);

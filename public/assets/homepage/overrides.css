@@ -1,0 +1,80 @@
+/* ------------------------------------------------------------------
+   تخصيصات صفحة الطالب الرئيسية فوق target.css
+   (خطوط بديلة + سلوك القائمة الجانبية + القوائم المنسدلة)
+------------------------------------------------------------------ */
+
+/* الخط "Amin" غير متوفر محلياً — نستبدله بخط Cairo المستخدم في المنصة */
+.font-amin {
+    font-family: 'Cairo', 'Almarai', sans-serif;
+}
+
+/* لوحات القوائم المنسدلة (الإشعارات + حساب المستخدم) */
+[data-menu-panel] {
+    min-width: 15rem;
+    top: 100%;
+}
+
+[data-menu-panel] .menu-sep {
+    height: 2px;
+    width: 100%;
+    background-color: var(--color-outer-container);
+}
+
+/* تصغير القائمة الجانبية: إخفاء النصوص والإبقاء على الأيقونات */
+body.collapsed-side-nav .SideNav .nav-label {
+    display: none;
+}
+
+body.collapsed-side-nav .SideNav .min-w-52 {
+    min-width: 0;
+}
+
+/* فتح القائمة الجانبية على الموبايل */
+@media (max-width: 1023.98px) {
+    body.sidenav-mobile-open .sidenav-outer {
+        display: flex !important;
+    }
+
+    body.sidenav-mobile-open .sidenav-outer .sidenav-spacer {
+        display: none;
+    }
+}
+
+/* رسائل الفلاش */
+.flash-success {
+    background: rgba(16, 185, 129, .12);
+    border: 2px solid rgba(16, 185, 129, .4);
+    color: #059669;
+}
+
+body.darkmode .flash-success {
+    color: #34d399;
+}
+
+.flash-error {
+    background: rgba(244, 63, 94, .1);
+    border: 2px solid rgba(244, 63, 94, .4);
+    color: #e11d48;
+}
+
+body.darkmode .flash-error {
+    color: #fb7185;
+}
+
+/* شريط تنبيه وضع الدعم الفني (انتحال الحساب) */
+.impersonation-banner {
+    background: #f59e0b;
+    color: #451a03;
+    text-align: center;
+    padding: .5rem 1rem;
+    font-weight: 700;
+}
+
+.impersonation-banner button {
+    text-decoration: underline;
+    margin-right: .75rem;
+}
+
+.impersonation-banner button:hover {
+    text-decoration: none;
+}

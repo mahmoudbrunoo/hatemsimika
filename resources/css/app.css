@@ -1,3 +1,4 @@
+@import url('https://fonts.bunny.net/css?family=almarai:400,700,800|tajawal:400,500,700,800');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -7,21 +8,26 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* خط المرجع الأساسي — Almarai كما في التصميم المرجعي */
+    --font-sans: 'Almarai', 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* هوية منطقة الطالب — أزرق بسطتهالك */
-    --color-brand-50: #eef4ff;
-    --color-brand-100: #dbe7fe;
-    --color-brand-200: #bfd4fe;
-    --color-brand-300: #93b6fd;
-    --color-brand-400: #608efa;
-    --color-brand-500: #3d6ef6;
-    --color-brand-600: #2754eb;
-    --color-brand-700: #1f41d8;
-    --color-brand-800: #2037af;
-    --color-brand-900: #20338a;
-    --color-brand-950: #182154;
+    /* الهوية الأساسية — سماوي بسطتهالك (--color-primary: #1eb1ff / --color-bassthalk: #11baf0 في المرجع) */
+    --color-brand-50: #eef9ff;
+    --color-brand-100: #d8f1ff;
+    --color-brand-200: #b3e6ff;
+    --color-brand-300: #75d5ff;
+    --color-brand-400: #38bdf8;
+    --color-brand-500: #1eb1ff;
+    --color-brand-600: #0c96e6;
+    --color-brand-700: #0678bf;
+    --color-brand-800: #0b659c;
+    --color-brand-900: #105580;
+    --color-brand-950: #0a3552;
+
+    /* ألوان مرجعية مباشرة */
+    --color-bassthalk: #11baf0;
+    --color-azure: #e7f8fd;
 
     /* هوية الواجهة العامة — أحمر خالد صقر */
     --color-flame-50: #fef3f2;
@@ -44,85 +50,391 @@
     --color-mint-500: #22c55c;
     --color-mint-600: #16a349;
 
-    /* أسطح الوضع الليلي — كحلي بسطتهالك */
-    --color-night-700: #22304d;
-    --color-night-800: #16203a;
-    --color-night-850: #121b31;
-    --color-night-900: #0e1627;
-    --color-night-950: #0a101e;
+    /* أسطح الوضع الليلي — سُلَّم المرجع (dark-0 → dark-3) */
+    --color-night-700: #374151;
+    --color-night-800: #1f2937;
+    --color-night-850: #18202b;
+    --color-night-900: #111827;
+    --color-night-950: #080c14;
 }
 
-body {
-    @apply bg-slate-50 text-slate-800 antialiased dark:bg-night-950 dark:text-slate-200;
+/* ============================================================
+   متغيرات نظام التصميم المرجعي (بسطتهالك) — مستخرجة من target.css
+   ============================================================ */
+:root {
+    /* ألوان خام */
+    --color-white: #fff;
+    --color-grey-1: #f3f4f6;
+    --color-grey-2: #d1d5db;
+    --color-grey-3: #9ca3af;
+    --color-dark-0: #080c14;
+    --color-dark-1: #111827;
+    --color-dark-2: #1f2937;
+    --color-dark-3: #374151;
+    --color-dark-4: #6b7280;
+    --color-primary: #1eb1ff;
+
+    /* حاويات دلالية — النهاري */
+    --color-primary-container: var(--color-white);
+    --color-secondary-container: var(--color-grey-2);
+    --color-third-container: var(--color-grey-1);
+    --color-outer-container: var(--color-grey-1);
+    --color-inner-container: var(--color-white);
+    --color-middle-container: var(--color-grey-2);
+    --color-text-primary: var(--color-dark-1);
+    --color-text-secondary: var(--color-dark-4);
+    --color-footer: var(--color-dark-2);
+
+    /* حدود الحقول — كما في المرجع */
+    --input-border: #c0c7d6;
+
+    /* الطباعة */
+    --font-size-h1: 1.5rem;
+    --font-size-h2: 1.25rem;
+    --font-size-h3: 1.125rem;
+    --font-size-normal: 0.938rem;
+    --font-size-small: 0.813rem;
+    --font-size-smaller: 0.75rem;
+    --font-size-big: 2rem;
+    --font-size-bigmax: 3rem;
+    --font-size-bigmain: 4rem;
+    --font-w-normal: 400;
+    --font-w-medium: 600;
+    --font-w-bold: 700;
+
+    /* سرعات الانتقال */
+    --transition-smooth: 0.4s;
+    --transition-very-smooth: 0.6s;
+    --transition-fast: 0.2s;
+
+    /* الظلال */
+    --color-shadow-large: #0006;
+    --color-shadow-medium: #0004;
+    --color-shadow-small: #0002;
+    --shadow-large: 20px var(--color-shadow-large);
+    --shadow-medium: 10px var(--color-shadow-medium);
+    --shadow-small: 5px var(--color-shadow-small);
+
+    /* أنصاف الأقطار */
+    --border-radius-large: 1.3rem;
+    --border-radius-medium: 1rem;
+    --border-radius-small: 0.4rem;
+}
+
+@media screen and (min-width: 768px) {
+    :root {
+        --font-size-h1: 2rem;
+        --font-size-h2: 1.5rem;
+        --font-size-h3: 1.25rem;
+        --font-size-normal: 1rem;
+        --font-size-small: 0.875rem;
+        --font-size-smaller: 0.813rem;
+        --font-size-big: 3rem;
+        --font-size-bigmax: 4rem;
+        --font-size-bigmain: 6rem;
+    }
+}
+
+/* الوضع الليلي — قلب الحاويات كما في body.darkmode بالمرجع */
+.dark {
+    --color-primary-container: var(--color-dark-0);
+    --color-secondary-container: var(--color-dark-2);
+    --color-third-container: var(--color-dark-1);
+    --color-outer-container: var(--color-dark-0);
+    --color-inner-container: var(--color-dark-1);
+    --color-middle-container: var(--color-dark-2);
+    --color-text-primary: var(--color-white);
+    --color-text-secondary: var(--color-grey-3);
+    --color-shadow-large: #000;
+    --color-shadow-medium: #000c;
+    --color-shadow-small: #0005;
+    --input-border: #fff3;
+}
+
+/* ============================================================
+   الأساسات — كل الصفحات ترث نظام الحقول والأزرار تلقائياً
+   ============================================================ */
+@layer base {
+    body {
+        background-color: var(--color-primary-container);
+        color: var(--color-text-primary);
+        font-size: var(--font-size-normal);
+        @apply antialiased;
+        transition: background-color var(--transition-smooth) ease, color var(--transition-smooth) ease;
+    }
+
+    /* كل حقول الإدخال والقوائم والنصوص — نمط المرجع بلا استثناء
+       (:where يحافظ على أولوية صفرية فلا يكسر أي تخصيص موجود) */
+    :where(
+            input:not(
+                    [type='checkbox'],
+                    [type='radio'],
+                    [type='range'],
+                    [type='file'],
+                    [type='color'],
+                    [type='submit'],
+                    [type='button'],
+                    [type='reset'],
+                    [type='hidden']
+                ),
+            textarea,
+            select
+        ) {
+        background-color: var(--color-inner-container);
+        border: 1px solid var(--input-border);
+        border-radius: var(--border-radius-small);
+        color: var(--color-text-primary);
+        font-size: var(--font-size-normal);
+        padding: 0.625rem 0.875rem;
+        transition: border-color var(--transition-fast) ease, box-shadow var(--transition-fast) ease,
+            background-color var(--transition-fast) ease;
+    }
+
+    :where(
+            input:not(
+                    [type='checkbox'],
+                    [type='radio'],
+                    [type='range'],
+                    [type='file'],
+                    [type='color'],
+                    [type='submit'],
+                    [type='button'],
+                    [type='reset'],
+                    [type='hidden']
+                ),
+            textarea,
+            select
+        ):focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgb(30 177 255 / 25%);
+        outline: none;
+    }
+
+    :where(input, textarea)::placeholder {
+        color: var(--color-grey-3);
+    }
+
+    /* مربعات الاختيار وأزرار الراديو بلون المرجع السماوي */
+    :where(input[type='checkbox'], input[type='radio']) {
+        accent-color: var(--color-primary);
+    }
+
+    :where(button):not(:disabled) {
+        cursor: pointer;
+    }
+
+    :where(button, a, summary):focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
 }
 
 /* أساسات مسجلة كـ utilities حتى يعمل @apply عليها في تايلويند v4 */
 @utility btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
-        focus:outline-none focus:ring-2 focus:ring-brand-500/40 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold
+        focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:outline-none
+        disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-small);
+    transition: all var(--transition-smooth) ease;
 }
 
 @utility card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm
-        dark:border-night-700/60 dark:bg-night-900;
+    @apply border border-slate-200 bg-white dark:border-night-700/60 dark:bg-night-900;
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 0 var(--shadow-small);
 }
 
 @utility card-pad {
-    @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm
-        dark:border-night-700/60 dark:bg-night-900 sm:p-6;
+    @apply card p-5 sm:p-6;
 }
 
 @utility badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold;
+}
+
+/* مفردات المرجع الدلالية — نفس أسماء بسطتهالك */
+@utility smooth {
+    transition: all var(--transition-smooth) ease;
+}
+
+@utility smooth-slow {
+    transition: all var(--transition-very-smooth) ease;
+}
+
+@utility smooth-fast {
+    transition: all var(--transition-fast) ease;
+}
+
+@utility flex-center-both {
+    @apply flex items-center justify-center;
+}
+
+@utility flex-center-x {
+    @apply flex justify-center;
+}
+
+@utility flex-center-y {
+    @apply flex items-center;
+}
+
+@utility font-h1 {
+    font-size: var(--font-size-h1);
+}
+
+@utility font-h2 {
+    font-size: var(--font-size-h2);
+}
+
+@utility font-h3 {
+    font-size: var(--font-size-h3);
+}
+
+@utility font-big {
+    font-size: var(--font-size-big);
+}
+
+@utility font-bigmax {
+    font-size: var(--font-size-bigmax);
+}
+
+@utility font-bigmain {
+    font-size: var(--font-size-bigmain);
+}
+
+@utility font-w-bold {
+    font-weight: var(--font-w-bold);
+}
+
+@utility font-w-medium {
+    font-weight: var(--font-w-medium);
+}
+
+@utility clr-text-primary {
+    color: var(--color-text-primary);
+}
+
+@utility clr-text-secondary {
+    color: var(--color-text-secondary);
+}
+
+@utility bg-primary-container {
+    background-color: var(--color-primary-container);
+}
+
+@utility bg-secondary-container {
+    background-color: var(--color-secondary-container);
+}
+
+@utility bg-third-container {
+    background-color: var(--color-third-container);
+}
+
+@utility bg-inner-container {
+    background-color: var(--color-inner-container);
+}
+
+@utility bg-outer-container {
+    background-color: var(--color-outer-container);
+}
+
+@utility border-inner-container {
+    border-color: var(--color-inner-container);
+}
+
+@utility border-secondary-container {
+    border-color: var(--color-secondary-container);
+}
+
+@utility shadow-large {
+    box-shadow: 0 0 var(--shadow-large);
+}
+
+@utility shadow-medium {
+    box-shadow: 0 0 var(--shadow-medium);
+}
+
+@utility shadow-small {
+    box-shadow: 0 0 var(--shadow-small);
+}
+
+/* ظل عند المرور مع تكبير طفيف — سلوك كروت المرجع */
+.hover-shadow:not(.not-allowed):hover {
+    box-shadow: 0 7px 10px 0 #0003;
+    transform: scale(1.03);
+}
+
+.hover-shadow-large:not(.not-allowed):hover {
+    box-shadow: -7px 15px 40px -5px var(--color-shadow-large);
+    transform: scale(1.03);
 }
 
 @layer components {
-    /* أزرار */
+    /* ===== الأزرار — نمط المرجع: تعبئة تتحول لإطار عند المرور ===== */
     .btn-primary {
-        @apply btn bg-brand-500 text-white shadow-sm hover:bg-brand-600 active:scale-[.98];
+        @apply btn border-brand-500 bg-brand-500 text-white
+            hover:bg-transparent hover:text-brand-500 active:scale-[.98];
     }
 
     .btn-secondary {
-        @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-100
-            dark:border-night-700 dark:bg-night-800 dark:text-slate-200 dark:hover:bg-night-700;
+        @apply btn border-slate-300 bg-white text-slate-700
+            hover:border-brand-500 hover:text-brand-500
+            dark:border-night-700 dark:bg-night-800 dark:text-slate-200
+            dark:hover:border-brand-500 dark:hover:text-brand-400;
+    }
+
+    .btn-outline {
+        @apply btn border-brand-500 bg-transparent text-brand-500
+            hover:bg-brand-500 hover:text-white active:scale-[.98];
     }
 
     .btn-danger {
-        @apply btn bg-rose-600 text-white hover:bg-rose-700;
+        @apply btn border-rose-500 bg-rose-500 text-white
+            hover:bg-transparent hover:text-rose-500 active:scale-[.98];
     }
 
     .btn-success {
-        @apply btn bg-emerald-600 text-white hover:bg-emerald-700;
+        @apply btn border-teal-500 bg-teal-500 text-white
+            hover:bg-transparent hover:text-teal-500 active:scale-[.98];
     }
 
     /* زر تحميل ملف اكسيل — تركواز بسطتهالك */
     .btn-excel {
-        @apply btn bg-teal-600 px-6 py-3 text-white shadow-sm hover:bg-teal-700 active:scale-[.98];
+        @apply btn border-teal-500 bg-teal-500 px-6 py-3 text-white
+            hover:bg-transparent hover:text-teal-500 active:scale-[.98];
     }
 
     /* أزرار الواجهة العامة الحمراء */
     .btn-flame {
-        @apply btn bg-flame-600 text-white shadow-sm hover:bg-flame-700 active:scale-[.98];
+        @apply btn border-flame-600 bg-flame-600 text-white
+            hover:bg-transparent hover:text-flame-600 active:scale-[.98]
+            dark:hover:text-flame-400;
     }
 
     .btn-flame-outline {
-        @apply btn border-2 border-flame-600 bg-white text-flame-600 hover:bg-flame-50
-            dark:border-flame-500 dark:bg-transparent dark:text-flame-400 dark:hover:bg-flame-500/10;
+        @apply btn border-flame-600 bg-transparent text-flame-600
+            hover:bg-flame-600 hover:text-white
+            dark:border-flame-500 dark:text-flame-400 dark:hover:bg-flame-500 dark:hover:text-white;
     }
 
     .btn-sm {
         @apply px-3 py-1.5 text-xs;
     }
 
-    /* نماذج */
+    /* ===== النماذج ===== */
     .label {
-        @apply mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300;
+        @apply mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300;
     }
 
     .input {
-        @apply block w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-800
-            placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30
-            dark:border-night-700 dark:bg-night-950 dark:text-slate-100;
+        @apply block w-full text-sm text-slate-800
+            placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-[3px] focus:ring-brand-500/25
+            dark:bg-night-950 dark:text-slate-100;
+        background-color: var(--color-inner-container);
+        border: 1px solid var(--input-border);
+        border-radius: var(--border-radius-small);
+        padding: 0.625rem 0.875rem;
+        transition: border-color var(--transition-fast) ease, box-shadow var(--transition-fast) ease;
     }
 
     /* حقل بخط سفلي فقط — نمط شحن الكود في بسطتهالك */
@@ -130,14 +442,15 @@ body {
         @apply block w-full border-0 border-b-2 border-slate-300 bg-transparent px-2 py-3 text-center text-base
             font-bold tracking-widest text-slate-800 placeholder:font-semibold placeholder:tracking-normal
             placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-0
-            dark:border-night-700 dark:text-slate-100 dark:placeholder:text-slate-500;
+            dark:border-night-700 dark:bg-transparent dark:text-slate-100 dark:placeholder:text-slate-500;
+        border-radius: 0;
     }
 
     .error {
         @apply mt-1 text-xs font-medium text-rose-600 dark:text-rose-400;
     }
 
-    /* شارات الحالة */
+    /* ===== شارات الحالة ===== */
     .badge-green {
         @apply badge bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300;
     }
@@ -158,7 +471,7 @@ body {
         @apply badge bg-slate-100 text-slate-600 dark:bg-night-800 dark:text-slate-300;
     }
 
-    /* جداول */
+    /* ===== الجداول ===== */
     .table-box {
         @apply card overflow-x-auto;
     }
@@ -168,8 +481,13 @@ body {
     }
 
     .table thead th {
-        @apply border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-500
+        @apply border-b border-slate-200 px-4 py-3 text-xs font-bold text-slate-500
             dark:border-night-700/60 dark:bg-night-950/60 dark:text-slate-300;
+        background-color: var(--color-third-container);
+    }
+
+    .dark .table thead th {
+        background-color: rgb(8 12 20 / 60%);
     }
 
     .table tbody td {
@@ -184,9 +502,9 @@ body {
         @apply dark:bg-night-850/60;
     }
 
-    /* روابط الهيدر العلوي */
+    /* ===== روابط الهيدر والقوائم ===== */
     .side-link {
-        @apply flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-600 transition
+        @apply smooth flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-600
             hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-night-800 dark:hover:text-white;
     }
 
@@ -197,8 +515,8 @@ body {
 
     /* القائمة الجانبية لمنطقة الطالب — أزرار متراصة بنمط بسطتهالك */
     .dash-link {
-        @apply block w-full rounded-lg border border-slate-200 bg-white px-4 py-3.5 text-right text-sm font-bold
-            text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-600
+        @apply smooth block w-full rounded-lg border border-slate-200 bg-white px-4 py-3.5 text-right text-sm font-bold
+            text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-600
             dark:border-night-700/40 dark:bg-night-850 dark:text-slate-100 dark:hover:border-brand-500/40 dark:hover:text-white;
     }
 
@@ -210,7 +528,8 @@ body {
     /* شارة عنوان الصفحة — النمط الكبسولي في بسطتهالك */
     .page-pill {
         @apply mx-auto flex w-fit items-center gap-3 rounded-full border border-slate-200 bg-white py-2 pl-2 pr-6
-            text-xl font-black text-slate-900 shadow-sm dark:border-night-700/60 dark:bg-night-850 dark:text-white;
+            font-black text-slate-900 shadow-sm dark:border-night-700/60 dark:bg-night-850 dark:text-white;
+        font-size: var(--font-size-h2);
     }
 
     .page-pill-icon {
@@ -219,8 +538,8 @@ body {
 
     /* كبسولة المحفظة في الهيدر */
     .wallet-pill {
-        @apply flex items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-4 text-sm font-extrabold
-            text-slate-800 transition hover:border-brand-400 dark:border-night-700 dark:bg-white dark:text-night-900;
+        @apply smooth flex items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-4 text-sm font-extrabold
+            text-slate-800 hover:border-brand-400 dark:border-night-700 dark:bg-white dark:text-night-900;
     }
 
     /* بطاقة إحصائية */
@@ -238,8 +557,8 @@ body {
 
     /* كروت "ليه تشترك معانا؟" — أحمر برقم كبير وشريط أخضر سفلي */
     .why-card {
-        @apply relative overflow-hidden rounded-2xl border-b-[6px] border-mint-400 bg-flame-600 p-6 text-white
-            shadow-md transition duration-300 hover:-translate-y-1.5 hover:shadow-xl min-h-[220px];
+        @apply smooth relative overflow-hidden rounded-2xl border-b-[6px] border-mint-400 bg-flame-600 p-6 text-white
+            shadow-md hover:-translate-y-1.5 hover:shadow-xl min-h-[220px];
     }
 
     .why-card::before {
@@ -254,89 +573,113 @@ body {
     }
 }
 
-/* مفتاح الوضع الليلي/النهاري — كبسولة شمس/قمر منزلقة كما في المراجع */
+/* ============================================================
+   مفتاح الوضع الليلي/النهاري — مطابق لمفتاح المرجع (Headless UI)
+   مسار سماوي بأيقونتي شمس/قمر وقرص أبيض منزلق
+   ============================================================ */
 .theme-pill {
     direction: ltr;
     position: relative;
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    width: 4.75rem;
-    height: 2.375rem;
-    padding: 0 0.4rem;
-    border-radius: 9999px;
-    cursor: pointer;
     flex-shrink: 0;
-    border: 2px solid var(--color-flame-600);
-    background: #fff;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.theme-pill .theme-pill-knob {
-    position: absolute;
-    top: 50%;
-    left: 0.25rem;
-    width: 1.625rem;
-    height: 1.625rem;
+    height: 2.25rem; /* 36px */
+    width: 4.875rem; /* 78px */
+    padding: 0.375rem 0.5rem; /* py-1.5 px-2 */
     border-radius: 9999px;
-    background: var(--color-flame-600);
-    transform: translateY(-50%);
-    transition: transform 0.35s cubic-bezier(0.45, 1.45, 0.55, 1), background-color 0.3s ease;
+    border: 0;
+    cursor: pointer;
+    background-color: #38bdf8; /* sky-400 */
+    color: #bae6fd; /* sky-200 — أيقونات المسار */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.dark .theme-pill .theme-pill-knob {
-    transform: translate(2.35rem, -50%);
-}
-
-.theme-pill svg {
-    position: relative;
-    z-index: 1;
-    width: 1.1rem;
-    height: 1.1rem;
-    transition: color 0.3s ease;
-}
-
-.theme-pill .theme-pill-sun {
-    color: #fff;
-}
-
-.theme-pill .theme-pill-moon {
-    color: var(--color-flame-600);
+.theme-pill:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #38bdf8;
 }
 
 .dark .theme-pill {
-    background: var(--color-night-800);
-    border-color: var(--color-night-700);
+    background-color: #334155; /* slate-700 */
+    color: #94a3b8; /* slate-400 */
 }
 
+.dark .theme-pill:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #64748b;
+}
+
+/* أيقونتا المسار: الشمس تظهر ليلاً مكان القرص، والقمر نهاراً */
+.theme-pill .theme-pill-sun,
+.theme-pill .theme-pill-moon {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    transform: scale(0);
+    transition: transform 0.5s ease;
+}
+
+.theme-pill .theme-pill-moon {
+    margin-left: 0.875rem; /* ml-3.5 */
+}
+
+.theme-pill .theme-pill-moon,
 .dark .theme-pill .theme-pill-sun {
-    color: #94a3b8;
+    transform: scale(1);
+    transition: transform 0.3s ease;
 }
 
 .dark .theme-pill .theme-pill-moon {
-    color: #fff;
+    transform: scale(0);
+    transition: transform 0.5s ease;
 }
 
-/* نسخة منطقة الطالب — أزرق/سماوي بسطتهالك */
-.theme-pill-sky {
-    border-color: var(--color-brand-500);
+/* القرص الأبيض المنزلق */
+.theme-pill .theme-pill-knob {
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #fff;
+    transform: translateX(0);
+    transition: transform 0.5s ease;
 }
 
-.theme-pill-sky .theme-pill-knob {
-    background: var(--color-brand-500);
+.dark .theme-pill .theme-pill-knob {
+    transform: translateX(2.625rem);
 }
 
-.theme-pill-sky .theme-pill-moon {
-    color: var(--color-brand-500);
+/* أيقونتا القرص متراكبتان في نفس الخلية */
+.theme-pill .theme-pill-knob svg {
+    grid-area: 1 / 1;
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.dark .theme-pill-sky {
-    background: var(--color-night-800);
-    border-color: var(--color-night-700);
+.theme-pill .theme-pill-knob-sun {
+    color: #0ea5e9; /* sky-500 */
+    opacity: 1;
+    transform: scale(1);
 }
 
-.dark .theme-pill-sky .theme-pill-knob {
-    background: var(--color-brand-500);
+.dark .theme-pill .theme-pill-knob-sun {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.theme-pill .theme-pill-knob-moon {
+    color: #334155; /* slate-700 */
+    opacity: 0;
+    transform: scale(0);
+}
+
+.dark .theme-pill .theme-pill-knob-moon {
+    opacity: 1;
+    transform: scale(1);
 }
 
 /* شريط تقدم التمرير أسفل الهيدر */
@@ -353,7 +696,7 @@ body {
 }
 
 .scroll-progress-sky {
-    background: linear-gradient(to left, #22d3ee, var(--color-brand-500));
+    background: linear-gradient(to left, var(--color-bassthalk), var(--color-brand-500));
 }
 
 /* حلقة إحصائية دائرية (دونات) — احصائيات كورساتك في بسطتهالك */
@@ -374,7 +717,7 @@ body {
     width: calc(100% - 2.5rem);
     height: calc(100% - 2.5rem);
     border-radius: 9999px;
-    background: #fff;
+    background: var(--color-inner-container);
 }
 
 .dark .donut-inner {
@@ -402,7 +745,7 @@ body {
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    border-radius: 1rem;
+    border-radius: var(--border-radius-medium);
     background: #000;
 }
 
@@ -413,4 +756,137 @@ body {
     width: 100%;
     height: 100%;
     border: 0;
+}
+
+/* ===== صفحة تسجيل الدخول — منقول من التصميم المرجعي (بسطتهالك) ===== */
+
+/* خط تجوّل — خط فورم الدخول في المرجع */
+.font-taj {
+    font-family: 'Tajawal', 'Almarai', sans-serif;
+}
+
+/* متغيرات نطاق صفحة الدخول — مطابقة لمتغيرات المرجع مع أسطح مشروعنا */
+.auth-login {
+    --input-colors: var(--color-primary);
+    --auth-container: #f8fafc;
+    --auth-text-primary: #1e293b;
+    --auth-text-secondary: #6b7280;
+}
+
+.dark .auth-login {
+    --auth-container: var(--color-night-950);
+    --auth-text-primary: #fff;
+    --auth-text-secondary: #9ca3af;
+}
+
+/* تعتيم إشعاعي فوق صورة الجانب في الوضع الليلي */
+.form-img-cover {
+    background-image: radial-gradient(transparent, #000);
+}
+
+/* مجموعة حقل بأسلوب Material — تسمية عائمة وخط سفلي وتعبئة متحركة */
+.auth-login .form-reg__group {
+    position: relative;
+}
+
+.auth-login .form-reg__group.has-error {
+    --input-colors: #f43f5e;
+}
+
+.auth-login .form-reg__group input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--auth-text-secondary);
+    border-radius: 0;
+    color: var(--auth-text-primary);
+    display: block;
+    font-size: 18px;
+    padding: 0.625em 0.625em 0.625em 0.3125em;
+    position: relative;
+    width: 100%;
+    z-index: 10;
+}
+
+.auth-login .form-reg__group input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.auth-login .form-reg__group label {
+    color: var(--auth-text-secondary);
+    font-size: 18px;
+    font-weight: 400;
+    pointer-events: none;
+    position: absolute;
+    right: 0.3125em;
+    top: 0.625em;
+    transition: all 0.27s ease;
+    z-index: 10;
+}
+
+.auth-login .form-reg__group input:focus ~ label,
+.auth-login .form-reg__group input:valid ~ label {
+    color: var(--input-colors);
+    font-size: 14px;
+    left: 0;
+    top: -20px;
+}
+
+.auth-login .form-reg__group .bar {
+    display: block;
+    position: relative;
+    z-index: 10;
+}
+
+.auth-login .form-reg__group .bar::before {
+    background: var(--input-colors);
+    border-radius: 100px;
+    bottom: 0;
+    content: '';
+    height: 2px;
+    position: absolute;
+    right: 0;
+    transition: all 0.3s ease;
+    width: 0;
+}
+
+.auth-login .form-reg__group input:focus ~ .bar::before {
+    width: 100%;
+}
+
+.auth-login .form-reg__group .bg {
+    background: var(--input-colors);
+    opacity: 0.3;
+    transition: all 0.3s ease;
+    z-index: 0;
+}
+
+.auth-login .form-reg__group .bg,
+.auth-login .form-reg__group .bg::after {
+    bottom: 0;
+    content: '';
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+}
+
+.auth-login .form-reg__group .bg::after {
+    background: var(--auth-container);
+    transition: all 0.4s ease 0.2s;
+}
+
+.auth-login .form-reg__group input:focus ~ .bg,
+.auth-login .form-reg__group input:focus ~ .bg::after {
+    width: 100%;
+}
+
+/* لون التعبئة التلقائية للمتصفح كما في المرجع */
+.auth-login input:-webkit-autofill,
+.auth-login input:-webkit-autofill:active,
+.auth-login input:-webkit-autofill:focus,
+.auth-login input:-webkit-autofill:hover {
+    -webkit-box-shadow: inset 0 0 0 30px #fef9c3 !important;
+    opacity: 0.2;
 }

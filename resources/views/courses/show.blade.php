@@ -70,15 +70,19 @@
                     </div>
                     <div class="p-5">
                         {{-- السعر بخصم السلاش --}}
+                        @php $isFree = $course->effectivePrice() <= 0; @endphp
                         <div class="flex items-baseline gap-2">
-                            @if ($course->discount_price !== null)
+                            @if ($isFree)
+                                <span class="text-3xl font-black text-emerald-600">مجاني</span>
+                                @if ((float) $course->price > 0)
+                                    <span class="text-lg font-bold text-slate-400 line-through">{{ egp($course->price) }}</span>
+                                @endif
+                            @elseif ($course->discount_price !== null)
                                 <span class="text-3xl font-black text-brand-600">{{ egp($course->discount_price) }}</span>
                                 <span class="text-lg font-bold text-slate-400 line-through">{{ egp($course->price) }}</span>
                                 <span class="badge-red">وفر {{ $course->discountPercent() }}%</span>
-                            @elseif ((float) $course->price > 0)
-                                <span class="text-3xl font-black text-brand-600">{{ egp($course->price) }}</span>
                             @else
-                                <span class="text-3xl font-black text-emerald-600">مجاني</span>
+                                <span class="text-3xl font-black text-brand-600">{{ egp($course->price) }}</span>
                             @endif
                         </div>
 
@@ -90,9 +94,16 @@
                             @if ($enrolled)
                                 <a href="{{ route('student.learn.course', $course) }}" class="btn-success w-full py-3 text-base">أكمل التعلم</a>
                             @elseif (auth()->check())
-                                <a href="{{ route('student.checkout.course', $course) }}" class="btn-primary w-full py-3 text-base">اشترك الآن</a>
+                                @if ($isFree)
+                                    <form method="POST" action="{{ route('student.checkout.free', $course) }}">
+                                        @csrf
+                                        <button type="submit" class="btn-success w-full py-3 text-base">ابدأ الكورس الآن — اشترك مجاناً</button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('student.checkout.course', $course) }}" class="btn-primary w-full py-3 text-base">اشترك الآن</a>
+                                @endif
                             @else
-                                <a href="{{ route('register') }}" class="btn-primary w-full py-3 text-base">سجل واشترك الآن</a>
+                                <a href="{{ route('register') }}" class="btn-primary w-full py-3 text-base">{{ $isFree ? 'سجل وابدأ الكورس مجاناً' : 'سجل واشترك الآن' }}</a>
                             @endif
                         </div>
 

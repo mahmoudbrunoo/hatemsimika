@@ -77,6 +77,7 @@ Route::middleware(['auth', 'approved'])->prefix('me')->name('student.')->group(f
     Route::get('/attempts/{attempt}/result', [App\Http\Controllers\Student\ExamController::class, 'result'])->name('exams.result');
 
     // الشراء
+    Route::post('/enroll-free/{course:slug}', [App\Http\Controllers\Student\CheckoutController::class, 'enrollFree'])->name('checkout.free');
     Route::get('/checkout/{course:slug}', [App\Http\Controllers\Student\CheckoutController::class, 'course'])->name('checkout.course');
     Route::get('/checkout/book/{book:slug}', [App\Http\Controllers\Student\CheckoutController::class, 'book'])->name('checkout.book');
     Route::post('/checkout/{type}/{id}', [App\Http\Controllers\Student\CheckoutController::class, 'store'])->name('checkout.store');
