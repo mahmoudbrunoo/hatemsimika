@@ -27,9 +27,9 @@
                 <div class="relative text-center text-xl font-bold md:text-2xl">
                     <div class="flex flex-row flex-wrap gap-x-2">
                         <span>تسجيل</span>
-                        <span class="text-yellow-700 dark:text-yellow-400">الدخول :</span>
+                        <span class="text-amber-700 dark:text-amber-400">الدخول :</span>
                     </div>
-                    <span class="absolute inset-y-0 -right-2 flex w-8 translate-x-full transform items-center justify-center text-yellow-700 dark:text-yellow-400">
+                    <span class="absolute inset-y-0 -right-2 flex w-8 translate-x-full transform items-center justify-center text-amber-700 dark:text-amber-400">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24" aria-hidden="true">
                             <path fill="currentColor" d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1zM12 6c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2"/>
                         </svg>
@@ -37,15 +37,15 @@
                 </div>
 
                 {{-- الوصف --}}
-                <div class="text-[0.938rem] font-normal text-gray-500 md:text-base dark:text-gray-400">
+                <div class="text-[0.938rem] font-normal text-slate-500 md:text-base dark:text-slate-400">
                     ادخل على حسابك بإدخال البريد الإلكتروني أو رقم الهاتف وكلمة المرور
                 </div>
 
                 {{-- رابط إنشاء حساب --}}
-                <div class="flex flex-row flex-wrap gap-x-2 text-[0.938rem] font-normal text-gray-500 md:text-base dark:text-gray-400">
+                <div class="flex flex-row flex-wrap gap-x-2 text-[0.938rem] font-normal text-slate-500 md:text-base dark:text-slate-400">
                     <span>لا يوجد لديك حساب؟</span>
                     <a href="{{ route('register') }}">
-                        <span class="smooth text-sky-500 dark:text-sky-400">انشئ حسابك الآن !</span>
+                        <span class="smooth text-brand-500 dark:text-brand-400">انشئ حسابك الآن !</span>
                     </a>
                 </div>
 
@@ -64,7 +64,7 @@
                                     <span class="bar"></span>
                                     <label for="login">
                                         <div class="flex flex-row flex-wrap items-center gap-x-2">
-                                            <span class="flex -translate-y-px transform items-center justify-center text-cyan-500">
+                                            <span class="flex -translate-y-px transform items-center justify-center text-brand-500">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1024 1024" aria-hidden="true">
                                                     <path fill="currentColor" d="M885.6 230.2L779.1 123.8a80.83 80.83 0 0 0-57.3-23.8c-21.7 0-42.1 8.5-57.4 23.8L549.8 238.4a80.83 80.83 0 0 0-23.8 57.3c0 21.7 8.5 42.1 23.8 57.4l83.8 83.8A393.8 393.8 0 0 1 553.1 553A395.3 395.3 0 0 1 437 633.8L353.2 550a80.83 80.83 0 0 0-57.3-23.8c-21.7 0-42.1 8.5-57.4 23.8L123.8 664.5a80.9 80.9 0 0 0-23.8 57.4c0 21.7 8.5 42.1 23.8 57.4l106.3 106.3c24.4 24.5 58.1 38.4 92.7 38.4c7.3 0 14.3-.6 21.2-1.8c134.8-22.2 268.5-93.9 376.4-201.7C828.2 612.8 899.8 479.2 922.3 344c6.8-41.3-6.9-83.8-36.7-113.8"/>
                                                 </svg>
@@ -83,7 +83,7 @@
                                     <span class="bar"></span>
                                     <label for="password">
                                         <div class="flex flex-row flex-wrap items-center gap-x-2">
-                                            <span class="flex -translate-y-px transform items-center justify-center text-cyan-500">
+                                            <span class="flex -translate-y-px transform items-center justify-center text-brand-500">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true">
                                                     <path fill="currentColor" d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zm-2 0V7a4 4 0 0 0-8 0v1zm-5 6v2h2v-2zm-4 0v2h2v-2zm8 0v2h2v-2z"/>
                                                 </svg>
@@ -95,9 +95,9 @@
                                 </div>
 
                                 <label for="remember"
-                                       class="flex w-fit cursor-pointer items-center gap-2 text-[0.938rem] text-gray-500 md:text-base dark:text-gray-400">
+                                       class="flex w-fit cursor-pointer items-center gap-2 text-[0.938rem] text-slate-500 md:text-base dark:text-slate-400">
                                     <input id="remember" name="remember" type="checkbox" value="1" @checked(old('remember'))
-                                           class="size-4 rounded border-gray-300 text-cyan-500 accent-cyan-500 focus:ring-cyan-500/40 dark:border-night-700 dark:bg-night-950">
+                                           class="size-4 rounded border-slate-300 text-brand-500 accent-brand-500 focus:ring-brand-500/40 dark:border-night-700 dark:bg-night-950">
                                     افتكرني على الجهاز ده
                                 </label>
 
@@ -105,14 +105,14 @@
 
                             <div class="flex flex-wrap items-center gap-4">
                                 <button type="submit"
-                                        class="smooth rounded-md border-2 border-yellow-400 bg-yellow-400 px-4 py-3 text-white hover:bg-transparent hover:text-yellow-400 dark:border-yellow-500 dark:bg-yellow-500 dark:hover:bg-transparent dark:hover:text-yellow-500">
+                                        class="smooth rounded-md border-2 border-amber-400 bg-amber-400 px-4 py-3 text-white hover:bg-transparent hover:text-amber-400 dark:border-amber-500 dark:bg-amber-500 dark:hover:bg-transparent dark:hover:text-amber-500">
                                     تسجيل الدخول
                                 </button>
 
                                 {{-- زر فيديو شرح التسجيل — يظهر فقط لو الأدمن ضبط الرابط --}}
                                 @if (setting('auth.video_url'))
                                     <a href="{{ setting('auth.video_url') }}" target="_blank" rel="noopener"
-                                       class="smooth inline-flex items-center gap-2 rounded-md border-2 border-red-500 px-4 py-3 font-bold text-red-500 hover:bg-red-500 hover:text-white dark:text-red-400 dark:hover:bg-red-500 dark:hover:text-white">
+                                       class="smooth inline-flex items-center gap-2 rounded-md border-2 border-rose-500 px-4 py-3 font-bold text-rose-500 hover:bg-rose-500 hover:text-white dark:text-rose-400 dark:hover:bg-rose-500 dark:hover:text-white">
                                         <svg class="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
                                         {{ setting('auth.video_label', 'شاهد طريقة التسجيل') }}
                                     </a>
@@ -123,10 +123,10 @@
                 </div>
 
                 {{-- رابط إنشاء حساب — أسفل الصفحة --}}
-                <div class="flex flex-row flex-wrap gap-x-2 text-[0.938rem] font-normal text-gray-500 md:text-base dark:text-gray-400">
+                <div class="flex flex-row flex-wrap gap-x-2 text-[0.938rem] font-normal text-slate-500 md:text-base dark:text-slate-400">
                     <span>لا يوجد لديك حساب؟</span>
                     <a href="{{ route('register') }}">
-                        <span class="smooth text-sky-500 dark:text-sky-400">انشئ حسابك الآن !</span>
+                        <span class="smooth text-brand-500 dark:text-brand-400">انشئ حسابك الآن !</span>
                     </a>
                 </div>
 

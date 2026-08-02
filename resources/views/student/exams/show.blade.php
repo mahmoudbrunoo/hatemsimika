@@ -52,7 +52,7 @@
         </div>
 
         @if ($exam->window_opens_at || $exam->window_closes_at)
-            <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
+            <div class="mt-4 rounded-xl border border-slate-300 bg-slate-50 p-4 text-sm font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
                 @if ($exam->window_opens_at)
                     <p>🕐 الامتحان يفتح: {{ $exam->window_opens_at->translatedFormat('d M Y — h:i a') }}</p>
                 @endif

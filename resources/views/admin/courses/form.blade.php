@@ -117,7 +117,7 @@
             <input id="thumbnail" name="thumbnail" type="file" accept="image/jpeg,image/png,image/webp" class="input">
             @if ($course->exists && $course->thumbnail_path)
                 <img src="{{ \Illuminate\Support\Facades\Storage::url($course->thumbnail_path) }}" alt="غلاف {{ $course->title }}"
-                     class="mt-3 h-24 rounded-xl border border-slate-200 object-cover dark:border-slate-800">
+                     class="mt-3 h-24 rounded-xl border border-slate-300 object-cover dark:border-slate-800">
             @endif
             @error('thumbnail')<p class="error">{{ $message }}</p>@enderror
         </div>

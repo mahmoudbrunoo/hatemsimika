@@ -63,7 +63,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
+                        <div class="mt-auto flex items-center justify-between gap-3 border-t border-slate-300/60 pt-3 dark:border-slate-800">
                             <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
                                 @if ($enrollment->expires_at)
                                     ينتهي {{ $enrollment->expires_at->format('Y/m/d') }}

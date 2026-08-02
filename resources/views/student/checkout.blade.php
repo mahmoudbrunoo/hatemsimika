@@ -116,7 +116,7 @@
                     <span class="badge-sky">{{ $type === 'course' ? 'كورس' : 'كتاب' }}</span>
                     <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">{{ $item->title }}</h2>
 
-                    <div class="flex flex-wrap items-baseline gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+                    <div class="flex flex-wrap items-baseline gap-2 border-t border-slate-300/60 pt-3 dark:border-slate-800">
                         <span class="text-2xl font-black text-brand-600 dark:text-brand-300">{{ egp($price) }}</span>
                         @if ($item->discountPercent())
                             <s class="text-sm font-semibold text-slate-400">{{ egp($item->price) }}</s>

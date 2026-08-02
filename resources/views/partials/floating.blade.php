@@ -24,7 +24,7 @@
     </button>
 
     <div x-show="open" x-cloak x-transition
-         class="absolute bottom-[4.5rem] right-0 flex h-[28rem] w-[19rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-night-700 dark:bg-night-900 sm:w-80">
+         class="absolute bottom-[4.5rem] right-0 flex h-[28rem] w-[19rem] flex-col overflow-hidden rounded-2xl border border-slate-300 bg-surface shadow-2xl dark:border-night-700 dark:bg-night-900 sm:w-80">
         <div class="bg-brand-500 px-4 py-3 text-sm font-extrabold text-white">المساعد الذكي — بجاوبك فوراً</div>
 
         <div x-ref="box" class="flex-1 space-y-2.5 overflow-y-auto p-3">
@@ -54,7 +54,7 @@
             <div x-show="options.length || stack.length" class="pt-1">
                 <template x-for="o in options" :key="o.id">
                     <button type="button" @click="choose(o)"
-                            class="mb-1.5 flex w-full items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-right text-sm font-bold text-slate-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-night-700 dark:bg-night-800 dark:text-slate-200 dark:hover:border-brand-500 dark:hover:text-brand-300">
+                            class="mb-1.5 flex w-full items-center justify-between gap-2 rounded-xl border border-slate-300 bg-surface px-3.5 py-2.5 text-right text-sm font-bold text-slate-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-night-700 dark:bg-night-800 dark:text-slate-200 dark:hover:border-brand-500 dark:hover:text-brand-300">
                         <span x-text="o.label"></span>
                         <svg x-show="o.children.length" class="size-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                     </button>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <form @submit.prevent="send()" class="flex items-center gap-2 border-t border-slate-100 p-2.5 dark:border-night-800">
+        <form @submit.prevent="send()" class="flex items-center gap-2 border-t border-slate-300/60 p-2.5 dark:border-night-800">
             <input type="text" x-model="draft" placeholder="أو اكتب سؤالك هنا..." class="input py-2">
             <button class="btn-primary btn-sm shrink-0" :disabled="sending">إرسال</button>
         </form>

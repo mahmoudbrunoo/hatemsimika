@@ -223,18 +223,24 @@ Alpine.data('chatbot', ({ url, welcome, tree }) => ({
 // ------------------------------------------------------------------ الرسوم البيانية
 // أي عنصر canvas عليه data-chart يترسم تلقائياً حسب نوعه.
 const chartPalette = {
-    videos: '#1b5df5',
-    quizzes: '#10b981',
-    hours: '#f59e0b',
-    line: '#1b5df5',
+    videos: '#800033',
+    quizzes: '#9c6a82',
+    hours: '#c08a45',
+    line: '#800033',
 };
 
 function gridColor() {
-    return document.documentElement.classList.contains('dark') ? 'rgba(148,163,184,.15)' : 'rgba(100,116,139,.15)';
+    return document.documentElement.classList.contains('dark') ? 'rgba(210,168,155,.15)' : 'rgba(74,21,27,.12)';
+}
+
+// لون نصوص المحاور ووسائل الإيضاح — من نظام الألوان الموحّد
+function chartTextColor() {
+    return document.documentElement.classList.contains('dark') ? '#d2a89b' : '#7a4e52';
 }
 
 function renderCharts() {
     Chart.defaults.font.family = "'Cairo', sans-serif";
+    Chart.defaults.color = chartTextColor();
 
     // نشاط المذاكرة الأسبوعي: فيديوهات + كويزات أعمدة، والساعات خط
     document.querySelectorAll('canvas[data-chart="weekly"]').forEach((canvas) => {

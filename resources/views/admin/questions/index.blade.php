@@ -87,7 +87,7 @@
 
                 <div class="mt-2 space-y-3">
                     @for ($i = 0; $i < 4; $i++)
-                        <div class="grid gap-3 rounded-xl border border-slate-200 p-3 dark:border-slate-800 sm:grid-cols-[auto_1fr_1fr_1fr]">
+                        <div class="grid gap-3 rounded-xl border border-slate-300 p-3 dark:border-slate-800 sm:grid-cols-[auto_1fr_1fr_1fr]">
                             <label class="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300" title="الإجابة الصحيحة">
                                 <input type="radio" name="correct" value="{{ $i }}"
                                        class="size-4 border-slate-300 text-emerald-600 focus:ring-emerald-500/40 dark:border-slate-700 dark:bg-slate-950"

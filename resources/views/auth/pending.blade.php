@@ -61,7 +61,7 @@
                 </div>
             @endif
 
-            <div class="mt-7 border-t border-slate-100 pt-6 dark:border-slate-800">
+            <div class="mt-7 border-t border-slate-300/60 pt-6 dark:border-slate-800">
                 <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">
                     محتاج مساعدة أو استعجلت التفعيل؟ كلمنا واتساب على
                     <span dir="ltr" class="font-extrabold text-slate-700 dark:text-slate-200">{{ $whatsapp }}</span>

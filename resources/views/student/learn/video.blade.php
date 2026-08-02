@@ -58,7 +58,7 @@
             </div>
 
             @if ($video->description)
-                <div class="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+                <div class="mt-4 border-t border-slate-300/60 pt-4 dark:border-slate-800">
                     <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">عن الفيديو</h2>
                     <p class="mt-2 whitespace-pre-line text-sm leading-8 text-slate-600 dark:text-slate-300">{{ $video->description }}</p>
                 </div>
@@ -71,7 +71,7 @@
             @endphp
 
             @if ($takeaways->isNotEmpty())
-                <div class="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+                <div class="mt-4 border-t border-slate-300/60 pt-4 dark:border-slate-800">
                     <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">🎯 أهم النقاط المستفادة</h2>
                     <ul class="mt-2 space-y-1.5 text-sm leading-7 text-slate-600 dark:text-slate-300">
                         @foreach ($takeaways as $point)

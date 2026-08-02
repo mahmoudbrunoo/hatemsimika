@@ -12,81 +12,144 @@
     --font-sans: 'Almarai', 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
         'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* الهوية الأساسية — سماوي بسطتهالك (--color-primary: #1eb1ff / --color-bassthalk: #11baf0 في المرجع) */
-    --color-brand-50: #eef9ff;
-    --color-brand-100: #d8f1ff;
-    --color-brand-200: #b3e6ff;
-    --color-brand-300: #75d5ff;
-    --color-brand-400: #38bdf8;
-    --color-brand-500: #1eb1ff;
-    --color-brand-600: #0c96e6;
-    --color-brand-700: #0678bf;
-    --color-brand-800: #0b659c;
-    --color-brand-900: #105580;
-    --color-brand-950: #0a3552;
+    /* ============================================================
+       نظام الألوان الموحّد للمنصة
+       النهاري: نبيتي #800033 · كريمي #F4EBE1 · بيج #E0C9B1 · نص #4A151B
+       الليلي: خوخي داكن #120913/#3A1F3D/#5E3B5C · وردي #9C6A82 · نص #D2A89B
+       ============================================================ */
 
-    /* ألوان مرجعية مباشرة */
-    --color-bassthalk: #11baf0;
-    --color-azure: #e7f8fd;
+    /* الهوية الأساسية — النبيتي (Burgundy #800033) */
+    --color-brand-50: #f9eeec;
+    --color-brand-100: #f3dcd9;
+    --color-brand-200: #e9bdbc;
+    --color-brand-300: #da929b;
+    --color-brand-400: #be5672;
+    --color-brand-500: #800033;
+    --color-brand-600: #6d002c;
+    --color-brand-700: #580123;
+    --color-brand-800: #45011c;
+    --color-brand-900: #360115;
+    --color-brand-950: #23000d;
 
-    /* هوية الواجهة العامة — أحمر خالد صقر */
-    --color-flame-50: #fef3f2;
-    --color-flame-100: #fee5e2;
-    --color-flame-200: #fecfca;
-    --color-flame-300: #fcaca4;
-    --color-flame-400: #f87b6f;
-    --color-flame-500: #ef4f41;
-    --color-flame-600: #e73224;
-    --color-flame-700: #c2271a;
-    --color-flame-800: #a02419;
-    --color-flame-900: #84241c;
-    --color-flame-950: #480e09;
+    /* ألوان مرجعية مباشرة — موحّدة على النبيتي والكريمي */
+    --color-bassthalk: #800033;
+    --color-azure: #f6e9dc;
 
-    /* الأخضر — شريط الكروت وخط التقدم */
-    --color-mint-100: #dcfce9;
-    --color-mint-200: #bbf7d2;
-    --color-mint-300: #86efab;
-    --color-mint-400: #4ade7f;
-    --color-mint-500: #22c55c;
-    --color-mint-600: #16a349;
+    /* هوية الواجهة العامة — نفس عائلة النبيتي (flame-600 = اللون الأساسي) */
+    --color-flame-50: #f9eeec;
+    --color-flame-100: #f3dcd9;
+    --color-flame-200: #e9bdbc;
+    --color-flame-300: #da929b;
+    --color-flame-400: #c25a78;
+    --color-flame-500: #93103f;
+    --color-flame-600: #800033;
+    --color-flame-700: #660029;
+    --color-flame-800: #530222;
+    --color-flame-900: #40031a;
+    --color-flame-950: #26000f;
 
-    /* أسطح الوضع الليلي — سُلَّم المرجع (dark-0 → dark-3) */
-    --color-night-700: #374151;
-    --color-night-800: #1f2937;
-    --color-night-850: #18202b;
-    --color-night-900: #111827;
-    --color-night-950: #080c14;
+    /* اللمسة الثانوية — وردي/بنفسجي هادئ (#9C6A82) لشريط التقدم والشارات */
+    --color-mint-100: #f0e4ea;
+    --color-mint-200: #e1cdd7;
+    --color-mint-300: #c8a5b5;
+    --color-mint-400: #b28799;
+    --color-mint-500: #9c6a82;
+    --color-mint-600: #85566d;
+
+    /* أسطح الوضع الليلي — خوخي داكن (#120913 → #5E3B5C) */
+    --color-night-700: #5e3b5c;
+    --color-night-800: #3a1f3d;
+    --color-night-850: #2c1630;
+    --color-night-900: #221026;
+    --color-night-950: #120913;
+
+    /* سطح الكروت النهاري — البيج الدافئ */
+    --color-surface: #e0c9b1;
+    --color-cream: #f4ebe1;
+
+    /* أسماء دلالية — primary = النبيتي الأساسي، secondary = الوردي الثانوي
+       (تُستخدم في لوحة الطالب: text-primary-500 / bg-secondary-500 ...) */
+    --color-primary-50: #f9eeec;
+    --color-primary-100: #f3dcd9;
+    --color-primary-200: #e9bdbc;
+    --color-primary-300: #da929b;
+    --color-primary-400: #be5672;
+    --color-primary-500: #800033;
+    --color-primary-600: #6d002c;
+    --color-primary-700: #580123;
+    --color-primary-800: #45011c;
+    --color-primary-900: #360115;
+    --color-primary-950: #23000d;
+
+    --color-secondary-50: #f8f1f4;
+    --color-secondary-100: #f0e4ea;
+    --color-secondary-200: #e1cdd7;
+    --color-secondary-300: #c8a5b5;
+    --color-secondary-400: #b28799;
+    --color-secondary-500: #9c6a82;
+    --color-secondary-600: #85566d;
+    --color-secondary-700: #6f4459;
+    --color-secondary-800: #593646;
+    --color-secondary-900: #432a36;
+    --color-secondary-950: #2b1a22;
+
+    /* المحايد الموحّد — يعيد تعريف slate/gray بدرجات دافئة من الهوية
+       (فاتحها كريمي/بيج للنهاري، وغامقها خوخي/نبيتي يخدم الوضعين) */
+    --color-slate-50: #f8f1e7;
+    --color-slate-100: #efe2d1;
+    --color-slate-200: #e0c9b1;
+    --color-slate-300: #d2a89b;
+    --color-slate-400: #b08a7e;
+    --color-slate-500: #8d6157;
+    --color-slate-600: #74463f;
+    --color-slate-700: #5c3138;
+    --color-slate-800: #3a1f3d;
+    --color-slate-900: #4a151b;
+    --color-slate-950: #120913;
+
+    --color-gray-50: #f8f1e7;
+    --color-gray-100: #efe2d1;
+    --color-gray-200: #e0c9b1;
+    --color-gray-300: #d2a89b;
+    --color-gray-400: #b08a7e;
+    --color-gray-500: #8d6157;
+    --color-gray-600: #74463f;
+    --color-gray-700: #5c3138;
+    --color-gray-800: #3a1f3d;
+    --color-gray-900: #4a151b;
+    --color-gray-950: #120913;
 }
 
 /* ============================================================
    متغيرات نظام التصميم المرجعي (بسطتهالك) — مستخرجة من target.css
    ============================================================ */
 :root {
-    /* ألوان خام */
+    /* ألوان خام — عائلة الكريمي/البيج للنهاري والخوخي الداكن لليلي */
     --color-white: #fff;
-    --color-grey-1: #f3f4f6;
-    --color-grey-2: #d1d5db;
-    --color-grey-3: #9ca3af;
-    --color-dark-0: #080c14;
-    --color-dark-1: #111827;
-    --color-dark-2: #1f2937;
-    --color-dark-3: #374151;
-    --color-dark-4: #6b7280;
-    --color-primary: #1eb1ff;
+    --color-grey-1: #efe4d3;
+    --color-grey-2: #e0c9b1;
+    --color-grey-3: #a98671;
+    --color-dark-0: #120913;
+    --color-dark-1: #221026;
+    --color-dark-2: #3a1f3d;
+    --color-dark-3: #5e3b5c;
+    --color-dark-4: #7a4e52;
+    --color-primary: #800033;
 
     /* حاويات دلالية — النهاري */
-    --color-primary-container: var(--color-white);
+    --color-primary-container: #f4ebe1;
     --color-secondary-container: var(--color-grey-2);
     --color-third-container: var(--color-grey-1);
     --color-outer-container: var(--color-grey-1);
-    --color-inner-container: var(--color-white);
+    --color-inner-container: #fbf4ea;
     --color-middle-container: var(--color-grey-2);
-    --color-text-primary: var(--color-dark-1);
+    --color-text-primary: #4a151b;
     --color-text-secondary: var(--color-dark-4);
     --color-footer: var(--color-dark-2);
 
-    /* حدود الحقول — كما في المرجع */
-    --input-border: #c0c7d6;
+    /* حدود الحقول والكروت — البيج الموحّد */
+    --input-border: #e0c9b1;
+    --color-card-border: #cdb093;
 
     /* الطباعة */
     --font-size-h1: 1.5rem;
@@ -107,10 +170,10 @@
     --transition-very-smooth: 0.6s;
     --transition-fast: 0.2s;
 
-    /* الظلال */
-    --color-shadow-large: #0006;
-    --color-shadow-medium: #0004;
-    --color-shadow-small: #0002;
+    /* الظلال — مدفّأة بدرجة النص النبيتي في النهاري */
+    --color-shadow-large: #4a151b66;
+    --color-shadow-medium: #4a151b40;
+    --color-shadow-small: #4a151b21;
     --shadow-large: 20px var(--color-shadow-large);
     --shadow-medium: 10px var(--color-shadow-medium);
     --shadow-small: 5px var(--color-shadow-small);
@@ -135,7 +198,7 @@
     }
 }
 
-/* الوضع الليلي — قلب الحاويات كما في body.darkmode بالمرجع */
+/* الوضع الليلي — أسطح خوخية داكنة ونصوص وردية فاتحة (#D2A89B) */
 .dark {
     --color-primary-container: var(--color-dark-0);
     --color-secondary-container: var(--color-dark-2);
@@ -143,12 +206,13 @@
     --color-outer-container: var(--color-dark-0);
     --color-inner-container: var(--color-dark-1);
     --color-middle-container: var(--color-dark-2);
-    --color-text-primary: var(--color-white);
-    --color-text-secondary: var(--color-grey-3);
+    --color-text-primary: #f0e5da;
+    --color-text-secondary: #d2a89b;
     --color-shadow-large: #000;
     --color-shadow-medium: #000c;
     --color-shadow-small: #0005;
-    --input-border: #fff3;
+    --input-border: #d2a89b4d;
+    --color-card-border: #5e3b5c99;
 }
 
 /* ============================================================
@@ -206,7 +270,7 @@
             select
         ):focus {
         border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgb(30 177 255 / 25%);
+        box-shadow: 0 0 0 3px rgb(128 0 51 / 20%);
         outline: none;
     }
 
@@ -240,7 +304,8 @@
 }
 
 @utility card {
-    @apply border border-slate-200 bg-white dark:border-night-700/60 dark:bg-night-900;
+    background-color: var(--color-secondary-container);
+    border: 1px solid var(--color-card-border);
     border-radius: var(--border-radius-medium);
     box-shadow: 0 0 var(--shadow-small);
 }
@@ -360,7 +425,7 @@
 
 /* ظل عند المرور مع تكبير طفيف — سلوك كروت المرجع */
 .hover-shadow:not(.not-allowed):hover {
-    box-shadow: 0 7px 10px 0 #0003;
+    box-shadow: 0 7px 10px 0 #4a151b33;
     transform: scale(1.03);
 }
 
@@ -377,10 +442,10 @@
     }
 
     .btn-secondary {
-        @apply btn border-slate-300 bg-white text-slate-700
+        @apply btn bg-inner-container border-slate-300 text-slate-700
             hover:border-brand-500 hover:text-brand-500
             dark:border-night-700 dark:bg-night-800 dark:text-slate-200
-            dark:hover:border-brand-500 dark:hover:text-brand-400;
+            dark:hover:border-brand-300 dark:hover:text-brand-300;
     }
 
     .btn-outline {
@@ -394,14 +459,16 @@
     }
 
     .btn-success {
-        @apply btn border-teal-500 bg-teal-500 text-white
-            hover:bg-transparent hover:text-teal-500 active:scale-[.98];
+        @apply btn border-mint-500 bg-mint-500 text-white
+            hover:bg-transparent hover:text-mint-500 active:scale-[.98]
+            dark:hover:text-mint-300;
     }
 
-    /* زر تحميل ملف اكسيل — تركواز بسطتهالك */
+    /* زر تحميل ملف اكسيل — اللمسة الثانوية الوردية */
     .btn-excel {
-        @apply btn border-teal-500 bg-teal-500 px-6 py-3 text-white
-            hover:bg-transparent hover:text-teal-500 active:scale-[.98];
+        @apply btn border-mint-500 bg-mint-500 px-6 py-3 text-white
+            hover:bg-transparent hover:text-mint-500 active:scale-[.98]
+            dark:hover:text-mint-300;
     }
 
     /* أزرار الواجهة العامة الحمراء */
@@ -464,7 +531,7 @@
     }
 
     .badge-sky {
-        @apply badge bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300;
+        @apply badge bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200;
     }
 
     .badge-gray {
@@ -481,17 +548,17 @@
     }
 
     .table thead th {
-        @apply border-b border-slate-200 px-4 py-3 text-xs font-bold text-slate-500
+        @apply border-b border-slate-300 px-4 py-3 text-xs font-bold text-slate-600
             dark:border-night-700/60 dark:bg-night-950/60 dark:text-slate-300;
         background-color: var(--color-third-container);
     }
 
     .dark .table thead th {
-        background-color: rgb(8 12 20 / 60%);
+        background-color: rgb(18 9 19 / 60%);
     }
 
     .table tbody td {
-        @apply border-b border-slate-100 px-4 py-3 align-middle dark:border-night-800;
+        @apply border-b border-slate-300/50 px-4 py-3 align-middle dark:border-night-800;
     }
 
     .table tbody tr:hover {
@@ -515,9 +582,9 @@
 
     /* القائمة الجانبية لمنطقة الطالب — أزرار متراصة بنمط بسطتهالك */
     .dash-link {
-        @apply smooth block w-full rounded-lg border border-slate-200 bg-white px-4 py-3.5 text-right text-sm font-bold
-            text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-600
-            dark:border-night-700/40 dark:bg-night-850 dark:text-slate-100 dark:hover:border-brand-500/40 dark:hover:text-white;
+        @apply smooth bg-surface block w-full rounded-lg border border-slate-300 px-4 py-3.5 text-right text-sm font-bold
+            text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-brand-500 hover:text-brand-600
+            dark:border-night-700/40 dark:bg-night-850 dark:text-slate-100 dark:hover:border-brand-300/40 dark:hover:text-white;
     }
 
     .dash-link-active {
@@ -527,7 +594,7 @@
 
     /* شارة عنوان الصفحة — النمط الكبسولي في بسطتهالك */
     .page-pill {
-        @apply mx-auto flex w-fit items-center gap-3 rounded-full border border-slate-200 bg-white py-2 pl-2 pr-6
+        @apply bg-surface mx-auto flex w-fit items-center gap-3 rounded-full border border-slate-300 py-2 pl-2 pr-6
             font-black text-slate-900 shadow-sm dark:border-night-700/60 dark:bg-night-850 dark:text-white;
         font-size: var(--font-size-h2);
     }
@@ -538,7 +605,7 @@
 
     /* كبسولة المحفظة في الهيدر */
     .wallet-pill {
-        @apply smooth flex items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-4 text-sm font-extrabold
+        @apply smooth bg-inner-container flex items-center gap-2 rounded-full border border-slate-300 py-1 pl-1 pr-4 text-sm font-extrabold
             text-slate-800 hover:border-brand-400 dark:border-night-700 dark:bg-white dark:text-night-900;
     }
 
@@ -568,7 +635,7 @@
         left: 1.25rem;
         width: 3.5rem;
         height: 3rem;
-        background-image: radial-gradient(rgb(72 14 9 / 55%) 2.5px, transparent 3px);
+        background-image: radial-gradient(rgb(38 0 15 / 55%) 2.5px, transparent 3px);
         background-size: 15px 15px;
     }
 }
@@ -589,23 +656,23 @@
     border-radius: 9999px;
     border: 0;
     cursor: pointer;
-    background-color: #38bdf8; /* sky-400 */
-    color: #bae6fd; /* sky-200 — أيقونات المسار */
+    background-color: #800033; /* النبيتي الأساسي */
+    color: #e9bdbc; /* brand-200 — أيقونات المسار */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .theme-pill:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #38bdf8;
+    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #9c6a82;
 }
 
 .dark .theme-pill {
-    background-color: #334155; /* slate-700 */
-    color: #94a3b8; /* slate-400 */
+    background-color: #5e3b5c; /* السطح الخوخي المرتفع */
+    color: #d2a89b; /* النص الوردي الفاتح */
 }
 
 .dark .theme-pill:focus-visible {
-    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #64748b;
+    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #9c6a82;
 }
 
 /* أيقونتا المسار: الشمس تظهر ليلاً مكان القرص، والقمر نهاراً */
@@ -661,7 +728,7 @@
 }
 
 .theme-pill .theme-pill-knob-sun {
-    color: #0ea5e9; /* sky-500 */
+    color: #800033; /* النبيتي */
     opacity: 1;
     transform: scale(1);
 }
@@ -672,7 +739,7 @@
 }
 
 .theme-pill .theme-pill-knob-moon {
-    color: #334155; /* slate-700 */
+    color: #3a1f3d; /* الخوخي الداكن */
     opacity: 0;
     transform: scale(0);
 }
@@ -707,7 +774,7 @@
     width: 11rem;
     height: 11rem;
     border-radius: 9999px;
-    background: conic-gradient(var(--donut-color, #a855f7) calc(var(--donut-value, 0) * 1%), rgb(148 163 184 / 18%) 0);
+    background: conic-gradient(var(--donut-color, #9c6a82) calc(var(--donut-value, 0) * 1%), rgb(156 106 130 / 22%) 0);
 }
 
 .donut-inner {
@@ -765,18 +832,18 @@
     font-family: 'Tajawal', 'Almarai', sans-serif;
 }
 
-/* متغيرات نطاق صفحة الدخول — مطابقة لمتغيرات المرجع مع أسطح مشروعنا */
+/* متغيرات نطاق صفحة الدخول — مطابقة لنظام الألوان الموحّد */
 .auth-login {
     --input-colors: var(--color-primary);
-    --auth-container: #f8fafc;
-    --auth-text-primary: #1e293b;
-    --auth-text-secondary: #6b7280;
+    --auth-container: #f4ebe1;
+    --auth-text-primary: #4a151b;
+    --auth-text-secondary: #7a4e52;
 }
 
 .dark .auth-login {
     --auth-container: var(--color-night-950);
-    --auth-text-primary: #fff;
-    --auth-text-secondary: #9ca3af;
+    --auth-text-primary: #f0e5da;
+    --auth-text-secondary: #d2a89b;
 }
 
 /* تعتيم إشعاعي فوق صورة الجانب في الوضع الليلي */
@@ -882,11 +949,11 @@
     width: 100%;
 }
 
-/* لون التعبئة التلقائية للمتصفح كما في المرجع */
+/* لون التعبئة التلقائية للمتصفح — درجة كريمية دافئة من النظام */
 .auth-login input:-webkit-autofill,
 .auth-login input:-webkit-autofill:active,
 .auth-login input:-webkit-autofill:focus,
 .auth-login input:-webkit-autofill:hover {
-    -webkit-box-shadow: inset 0 0 0 30px #fef9c3 !important;
+    -webkit-box-shadow: inset 0 0 0 30px #f0e0ce !important;
     opacity: 0.2;
 }

@@ -92,13 +92,13 @@
                 @error('cover')<p class="error">{{ $message }}</p>@enderror
 
                 <template x-if="preview">
-                    <img :src="preview" alt="معاينة الغلاف" class="mt-3 h-32 w-24 rounded-xl border border-slate-200 object-cover dark:border-slate-700">
+                    <img :src="preview" alt="معاينة الغلاف" class="mt-3 h-32 w-24 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                 </template>
                 @if ($editing && $book->cover_path)
                     <div x-show="!preview" class="mt-3">
                         <p class="mb-1 text-xs font-bold text-slate-400">الغلاف الحالي</p>
                         <img src="{{ \Illuminate\Support\Facades\Storage::url($book->cover_path) }}"
-                             alt="الغلاف الحالي" class="h-32 w-24 rounded-xl border border-slate-200 object-cover dark:border-slate-700">
+                             alt="الغلاف الحالي" class="h-32 w-24 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                     </div>
                 @endif
             </div>

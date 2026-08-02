@@ -63,14 +63,14 @@
         <div class="card-pad">
             <h2 class="mb-4 font-extrabold text-slate-900 dark:text-white">إيرادات آخر 14 يوم</h2>
             <div class="h-64">
-                <canvas data-chart="line" data-series='@json($revenueSeries)' data-label="الإيرادات (جنيه)" data-color="#1b5df5"></canvas>
+                <canvas data-chart="line" data-series='@json($revenueSeries)' data-label="الإيرادات (جنيه)" data-color="#800033"></canvas>
             </div>
         </div>
 
         <div class="card-pad">
             <h2 class="mb-4 font-extrabold text-slate-900 dark:text-white">تسجيلات الطلاب آخر 14 يوم</h2>
             <div class="h-64">
-                <canvas data-chart="line" data-series='@json($signupSeries)' data-label="تسجيلات" data-color="#10b981"></canvas>
+                <canvas data-chart="line" data-series='@json($signupSeries)' data-label="تسجيلات" data-color="#9c6a82"></canvas>
             </div>
         </div>
     </div>

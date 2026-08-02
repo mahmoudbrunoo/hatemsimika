@@ -100,7 +100,7 @@
 
     {{-- الفروع --}}
     @if ($children->isNotEmpty())
-        <div class="mr-4 mt-3 space-y-3 border-r-2 border-dashed border-slate-200 pr-4 dark:border-night-700">
+        <div class="mr-4 mt-3 space-y-3 border-r-2 border-dashed border-slate-300 pr-4 dark:border-night-700">
             @foreach ($children as $child)
                 @include('admin.chatbot._node', ['option' => $child, 'depth' => $depth + 1])
             @endforeach

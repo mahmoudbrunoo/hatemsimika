@@ -44,7 +44,7 @@
                                     @if ($submission->file_path)
                                         <a href="{{ \Illuminate\Support\Facades\Storage::url($submission->file_path) }}" target="_blank" class="mt-2 inline-block">
                                             <img src="{{ \Illuminate\Support\Facades\Storage::url($submission->file_path) }}"
-                                                 alt="حل الواجب" class="max-h-48 rounded-xl border border-slate-200 object-cover dark:border-slate-700">
+                                                 alt="حل الواجب" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                                             <span class="mt-1 block text-xs font-bold text-brand-600 dark:text-brand-400">اضغط لفتح الصورة بالحجم الكامل</span>
                                         </a>
                                     @endif
@@ -117,7 +117,7 @@
                                     @if ($answer->essay_image)
                                         <a href="{{ \Illuminate\Support\Facades\Storage::url($answer->essay_image) }}" target="_blank" class="mt-2 inline-block">
                                             <img src="{{ \Illuminate\Support\Facades\Storage::url($answer->essay_image) }}"
-                                                 alt="إجابة الطالب" class="max-h-48 rounded-xl border border-slate-200 object-cover dark:border-slate-700">
+                                                 alt="إجابة الطالب" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                                             <span class="mt-1 block text-xs font-bold text-brand-600 dark:text-brand-400">اضغط لفتح الصورة بالحجم الكامل</span>
                                         </a>
                                     @endif

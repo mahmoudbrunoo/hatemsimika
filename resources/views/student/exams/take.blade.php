@@ -38,7 +38,7 @@
 
                     @if ($question->image_path)
                         <img src="{{ Storage::url($question->image_path) }}" alt="صورة السؤال"
-                             class="mt-3 max-h-80 rounded-xl border border-slate-200 object-contain dark:border-slate-700">
+                             class="mt-3 max-h-80 rounded-xl border border-slate-300 object-contain dark:border-slate-700">
                     @endif
 
                     @if ($question->audio_path)
@@ -77,7 +77,7 @@
                                         @endif
                                         @if ($option->image_path)
                                             <img src="{{ Storage::url($option->image_path) }}" alt="صورة الاختيار"
-                                                 class="mt-2 max-h-48 rounded-lg border border-slate-200 object-contain dark:border-slate-700">
+                                                 class="mt-2 max-h-48 rounded-lg border border-slate-300 object-contain dark:border-slate-700">
                                         @endif
                                         @if ($option->audio_path)
                                             <audio controls class="mt-2 w-full" src="{{ Storage::url($option->audio_path) }}"></audio>

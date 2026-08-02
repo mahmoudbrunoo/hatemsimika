@@ -135,7 +135,7 @@
             @endphp
 
             @foreach ($features as $f)
-                <div class="rounded-2xl border border-slate-100 bg-white p-7 shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-night-700/50 dark:bg-night-900">
+                <div class="rounded-2xl border border-slate-300/60 bg-surface p-7 shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-night-700/50 dark:bg-night-900">
                     <span class="grid size-12 place-items-center rounded-xl {{ $f['tint'] }}">
                         <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $f['icon'] !!}</svg>
                     </span>

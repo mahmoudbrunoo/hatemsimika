@@ -31,7 +31,7 @@
             <div class="space-y-3">
                 @forelse ($videos as $video)
                     @php $watched = $views->get($video->id)?->completed; @endphp
-                    <div class="flex flex-col gap-3 rounded-xl border border-slate-100 p-4 dark:border-slate-800 sm:flex-row sm:items-center">
+                    <div class="flex flex-col gap-3 rounded-xl border border-slate-300/60 p-4 dark:border-slate-800 sm:flex-row sm:items-center">
                         <div class="min-w-0 flex-1">
                             <div class="flex flex-wrap items-center gap-2">
                                 <h3 class="font-bold text-slate-900 dark:text-white">{{ $video->title }}</h3>
@@ -58,7 +58,7 @@
 
                 <div class="space-y-3">
                     @foreach ($attachments as $attachment)
-                        <div class="flex items-center gap-3 rounded-xl border border-slate-100 p-4 dark:border-slate-800">
+                        <div class="flex items-center gap-3 rounded-xl border border-slate-300/60 p-4 dark:border-slate-800">
                             <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-rose-50 text-lg dark:bg-rose-500/10">📕</span>
                             <div class="min-w-0 flex-1">
                                 <h3 class="truncate font-bold text-slate-900 dark:text-white">{{ $attachment->title }}</h3>
@@ -76,7 +76,7 @@
             <section class="card-pad">
                 <h2 class="mb-4 text-lg font-extrabold text-slate-900 dark:text-white">📝 الواجب</h2>
 
-                <div class="flex flex-col gap-3 rounded-xl border border-slate-100 p-4 dark:border-slate-800 sm:flex-row sm:items-center">
+                <div class="flex flex-col gap-3 rounded-xl border border-slate-300/60 p-4 dark:border-slate-800 sm:flex-row sm:items-center">
                     <div class="min-w-0 flex-1">
                         <div class="flex flex-wrap items-center gap-2">
                             <h3 class="font-bold text-slate-900 dark:text-white">{{ $assignment->title }}</h3>
@@ -111,7 +111,7 @@
             <section class="card-pad {{ $examUnlocked ? '' : 'opacity-60' }}">
                 <h2 class="mb-4 text-lg font-extrabold text-slate-900 dark:text-white">🏁 امتحان المحاضرة</h2>
 
-                <div class="flex flex-col gap-3 rounded-xl border border-slate-100 p-4 dark:border-slate-800 sm:flex-row sm:items-center">
+                <div class="flex flex-col gap-3 rounded-xl border border-slate-300/60 p-4 dark:border-slate-800 sm:flex-row sm:items-center">
                     <div class="min-w-0 flex-1">
                         <div class="flex flex-wrap items-center gap-2">
                             <h3 class="font-bold text-slate-900 dark:text-white">{{ $exam->title }}</h3>
@@ -157,7 +157,7 @@
 
             <div class="space-y-4">
                 @forelse ($qaThreads as $thread)
-                    <div class="rounded-xl border border-slate-100 p-4 dark:border-slate-800 {{ $thread->status === \App\Models\QaThread::STATUS_PENDING ? 'opacity-80' : '' }}">
+                    <div class="rounded-xl border border-slate-300/60 p-4 dark:border-slate-800 {{ $thread->status === \App\Models\QaThread::STATUS_PENDING ? 'opacity-80' : '' }}">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-sm font-extrabold text-slate-900 dark:text-white">{{ $thread->user?->shortName() ?? 'طالب' }}</span>
                             <span class="text-xs font-semibold text-slate-400">{{ $thread->created_at->diffForHumans() }}</span>
@@ -174,7 +174,7 @@
                         <p class="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $thread->body }}</p>
 
                         @if ($thread->image_path)
-                            <img src="{{ Storage::url($thread->image_path) }}" alt="صورة السؤال" class="mt-3 max-h-64 rounded-xl border border-slate-100 dark:border-slate-800">
+                            <img src="{{ Storage::url($thread->image_path) }}" alt="صورة السؤال" class="mt-3 max-h-64 rounded-xl border border-slate-300/60 dark:border-slate-800">
                         @endif
 
                         {{-- الردود --}}
@@ -195,14 +195,14 @@
                         @endif
                     </div>
                 @empty
-                    <p class="rounded-xl border border-dashed border-slate-200 p-5 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                    <p class="rounded-xl border border-dashed border-slate-300 p-5 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
                         لسه مفيش أسئلة على الدرس ده — كن أول واحد يسأل!
                     </p>
                 @endforelse
             </div>
 
             {{-- نموذج سؤال جديد --}}
-            <form method="POST" action="{{ route('student.qa.store', $lecture) }}" enctype="multipart/form-data" class="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
+            <form method="POST" action="{{ route('student.qa.store', $lecture) }}" enctype="multipart/form-data" class="mt-6 border-t border-slate-300/60 pt-5 dark:border-slate-800">
                 @csrf
 
                 <label for="qa-body" class="label">سؤالك</label>

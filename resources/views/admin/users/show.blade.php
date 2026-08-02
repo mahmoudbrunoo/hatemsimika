@@ -99,7 +99,7 @@
                     <a href="{{ route('admin.users.idphoto', $user) }}" target="_blank" rel="noopener"
                        title="اضغط لفتح الصورة بالحجم الكامل">
                         <img src="{{ route('admin.users.idphoto', $user) }}" alt="صورة بطاقة {{ $user->name }}"
-                             class="max-h-80 w-full rounded-xl border border-slate-200 object-contain dark:border-slate-800">
+                             class="max-h-80 w-full rounded-xl border border-slate-300 object-contain dark:border-slate-800">
                     </a>
                     <a href="{{ route('admin.users.idphoto', $user) }}" target="_blank" rel="noopener"
                        class="btn-secondary btn-sm mt-3">فتح الصورة بالحجم الكامل</a>

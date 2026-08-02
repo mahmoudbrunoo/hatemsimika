@@ -59,7 +59,7 @@
                         @if ($thread->image_path)
                             <a href="{{ \Illuminate\Support\Facades\Storage::url($thread->image_path) }}" target="_blank" class="mt-2 inline-block">
                                 <img src="{{ \Illuminate\Support\Facades\Storage::url($thread->image_path) }}"
-                                     alt="صورة مرفقة بالسؤال" class="max-h-48 rounded-xl border border-slate-200 object-cover dark:border-slate-700">
+                                     alt="صورة مرفقة بالسؤال" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                             </a>
                         @endif
                     </div>

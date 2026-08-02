@@ -1,4 +1,4 @@
-<footer class="mt-16 border-t border-slate-100 bg-white dark:border-night-800 dark:bg-night-900">
+<footer class="mt-16 border-t border-slate-300/60 bg-surface dark:border-night-800 dark:bg-night-900">
     <div class="mx-auto grid max-w-[90rem] gap-12 px-5 py-14 sm:px-8 md:grid-cols-3">
 
         {{-- الشعار والحقوق --}}

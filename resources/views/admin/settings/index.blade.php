@@ -52,7 +52,7 @@
                                     <div class="flex flex-wrap items-start gap-4" x-data="{ preview: null }">
                                         @if (setting_image($setting->key))
                                             <img x-show="!preview" src="{{ setting_image($setting->key) }}" alt="{{ $setting->label }}"
-                                                 class="h-20 max-w-40 rounded-xl border border-slate-200 object-contain dark:border-slate-700">
+                                                 class="h-20 max-w-40 rounded-xl border border-slate-300 object-contain dark:border-slate-700">
                                         @endif
                                         <template x-if="preview">
                                             <img :src="preview" alt="معاينة" class="h-20 max-w-40 rounded-xl border border-brand-300 object-contain">
@@ -95,7 +95,7 @@
             @endforeach
 
             {{-- شريط الحفظ الثابت --}}
-            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/90 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
+            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-300 bg-surface/90 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
                 <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
                     <p class="hidden text-sm font-semibold text-slate-500 dark:text-slate-400 sm:block">
                         التغييرات بتظهر فوراً في كل صفحات الموقع بعد الحفظ.

@@ -32,7 +32,7 @@
                 <svg class="size-5 text-slate-400 transition" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </button>
 
-            <div x-show="open" class="border-t border-slate-100 p-5 dark:border-slate-800 sm:p-6">
+            <div x-show="open" class="border-t border-slate-300/60 p-5 dark:border-slate-800 sm:p-6">
                 <form method="POST" action="{{ route('admin.lectures.update', $lecture) }}" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     @csrf
                     @method('PUT')
@@ -91,11 +91,11 @@
                 <svg class="size-5 text-slate-400 transition" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </button>
 
-            <div x-show="open" class="space-y-5 border-t border-slate-100 p-5 dark:border-slate-800 sm:p-6">
+            <div x-show="open" class="space-y-5 border-t border-slate-300/60 p-5 dark:border-slate-800 sm:p-6">
 
                 {{-- الفيديوهات الحالية --}}
                 @forelse ($lecture->videos as $video)
-                    <div x-data="{ editing: false }" class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <div x-data="{ editing: false }" class="rounded-xl border border-slate-300 p-4 dark:border-slate-800">
                         <div class="flex flex-wrap items-center justify-between gap-3">
                             <div class="min-w-0">
                                 <p class="font-bold text-slate-900 dark:text-white">{{ $video->position }}. {{ $video->title }}</p>
@@ -118,7 +118,7 @@
 
                         {{-- نموذج تعديل الفيديو --}}
                         <form x-show="editing" style="display: none;" method="POST" action="{{ route('admin.videos.update', $video) }}"
-                              class="mt-4 grid gap-4 border-t border-slate-100 pt-4 dark:border-slate-800 sm:grid-cols-2 lg:grid-cols-4">
+                              class="mt-4 grid gap-4 border-t border-slate-300/60 pt-4 dark:border-slate-800 sm:grid-cols-2 lg:grid-cols-4">
                             @csrf
                             @method('PUT')
 
@@ -231,9 +231,9 @@
                 <svg class="size-5 text-slate-400 transition" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </button>
 
-            <div x-show="open" class="space-y-4 border-t border-slate-100 p-5 dark:border-slate-800 sm:p-6">
+            <div x-show="open" class="space-y-4 border-t border-slate-300/60 p-5 dark:border-slate-800 sm:p-6">
                 @forelse ($lecture->attachments as $attachment)
-                    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 p-4 dark:border-slate-800">
                         <div class="flex items-center gap-3">
                             <span class="text-2xl">📄</span>
                             <div>
@@ -295,7 +295,7 @@
                 <svg class="size-5 text-slate-400 transition" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </button>
 
-            <div x-show="open" class="border-t border-slate-100 p-5 dark:border-slate-800 sm:p-6">
+            <div x-show="open" class="border-t border-slate-300/60 p-5 dark:border-slate-800 sm:p-6">
                 <form method="POST" action="{{ route('admin.assignments.save', $lecture) }}" enctype="multipart/form-data"
                       class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     @csrf

@@ -5,7 +5,7 @@
 
 @if ($dash)
     {{-- ============================ هيدر منطقة الطالب — نمط بسطتهالك ============================ --}}
-    <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-night-800 dark:bg-night-950/95"
+    <header class="sticky top-0 z-40 border-b border-slate-300 bg-surface/95 backdrop-blur dark:border-night-800 dark:bg-night-950/95"
             x-data="{ open: false, menu: false, bell: false }">
         <nav class="relative mx-auto flex h-[4.25rem] max-w-7xl items-center gap-3 px-4 sm:px-6">
 
@@ -51,7 +51,7 @@
                     <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
                 </button>
                 <div x-show="bell" x-cloak x-transition
-                     class="absolute left-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-4 text-center text-sm font-semibold text-slate-500 shadow-xl dark:border-night-700 dark:bg-night-850 dark:text-slate-300">
+                     class="absolute left-0 mt-2 w-64 rounded-2xl border border-slate-300 bg-surface p-4 text-center text-sm font-semibold text-slate-500 shadow-xl dark:border-night-700 dark:bg-night-850 dark:text-slate-300">
                     لا توجد إشعارات جديدة حالياً
                 </div>
             </div>
@@ -60,27 +60,27 @@
             <div class="relative" @click.outside="menu = false">
                 <button type="button" @click="menu = !menu" title="حسابي" class="flex items-center">
                     @if (auth()->user()->avatar_path)
-                        <img src="{{ Storage::url(auth()->user()->avatar_path) }}" class="size-10 rounded-full object-cover ring-2 ring-slate-200 dark:ring-night-700" alt="">
+                        <img src="{{ Storage::url(auth()->user()->avatar_path) }}" class="size-10 rounded-full object-cover ring-2 ring-slate-300 dark:ring-night-700" alt="">
                     @else
-                        <span class="grid size-10 place-items-center rounded-full bg-rose-300/80 text-sm font-extrabold text-white ring-2 ring-slate-200 dark:ring-night-700">
+                        <span class="grid size-10 place-items-center rounded-full bg-rose-300/80 text-sm font-extrabold text-white ring-2 ring-slate-300 dark:ring-night-700">
                             {{ mb_substr(auth()->user()->name, 0, 1) }}
                         </span>
                     @endif
                 </button>
 
                 <div x-show="menu" x-cloak x-transition
-                     class="absolute left-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-xl dark:border-night-700 dark:bg-night-850">
+                     class="absolute left-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-300 bg-surface py-2 shadow-xl dark:border-night-700 dark:bg-night-850">
                     <p class="px-4 py-2 text-sm font-extrabold text-slate-900 dark:text-white">{{ auth()->user()->shortName() }}</p>
-                    <div class="my-1 border-t border-slate-100 dark:border-night-800"></div>
+                    <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                     @if (auth()->user()->isStaff())
                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-sm font-bold text-brand-600 hover:bg-slate-50 dark:text-brand-300 dark:hover:bg-night-800">لوحة التحكم</a>
-                        <div class="my-1 border-t border-slate-100 dark:border-night-800"></div>
+                        <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                     @endif
                     <a href="{{ route('student.dashboard') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">الرئيسية</a>
                     <a href="{{ route('student.profile') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">ملف المستخدم</a>
                     <a href="{{ route('student.courses') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">كورساتي</a>
                     <a href="{{ route('student.invoices') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">الفواتير</a>
-                    <div class="my-1 border-t border-slate-100 dark:border-night-800"></div>
+                    <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button class="block w-full px-4 py-2.5 text-right text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10">
@@ -97,7 +97,7 @@
 @else
     {{-- ============================ الهيدر العام — نمط خالد صقر العائم ============================ --}}
     <header class="sticky top-0 z-40 px-3 pt-3 sm:px-5" x-data="{ open: false, menu: false }">
-        <nav class="relative mx-auto flex h-[4.5rem] max-w-[90rem] flex-row-reverse items-center justify-between gap-3 rounded-full md:rounded-xl border border-slate-100 bg-white px-4 shadow-xl dark:border-night-800 dark:bg-night-900 sm:px-6">
+        <nav class="relative mx-auto flex h-[4.5rem] max-w-[90rem] flex-row-reverse items-center justify-between gap-3 rounded-full md:rounded-xl border border-slate-300/60 bg-surface px-4 shadow-xl dark:border-night-800 dark:bg-night-900 sm:px-6">
 
             {{-- الشعار + مفتاح الوضع (يسار فعلي كما في المرجع) --}}
             <div class="flex items-center gap-4">
@@ -149,10 +149,10 @@
                         </button>
 
                         <div x-show="menu" x-cloak x-transition
-                             class="absolute left-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-xl dark:border-night-700 dark:bg-night-850">
+                             class="absolute left-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-300 bg-surface py-2 shadow-xl dark:border-night-700 dark:bg-night-850">
                             @if (auth()->user()->isStaff())
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-sm font-bold text-flame-600 hover:bg-slate-50 dark:text-flame-400 dark:hover:bg-night-800">لوحة التحكم</a>
-                                <div class="my-1 border-t border-slate-100 dark:border-night-800"></div>
+                                <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                             @endif
                             @if (auth()->user()->isApproved() || auth()->user()->isStaff())
                                 <a href="{{ route('student.dashboard') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">لوحة التعلم</a>
@@ -161,7 +161,7 @@
                             @else
                                 <a href="{{ route('account.pending') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">حالة الحساب</a>
                             @endif
-                            <div class="my-1 border-t border-slate-100 dark:border-night-800"></div>
+                            <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button class="block w-full px-4 py-2.5 text-right text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10">
@@ -185,7 +185,7 @@
 
         {{-- قائمة الموبايل --}}
         <div x-show="open" x-cloak x-transition
-             class="mx-auto mt-2 max-w-[90rem] rounded-2xl border border-slate-100 bg-white px-4 py-3 shadow-md dark:border-night-800 dark:bg-night-900 lg:hidden">
+             class="mx-auto mt-2 max-w-[90rem] rounded-2xl border border-slate-300/60 bg-surface px-4 py-3 shadow-md dark:border-night-800 dark:bg-night-900 lg:hidden">
             <a href="{{ route('home') }}" class="side-link">الرئيسية</a>
             <a href="{{ route('courses.index') }}" class="side-link">الكورسات</a>
             <a href="{{ route('books.index') }}" class="side-link">الكتب</a>

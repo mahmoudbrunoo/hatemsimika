@@ -64,7 +64,7 @@
             @endif
 
             @if ($submission->answer_text)
-                <div class="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+                <div class="mt-4 border-t border-slate-300/60 pt-4 dark:border-slate-800">
                     <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">إجابتك المكتوبة</h3>
                     <p class="mt-1.5 whitespace-pre-line text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $submission->answer_text }}</p>
                 </div>
@@ -72,11 +72,11 @@
 
             @if ($submission->file_path)
                 @php $isImage = in_array(strtolower(pathinfo($submission->file_path, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'webp']); @endphp
-                <div class="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+                <div class="mt-4 border-t border-slate-300/60 pt-4 dark:border-slate-800">
                     <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">الملف المرفوع</h3>
                     @if ($isImage)
                         <a href="{{ Storage::url($submission->file_path) }}" target="_blank">
-                            <img src="{{ Storage::url($submission->file_path) }}" alt="صورة الحل" class="mt-2 max-h-72 rounded-xl border border-slate-100 dark:border-slate-800">
+                            <img src="{{ Storage::url($submission->file_path) }}" alt="صورة الحل" class="mt-2 max-h-72 rounded-xl border border-slate-300/60 dark:border-slate-800">
                         </a>
                     @else
                         <a href="{{ Storage::url($submission->file_path) }}" target="_blank" class="btn-secondary btn-sm mt-2">📄 عرض الملف المرفوع</a>

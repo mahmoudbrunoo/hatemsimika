@@ -60,7 +60,7 @@
                 <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
                 @if ($question->image_path)
                     <img src="{{ \Illuminate\Support\Facades\Storage::url($question->image_path) }}" alt="صورة السؤال"
-                         class="mt-2 h-24 rounded-xl border border-slate-200 object-contain dark:border-slate-800">
+                         class="mt-2 h-24 rounded-xl border border-slate-300 object-contain dark:border-slate-800">
                 @endif
                 @error('image')<p class="error">{{ $message }}</p>@enderror
             </div>
@@ -86,7 +86,7 @@
                 <div class="mt-2 space-y-3">
                     @for ($i = 0; $i < $rowsCount; $i++)
                         @php $option = $question->options->values()->get($i); @endphp
-                        <div class="rounded-xl border {{ $option?->is_correct ? 'border-emerald-300 dark:border-emerald-500/40' : 'border-slate-200 dark:border-slate-800' }} p-3">
+                        <div class="rounded-xl border {{ $option?->is_correct ? 'border-emerald-300 dark:border-emerald-500/40' : 'border-slate-300 dark:border-slate-800' }} p-3">
                             <div class="grid gap-3 sm:grid-cols-[auto_1fr_1fr_1fr]">
                                 <label class="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300" title="الإجابة الصحيحة">
                                     <input type="radio" name="correct" value="{{ $i }}"
@@ -113,11 +113,11 @@
                             </div>
 
                             @if ($option && ($option->image_path || $option->audio_path))
-                                <div class="mt-3 flex flex-wrap items-center gap-4 border-t border-slate-100 pt-3 dark:border-slate-800">
+                                <div class="mt-3 flex flex-wrap items-center gap-4 border-t border-slate-300/60 pt-3 dark:border-slate-800">
                                     <span class="text-xs font-bold text-slate-400">الوسائط الحالية:</span>
                                     @if ($option->image_path)
                                         <img src="{{ \Illuminate\Support\Facades\Storage::url($option->image_path) }}" alt="صورة الاختيار"
-                                             class="h-14 rounded-lg border border-slate-200 object-contain dark:border-slate-800">
+                                             class="h-14 rounded-lg border border-slate-300 object-contain dark:border-slate-800">
                                     @endif
                                     @if ($option->audio_path)
                                         <audio controls class="h-9" src="{{ \Illuminate\Support\Facades\Storage::url($option->audio_path) }}"></audio>
@@ -146,7 +146,7 @@
                 <input id="explanation_image" name="explanation_image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
                 @if ($question->explanation_image)
                     <img src="{{ \Illuminate\Support\Facades\Storage::url($question->explanation_image) }}" alt="صورة الشرح"
-                         class="mt-2 h-24 rounded-xl border border-slate-200 object-contain dark:border-slate-800">
+                         class="mt-2 h-24 rounded-xl border border-slate-300 object-contain dark:border-slate-800">
                 @endif
                 @error('explanation_image')<p class="error">{{ $message }}</p>@enderror
             </div>

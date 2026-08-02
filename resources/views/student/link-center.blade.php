@@ -29,7 +29,7 @@
             </div>
 
             <button type="submit"
-                    class="mt-12 inline-flex items-center justify-center rounded-lg bg-cyan-600 px-10 py-4 text-base font-black text-white shadow-md transition hover:-translate-y-0.5 hover:bg-cyan-700 active:scale-[.98]">
+                    class="mt-12 inline-flex items-center justify-center rounded-lg bg-brand-600 px-10 py-4 text-base font-black text-white shadow-md transition hover:-translate-y-0.5 hover:bg-brand-700 active:scale-[.98]">
                 ربط الـ ID بالاكونت بتاعك
             </button>
         </form>

@@ -80,7 +80,7 @@
 
                     @if ($question->image_path)
                         <img src="{{ Storage::url($question->image_path) }}" alt="صورة السؤال"
-                             class="mt-3 max-h-80 rounded-xl border border-slate-200 object-contain dark:border-slate-700">
+                             class="mt-3 max-h-80 rounded-xl border border-slate-300 object-contain dark:border-slate-700">
                     @endif
 
                     @if ($question->audio_path)
@@ -93,7 +93,7 @@
                             @foreach ($question->options as $option)
                                 @php
                                     $isChosen = $answer->question_option_id === $option->id;
-                                    $classes = 'border-slate-200 dark:border-slate-700';
+                                    $classes = 'border-slate-300 dark:border-slate-700';
                                     if ($option->is_correct) {
                                         $classes = 'border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10';
                                     } elseif ($isChosen) {
@@ -131,7 +131,7 @@
                         @endif
                     @else
                         {{-- إجابة السؤال المقالي --}}
-                        <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
+                        <div class="mt-4 rounded-xl border border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
                             <p class="mb-2 text-xs font-bold text-slate-400 dark:text-slate-500">إجابتك:</p>
                             @if ($answer->essay_text)
                                 <p class="whitespace-pre-line text-sm font-semibold leading-7 text-slate-700 dark:text-slate-200">{{ $answer->essay_text }}</p>
@@ -139,7 +139,7 @@
                             @if ($answer->essay_image)
                                 <a href="{{ Storage::url($answer->essay_image) }}" target="_blank" rel="noopener">
                                     <img src="{{ Storage::url($answer->essay_image) }}" alt="صورة حلك"
-                                         class="mt-3 max-h-72 rounded-lg border border-slate-200 object-contain dark:border-slate-700">
+                                         class="mt-3 max-h-72 rounded-lg border border-slate-300 object-contain dark:border-slate-700">
                                 </a>
                             @endif
                             @if (! $answer->essay_text && ! $answer->essay_image)
@@ -150,8 +150,8 @@
 
                     {{-- شرح الإجابة --}}
                     @if ($question->explanation || $question->explanation_image || $question->explanation_video_url)
-                        <div class="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm dark:border-sky-500/30 dark:bg-sky-500/10">
-                            <p class="mb-2 text-xs font-black text-sky-700 dark:text-sky-300">💡 شرح الإجابة</p>
+                        <div class="mt-4 rounded-xl border border-brand-200 bg-brand-50 p-4 text-sm dark:border-brand-500/30 dark:bg-brand-500/10">
+                            <p class="mb-2 text-xs font-black text-brand-700 dark:text-brand-300">💡 شرح الإجابة</p>
                             @if ($question->explanation)
                                 <p class="whitespace-pre-line font-semibold leading-7 text-slate-700 dark:text-slate-200">{{ $question->explanation }}</p>
                             @endif

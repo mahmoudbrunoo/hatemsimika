@@ -32,7 +32,7 @@
                             <td>
                                 @if ($book->cover_path)
                                     <img src="{{ \Illuminate\Support\Facades\Storage::url($book->cover_path) }}"
-                                         alt="{{ $book->title }}" class="h-16 w-12 rounded-lg border border-slate-200 object-cover dark:border-slate-700">
+                                         alt="{{ $book->title }}" class="h-16 w-12 rounded-lg border border-slate-300 object-cover dark:border-slate-700">
                                 @else
                                     <div class="grid h-16 w-12 place-items-center rounded-lg bg-slate-100 text-xl dark:bg-slate-800">📕</div>
                                 @endif

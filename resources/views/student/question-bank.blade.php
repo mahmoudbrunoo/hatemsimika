@@ -48,7 +48,7 @@
                     <p class="mt-4 whitespace-pre-line font-bold leading-7 text-slate-900 dark:text-white">{{ $question->body }}</p>
 
                     @if ($question->image_path)
-                        <img src="{{ Storage::url($question->image_path) }}" alt="صورة السؤال" class="mt-3 max-h-72 rounded-xl border border-slate-200 object-contain dark:border-slate-700">
+                        <img src="{{ Storage::url($question->image_path) }}" alt="صورة السؤال" class="mt-3 max-h-72 rounded-xl border border-slate-300 object-contain dark:border-slate-700">
                     @endif
 
                     @if ($question->audio_path)
@@ -62,7 +62,7 @@
                                 <div class="flex items-start gap-3 rounded-xl border px-3.5 py-2.5 text-sm
                                             {{ $option->is_correct
                                                 ? 'border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10'
-                                                : 'border-slate-200 dark:border-slate-700' }}">
+                                                : 'border-slate-300 dark:border-slate-700' }}">
                                     <div class="min-w-0 flex-1">
                                         @if ($option->body)
                                             <p class="font-semibold text-slate-800 dark:text-slate-200">{{ $option->body }}</p>
@@ -89,7 +89,7 @@
                                 <span x-text="show ? 'إخفاء الشرح' : 'اعرض شرح الإجابة 💡'"></span>
                             </button>
                             <div x-show="show" x-cloak x-transition
-                                 class="mt-3 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm dark:border-sky-500/30 dark:bg-sky-500/10">
+                                 class="mt-3 rounded-xl border border-brand-200 bg-brand-50 p-4 text-sm dark:border-brand-500/30 dark:bg-brand-500/10">
                                 @if ($question->explanation)
                                     <p class="whitespace-pre-line font-semibold leading-6 text-slate-700 dark:text-slate-200">{{ $question->explanation }}</p>
                                 @endif

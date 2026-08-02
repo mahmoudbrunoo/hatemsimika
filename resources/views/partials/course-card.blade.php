@@ -34,7 +34,7 @@
             </span>
         </div>
 
-        <div class="flex items-center justify-between border-t border-slate-100 pt-3 dark:border-slate-800">
+        <div class="flex items-center justify-between border-t border-slate-300/60 pt-3 dark:border-slate-800">
             <div>
                 @if ($course->discount_price !== null)
                     <span class="text-lg font-black text-brand-600">{{ egp($course->discount_price) }}</span>
