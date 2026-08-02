@@ -13,6 +13,7 @@ use App\Services\CheckoutService;
 use App\Services\EnrollmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CheckoutController extends Controller
@@ -86,7 +87,8 @@ class CheckoutController extends Controller
         $extra = ['sender_phone' => $request->validated('sender_phone')];
 
         if ($request->hasFile('receipt')) {
-            $extra['receipt_path'] = $request->file('receipt')->store('receipts', 'public');
+            $extra['receipt_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/receipts', $request->file('receipt'));
         }
 
         try {

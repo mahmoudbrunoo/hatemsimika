@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -77,11 +78,13 @@ class BooksController extends Controller
         }
 
         if ($request->hasFile('cover')) {
-            $data['cover_path'] = $request->file('cover')->store('books', 'public');
+            $data['cover_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/books', $request->file('cover'));
         }
 
         if ($request->hasFile('preview_pdf')) {
-            $data['preview_pdf_path'] = $request->file('preview_pdf')->store('books/previews', 'public');
+            $data['preview_pdf_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/books/previews', $request->file('preview_pdf'));
         }
 
         unset($data['cover'], $data['preview_pdf']);

@@ -8,6 +8,7 @@ use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class RegisterController extends Controller
@@ -21,9 +22,9 @@ class RegisterController extends Controller
     {
         $data = $request->validated();
 
-        // تخزين خاص (غير متاح برابط عام) — تشوفه الإدارة فقط عبر مسار محمي
-        $data['id_photo_path'] = $request->file('id_photo')
-            ->store('id-photos', 'local');
+        // بطاقة الطالب: باكت Supabase الخاص حصرياً — بلا رابط عام، تشوفها الإدارة عبر روابط موقعة مؤقتة فقط
+        $data['id_photo_path'] = Storage::disk('supabase_private')
+            ->putFile('student-ids', $request->file('id_photo'));
 
         unset($data['id_photo']);
 

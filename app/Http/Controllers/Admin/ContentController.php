@@ -8,6 +8,7 @@ use App\Models\Lecture;
 use App\Models\Video;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 /** إدارة محتوى المحاضرة: فيديوهات + ملفات + واجب */
@@ -46,7 +47,8 @@ class ContentController extends Controller
 
         $lecture->attachments()->create([
             'title' => $data['title'],
-            'file_path' => $request->file('file')->store('attachments', 'public'),
+            'file_path' => Storage::disk('supabase_public')
+                ->putFile('public-uploads/attachments', $request->file('file')),
             'type' => 'pdf',
             'position' => $lecture->attachments()->max('position') + 1,
         ]);
@@ -73,7 +75,8 @@ class ContentController extends Controller
         ], [], ['title' => 'عنوان الواجب', 'max_score' => 'الدرجة الكلية']);
 
         if ($request->hasFile('file')) {
-            $data['file_path'] = $request->file('file')->store('assignments', 'public');
+            $data['file_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/assignments', $request->file('file'));
         }
 
         unset($data['file']);

@@ -92,17 +92,30 @@
             </div>
 
             {{-- صورة البطاقة --}}
-            <div class="card-pad">
+            <div class="card-pad" x-data="{ idOpen: false }">
                 <h2 class="mb-4 text-lg font-extrabold text-slate-900 dark:text-white">صورة البطاقة / الكارنيه</h2>
-                @if ($user->id_photo_path)
-                    {{-- الصورة تُعرض عبر مسار محمي للإدارة فقط — الملف في تخزين خاص بلا رابط عام --}}
-                    <a href="{{ route('admin.users.idphoto', $user) }}" target="_blank" rel="noopener"
-                       title="اضغط لفتح الصورة بالحجم الكامل">
-                        <img src="{{ route('admin.users.idphoto', $user) }}" alt="صورة بطاقة {{ $user->name }}"
+                @if ($idPhotoUrl)
+                    {{-- رابط موقّع مؤقت من الباكت الخاص (صلاحيته 10 دقائق) — لا يوجد أي رابط عام دائم للملف --}}
+                    <button type="button" @click="idOpen = true" class="block w-full cursor-zoom-in"
+                            title="اضغط لعرض الصورة بالحجم الكامل">
+                        <img src="{{ $idPhotoUrl }}" alt="صورة بطاقة {{ $user->name }}"
                              class="max-h-80 w-full rounded-xl border border-slate-300 object-contain dark:border-slate-800">
-                    </a>
-                    <a href="{{ route('admin.users.idphoto', $user) }}" target="_blank" rel="noopener"
-                       class="btn-secondary btn-sm mt-3">فتح الصورة بالحجم الكامل</a>
+                    </button>
+                    <button type="button" @click="idOpen = true" class="btn-secondary btn-sm mt-3">عرض الصورة بالحجم الكامل</button>
+                    <p class="mt-2 text-xs font-semibold text-slate-400">
+                        الرابط مؤقت وتنتهي صلاحيته بعد 10 دقائق — أعد تحميل الصفحة لتوليد رابط جديد.
+                    </p>
+
+                    {{-- معاينة داخل إطار لوحة التحكم بدون مغادرة الصفحة --}}
+                    <div x-show="idOpen" style="display: none;" @keydown.escape.window="idOpen = false"
+                         class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+                        <div class="absolute inset-0 bg-slate-950/80" @click="idOpen = false"></div>
+                        <div class="relative max-h-[90vh] max-w-4xl overflow-auto rounded-2xl bg-white p-3 shadow-2xl dark:bg-night-900">
+                            <img src="{{ $idPhotoUrl }}" alt="صورة بطاقة {{ $user->name }}"
+                                 class="mx-auto max-h-[80vh] rounded-lg object-contain">
+                            <button type="button" @click="idOpen = false" class="btn-secondary btn-sm mt-3 w-full">إغلاق</button>
+                        </div>
+                    </div>
                 @else
                     <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">لم يتم رفع صورة بطاقة.</p>
                 @endif

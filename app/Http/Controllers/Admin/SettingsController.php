@@ -7,6 +7,7 @@ use App\Models\SiteSetting;
 use App\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /** إدارة نصوص وصور وروابط كل صفحات الموقع من مكان واحد */
@@ -32,7 +33,8 @@ class SettingsController extends Controller
                     "settings_files.{$setting->key}" => ['image:allow_svg', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
                 ]);
 
-                $setting->update(['value' => $files[$setting->key]->store('settings', 'public')]);
+                $setting->update(['value' => Storage::disk('supabase_public')
+                    ->putFile('public-uploads/settings', $files[$setting->key])]);
                 continue;
             }
 

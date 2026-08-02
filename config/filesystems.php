@@ -60,6 +60,36 @@ return [
             'report' => false,
         ],
 
+        // الأصول العامة (أغلفة الكورسات/الكتب، الصور، الواجبات...) — روابط عامة مباشرة
+        'supabase_public' => [
+            'driver' => 's3',
+            'key' => env('SUPABASE_STORAGE_ACCESS_KEY_ID'),
+            'secret' => env('SUPABASE_STORAGE_SECRET_ACCESS_KEY'),
+            'region' => env('SUPABASE_STORAGE_REGION', 'eu-west-2'),
+            'bucket' => env('SUPABASE_PUBLIC_BUCKET', 'platform-uploads'),
+            'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            // Supabase public-object URL — bucket visibility is what makes it readable
+            'url' => rtrim(env('SUPABASE_URL', ''), '/')
+                . '/storage/v1/object/public/'
+                . env('SUPABASE_PUBLIC_BUCKET', 'platform-uploads'),
+            'throw' => true,
+            'report' => true,
+        ],
+
+        // مستندات بطاقات الطلاب — بلا أي رابط عام، الوصول عبر روابط موقعة مؤقتة فقط
+        'supabase_private' => [
+            'driver' => 's3',
+            'key' => env('SUPABASE_STORAGE_ACCESS_KEY_ID'),
+            'secret' => env('SUPABASE_STORAGE_SECRET_ACCESS_KEY'),
+            'region' => env('SUPABASE_STORAGE_REGION', 'eu-west-2'),
+            'bucket' => env('SUPABASE_PRIVATE_BUCKET', 'private'),
+            'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'throw' => true,
+            'report' => true,
+        ],
+
     ],
 
     /*

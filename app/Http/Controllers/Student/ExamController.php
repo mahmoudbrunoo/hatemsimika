@@ -9,6 +9,7 @@ use App\Services\ExamService;
 use App\Services\ProgressionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ExamController extends Controller
@@ -86,7 +87,8 @@ class ExamController extends Controller
 
         foreach ((array) $request->file('essay_images', []) as $questionId => $file) {
             if ($file !== null) {
-                $answers[(int) $questionId]['essay_image'] = $file->store('essay-answers', 'public');
+                $answers[(int) $questionId]['essay_image'] = Storage::disk('supabase_public')
+                    ->putFile('public-uploads/essay-answers', $file);
             }
         }
 

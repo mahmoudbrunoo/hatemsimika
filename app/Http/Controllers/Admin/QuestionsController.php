@@ -8,6 +8,7 @@ use App\Models\Question;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -117,15 +118,18 @@ class QuestionsController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $payload['image_path'] = $request->file('image')->store('questions', 'public');
+            $payload['image_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/questions', $request->file('image'));
         }
 
         if ($request->hasFile('audio')) {
-            $payload['audio_path'] = $request->file('audio')->store('questions/audio', 'public');
+            $payload['audio_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/questions/audio', $request->file('audio'));
         }
 
         if ($request->hasFile('explanation_image')) {
-            $payload['explanation_image'] = $request->file('explanation_image')->store('questions', 'public');
+            $payload['explanation_image'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/questions', $request->file('explanation_image'));
         }
 
         return $payload;
@@ -142,11 +146,13 @@ class QuestionsController extends Controller
             $audioPath = null;
 
             if ($request->hasFile("options.{$i}.image")) {
-                $imagePath = $request->file("options.{$i}.image")->store('questions/options', 'public');
+                $imagePath = Storage::disk('supabase_public')
+                    ->putFile('public-uploads/questions/options', $request->file("options.{$i}.image"));
             }
 
             if ($request->hasFile("options.{$i}.audio")) {
-                $audioPath = $request->file("options.{$i}.audio")->store('questions/options', 'public');
+                $audioPath = Storage::disk('supabase_public')
+                    ->putFile('public-uploads/questions/options', $request->file("options.{$i}.audio"));
             }
 
             if (($option['body'] ?? null) === null && $imagePath === null && $audioPath === null) {

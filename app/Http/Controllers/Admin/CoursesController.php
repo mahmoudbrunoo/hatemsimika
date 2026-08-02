@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -84,7 +85,8 @@ class CoursesController extends Controller
         }
 
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail_path'] = $request->file('thumbnail')->store('courses', 'public');
+            $data['thumbnail_path'] = Storage::disk('supabase_public')
+                ->putFile('public-uploads/courses', $request->file('thumbnail'));
         }
 
         unset($data['thumbnail']);

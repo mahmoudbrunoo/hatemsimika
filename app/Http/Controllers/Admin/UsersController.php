@@ -41,23 +41,47 @@ class UsersController extends Controller
         return view('admin.users.index', compact('users', 'status', 'search'));
     }
 
-    public function show(User $user): View
+    public function show(Request $request, User $user): View
     {
         $user->load(['enrollments.course', 'orders' => fn ($q) => $q->latest()->take(10)]);
 
         return view('admin.users.show', [
             'user' => $user,
             'courses' => Course::orderBy('academic_year')->orderBy('position')->get(),
+            'idPhotoUrl' => $this->idPhotoUrl($request, $user),
         ]);
     }
 
     /**
-     * عرض صورة البطاقة للإدارة فقط — الملف مخزن في قرص خاص بلا رابط عام.
-     * يدعم الملفات القديمة التي رُفعت سابقاً على القرص العام لحين نقلها.
+     * رابط موقّع مؤقت (10 دقائق) لصورة البطاقة من باكت Supabase الخاص — للإدارة فقط.
+     * الملفات القديمة غير المرحّلة تُعرض عبر المسار المحمي القديم.
      */
-    public function idPhoto(User $user): Response
+    protected function idPhotoUrl(Request $request, User $user): ?string
     {
+        if (! $user->id_photo_path || ! $request->user()?->isStaff()) {
+            return null;
+        }
+
+        return str_starts_with($user->id_photo_path, 'student-ids/')
+            ? Storage::disk('supabase_private')->temporaryUrl($user->id_photo_path, now()->addMinutes(10))
+            : route('admin.users.idphoto', $user);
+    }
+
+    /**
+     * عرض صورة البطاقة للإدارة فقط — الملف في باكت Supabase الخاص بلا أي رابط عام،
+     * ويُعاد التوجيه لرابط موقّع تنتهي صلاحيته بعد 10 دقائق.
+     * يدعم الملفات القديمة على الأقراص المحلية لحين نقلها.
+     */
+    public function idPhoto(Request $request, User $user): Response
+    {
+        abort_unless($request->user()?->isStaff(), 403);
         abort_unless($user->id_photo_path, 404);
+
+        if (str_starts_with($user->id_photo_path, 'student-ids/')) {
+            return redirect()->away(
+                Storage::disk('supabase_private')->temporaryUrl($user->id_photo_path, now()->addMinutes(10))
+            );
+        }
 
         foreach (['local', 'public'] as $disk) {
             if (Storage::disk($disk)->exists($user->id_photo_path)) {

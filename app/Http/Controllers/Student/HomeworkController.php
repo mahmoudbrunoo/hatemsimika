@@ -9,6 +9,7 @@ use App\Models\AssignmentSubmission;
 use App\Services\ProgressionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class HomeworkController extends Controller
@@ -39,7 +40,7 @@ class HomeworkController extends Controller
         }
 
         $filePath = $request->hasFile('file')
-            ? $request->file('file')->store('homework', 'public')
+            ? Storage::disk('supabase_public')->putFile('public-uploads/homework', $request->file('file'))
             : null;
 
         AssignmentSubmission::create([

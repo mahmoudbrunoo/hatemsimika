@@ -7,6 +7,7 @@ use App\Http\Requests\QaThreadRequest;
 use App\Models\Lecture;
 use App\Models\QaThread;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class QaController extends Controller
 {
@@ -20,7 +21,7 @@ class QaController extends Controller
             'user_id' => $request->user()->id,
             'body' => $request->validated('body'),
             'image_path' => $request->hasFile('image')
-                ? $request->file('image')->store('qa-images', 'public')
+                ? Storage::disk('supabase_public')->putFile('public-uploads/qa-images', $request->file('image'))
                 : null,
             'status' => QaThread::STATUS_PENDING,
         ]);
