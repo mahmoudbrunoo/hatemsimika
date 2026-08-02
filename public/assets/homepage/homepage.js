@@ -30,30 +30,11 @@
         return root.classList.contains('dark');
     };
 
+    // شكل المفتاح (.theme-pill) يتحرك بالكامل عبر CSS اعتماداً على كلاس dark —
+    // هنا فقط نحدّث حالة إمكانية الوصول
     var paintSwitches = function (dark) {
         document.querySelectorAll('[data-theme-switch]').forEach(function (btn) {
             btn.setAttribute('aria-checked', dark ? 'true' : 'false');
-
-            var knob = btn.querySelector('[data-knob]');
-            if (knob) knob.classList.toggle('translate-x-[2.625rem]', dark);
-
-            var swap = function (el, visible) {
-                if (!el) return;
-                el.classList.toggle('opacity-100', visible);
-                el.classList.toggle('scale-100', visible);
-                el.classList.toggle('opacity-0', !visible);
-                el.classList.toggle('scale-0', !visible);
-            };
-
-            // داخل المقبض: الشمس تظهر في الوضع النهاري والقمر في الليلي
-            swap(btn.querySelector('[data-knob-sun]'), !dark);
-            swap(btn.querySelector('[data-knob-moon]'), dark);
-
-            // أيقونات المسار (كما في التصميم الأصلي: الشمس ظاهرة في الوضع الليلي)
-            var trackSun = btn.querySelector('[data-track-sun]');
-            var trackMoon = btn.querySelector('[data-track-moon]');
-            if (trackSun) trackSun.classList.toggle('scale-100', dark), trackSun.classList.toggle('scale-0', !dark);
-            if (trackMoon) trackMoon.classList.toggle('scale-100', !dark), trackMoon.classList.toggle('scale-0', dark);
         });
     };
 
@@ -157,14 +138,15 @@
     });
 
     // -------------------------------------------------- الرسم البياني الأسبوعي
-    // نفس إعدادات resources/js/app.js حتى تبقى البيانات والسلوك كما هما
+    // نفس إعدادات وألوان resources/js/app.js — لوحة الألوان الموحّدة للمنصة
     var renderWeeklyChart = function () {
         if (typeof Chart === 'undefined') return;
 
         Chart.defaults.font.family = "'Cairo', 'Almarai', sans-serif";
+        Chart.defaults.color = isDark() ? '#d2a89b' : '#7a4e52';
 
-        var palette = { videos: '#1b5df5', quizzes: '#10b981', hours: '#f59e0b' };
-        var gridColor = isDark() ? 'rgba(148,163,184,.15)' : 'rgba(100,116,139,.15)';
+        var palette = { videos: '#800033', quizzes: '#9c6a82', hours: '#c08a45' };
+        var gridColor = isDark() ? 'rgba(210,168,155,.15)' : 'rgba(74,21,27,.12)';
 
         document.querySelectorAll('canvas[data-chart="weekly"]').forEach(function (canvas) {
             var rows;

@@ -78,3 +78,112 @@ body.darkmode .flash-error {
 .impersonation-banner button:hover {
     text-decoration: none;
 }
+
+/* ------------------------------------------------------------------
+   مفتاح الوضع الليلي/النهاري — نفس مكوّن .theme-pill المستخدم في باقي
+   المنصة (منسوخ من resources/css/app.css حتى تتطابق الصفحة المستقلة)
+------------------------------------------------------------------ */
+.theme-pill {
+    direction: ltr;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 2.25rem; /* 36px */
+    width: 4.875rem; /* 78px */
+    padding: 0.375rem 0.5rem;
+    border-radius: 9999px;
+    border: 0;
+    cursor: pointer;
+    background-color: #800033; /* النبيتي الأساسي */
+    color: #e9bdbc; /* brand-200 — أيقونات المسار */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-pill:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #9c6a82;
+}
+
+.dark .theme-pill {
+    background-color: #5e3b5c; /* السطح الخوخي المرتفع */
+    color: #d2a89b; /* النص الوردي الفاتح */
+}
+
+.dark .theme-pill:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-primary-container), 0 0 0 4px #9c6a82;
+}
+
+/* أيقونتا المسار: الشمس تظهر ليلاً مكان القرص، والقمر نهاراً */
+.theme-pill .theme-pill-sun,
+.theme-pill .theme-pill-moon {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    transform: scale(0);
+    transition: transform 0.5s ease;
+}
+
+.theme-pill .theme-pill-moon {
+    margin-left: 0.875rem;
+}
+
+.theme-pill .theme-pill-moon,
+.dark .theme-pill .theme-pill-sun {
+    transform: scale(1);
+    transition: transform 0.3s ease;
+}
+
+.dark .theme-pill .theme-pill-moon {
+    transform: scale(0);
+    transition: transform 0.5s ease;
+}
+
+/* القرص الأبيض المنزلق */
+.theme-pill .theme-pill-knob {
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #fff;
+    transform: translateX(0);
+    transition: transform 0.5s ease;
+}
+
+.dark .theme-pill .theme-pill-knob {
+    transform: translateX(2.625rem);
+}
+
+/* أيقونتا القرص متراكبتان في نفس الخلية */
+.theme-pill .theme-pill-knob svg {
+    grid-area: 1 / 1;
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.theme-pill .theme-pill-knob-sun {
+    color: #800033; /* النبيتي */
+    opacity: 1;
+    transform: scale(1);
+}
+
+.dark .theme-pill .theme-pill-knob-sun {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.theme-pill .theme-pill-knob-moon {
+    color: #3a1f3d; /* الخوخي الداكن */
+    opacity: 0;
+    transform: scale(0);
+}
+
+.dark .theme-pill .theme-pill-knob-moon {
+    opacity: 1;
+    transform: scale(1);
+}
