@@ -34,7 +34,7 @@ class SettingsController extends Controller
                 ]);
 
                 $setting->update(['value' => Storage::disk('supabase_public')
-                    ->putFile('public-uploads/settings', $files[$setting->key])]);
+                    ->putFile('platform-uploads/settings', $files[$setting->key])]);
                 continue;
             }
 
