@@ -51,7 +51,7 @@
                     @endif
 
                     @if ($book->preview_pdf_path)
-                        <a href="{{ $book->preview_pdf_path }}" target="_blank" class="btn-secondary px-6 py-3 text-base">معاينة الكتاب</a>
+                        <a href="{{ $book->preview_pdf_path }}" target="_blank" rel="noopener noreferrer" class="btn-secondary px-6 py-3 text-base">معاينة الكتاب</a>
                     @endif
                 </div>
             </div>

@@ -40,7 +40,7 @@
                             <td>
                                 <p class="font-bold text-slate-900 dark:text-white">{{ $book->title }}</p>
                                 @if ($book->preview_pdf_path)
-                                    <a href="{{ $book->preview_pdf_path }}" target="_blank"
+                                    <a href="{{ $book->preview_pdf_path }}" target="_blank" rel="noopener noreferrer"
                                        class="text-xs font-bold text-brand-600 hover:text-brand-700 dark:text-brand-400">ملف المعاينة (PDF)</a>
                                 @endif
                             </td>

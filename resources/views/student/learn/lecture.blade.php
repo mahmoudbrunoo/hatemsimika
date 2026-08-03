@@ -64,7 +64,7 @@
                                 <h3 class="truncate font-bold text-slate-900 dark:text-white">{{ $attachment->title }}</h3>
                                 <p class="text-xs font-bold uppercase text-slate-400">{{ $attachment->type }}</p>
                             </div>
-                            <a href="{{ route('student.learn.attachment', [$course, $attachment]) }}" target="_blank" class="btn-secondary btn-sm shrink-0">تحميل</a>
+                            <a href="{{ $attachment->file_path }}" target="_blank" rel="noopener noreferrer" class="btn-secondary btn-sm shrink-0">تحميل</a>
                         </div>
                     @endforeach
                 </div>

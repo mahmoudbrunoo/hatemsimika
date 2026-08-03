@@ -76,7 +76,7 @@
                             </td>
                             <td>
                                 @if ($order->receipt_path)
-                                    <a href="{{ $order->receipt_path }}" target="_blank" title="فتح الإيصال بالحجم الكامل">
+                                    <a href="{{ $order->receipt_path }}" target="_blank" rel="noopener noreferrer" title="فتح الإيصال بالحجم الكامل">
                                         <img src="{{ $order->receipt_path }}"
                                              alt="إيصال التحويل" class="h-14 w-14 rounded-lg border border-slate-300 object-cover dark:border-slate-700">
                                     </a>

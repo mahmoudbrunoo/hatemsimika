@@ -110,7 +110,7 @@
                 <p class="mt-1 text-xs font-medium text-slate-400">عينة من الكتاب يشوفها الطالب قبل الشراء — بحد أقصى 20 ميجا</p>
                 @error('preview_pdf')<p class="error">{{ $message }}</p>@enderror
                 @if ($editing && $book->preview_pdf_path)
-                    <a href="{{ $book->preview_pdf_path }}" target="_blank"
+                    <a href="{{ $book->preview_pdf_path }}" target="_blank" rel="noopener noreferrer"
                        class="mt-2 inline-block text-xs font-bold text-brand-600 hover:text-brand-700 dark:text-brand-400">
                         الملف الحالي (PDF)
                     </a>

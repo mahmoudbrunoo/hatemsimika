@@ -65,7 +65,6 @@ Route::middleware(['auth', 'approved'])->prefix('me')->name('student.')->group(f
     Route::get('/learn/{course:slug}/lectures/{lecture}', [App\Http\Controllers\Student\LearnController::class, 'lecture'])->name('learn.lecture');
     Route::get('/learn/{course:slug}/videos/{video}', [App\Http\Controllers\Student\LearnController::class, 'video'])->name('learn.video');
     Route::post('/learn/videos/{video}/progress', [App\Http\Controllers\Student\LearnController::class, 'progress'])->name('learn.progress');
-    Route::get('/learn/{course:slug}/attachments/{attachment}', [App\Http\Controllers\Student\LearnController::class, 'attachment'])->name('learn.attachment');
 
     Route::get('/homework/{assignment}', [App\Http\Controllers\Student\HomeworkController::class, 'show'])->name('homework.show');
     Route::post('/homework/{assignment}', [App\Http\Controllers\Student\HomeworkController::class, 'submit'])->name('homework.submit');

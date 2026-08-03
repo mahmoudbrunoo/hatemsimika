@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attachment;
 use App\Models\Course;
 use App\Models\DailyActivity;
 use App\Models\Lecture;
@@ -13,7 +12,6 @@ use App\Services\ProgressionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LearnController extends Controller
 {
@@ -121,19 +119,6 @@ class LearnController extends Controller
         }
 
         return response()->json(['ok' => true, 'completed' => $view->completed]);
-    }
-
-    /** تحميل مرفق PDF */
-    public function attachment(Request $request, Course $course, Attachment $attachment): BinaryFileResponse
-    {
-        $this->authorizeAccess($request, $course);
-        abort_unless($attachment->lecture->course_id === $course->id, 404);
-        abort_unless($this->progression->isLectureUnlocked($request->user(), $attachment->lecture), 403);
-
-        $path = storage_path('app/public/' . $attachment->file_path);
-        abort_unless(is_file($path), 404);
-
-        return response()->file($path);
     }
 
     protected function authorizeAccess(Request $request, Course $course): void

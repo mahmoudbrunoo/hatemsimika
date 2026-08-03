@@ -24,7 +24,7 @@
         @endif
 
         @if ($assignment->file_path)
-            <a href="{{ $assignment->file_path }}" target="_blank" class="btn-secondary mt-4">
+            <a href="{{ $assignment->file_path }}" target="_blank" rel="noopener noreferrer" class="btn-secondary mt-4">
                 📕 تحميل ملف الواجب
             </a>
         @endif
@@ -75,11 +75,11 @@
                 <div class="mt-4 border-t border-slate-300/60 pt-4 dark:border-slate-800">
                     <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">الملف المرفوع</h3>
                     @if ($isImage)
-                        <a href="{{ $submission->file_path }}" target="_blank">
+                        <a href="{{ $submission->file_path }}" target="_blank" rel="noopener noreferrer">
                             <img src="{{ $submission->file_path }}" alt="صورة الحل" class="mt-2 max-h-72 rounded-xl border border-slate-300/60 dark:border-slate-800">
                         </a>
                     @else
-                        <a href="{{ $submission->file_path }}" target="_blank" class="btn-secondary btn-sm mt-2">📄 عرض الملف المرفوع</a>
+                        <a href="{{ $submission->file_path }}" target="_blank" rel="noopener noreferrer" class="btn-secondary btn-sm mt-2">📄 عرض الملف المرفوع</a>
                     @endif
                 </div>
             @endif
