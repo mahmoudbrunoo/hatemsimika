@@ -79,12 +79,12 @@
                     <p class="mt-4 whitespace-pre-line font-bold leading-8 text-slate-900 dark:text-white">{{ $question->body }}</p>
 
                     @if ($question->image_path)
-                        <img src="{{ Storage::url($question->image_path) }}" alt="صورة السؤال"
+                        <img src="{{ $question->image_path }}" alt="صورة السؤال"
                              class="mt-3 max-h-80 rounded-xl border border-slate-300 object-contain dark:border-slate-700">
                     @endif
 
                     @if ($question->audio_path)
-                        <audio controls class="mt-3 w-full" src="{{ Storage::url($question->audio_path) }}"></audio>
+                        <audio controls class="mt-3 w-full" src="{{ $question->audio_path }}"></audio>
                     @endif
 
                     @if ($question->isMcq())
@@ -106,10 +106,10 @@
                                             <p class="font-semibold leading-7 text-slate-800 dark:text-slate-200">{{ $option->body }}</p>
                                         @endif
                                         @if ($option->image_path)
-                                            <img src="{{ Storage::url($option->image_path) }}" alt="" class="mt-2 max-h-40 rounded-lg object-contain">
+                                            <img src="{{ $option->image_path }}" alt="" class="mt-2 max-h-40 rounded-lg object-contain">
                                         @endif
                                         @if ($option->audio_path)
-                                            <audio controls class="mt-2 w-full" src="{{ Storage::url($option->audio_path) }}"></audio>
+                                            <audio controls class="mt-2 w-full" src="{{ $option->audio_path }}"></audio>
                                         @endif
                                     </div>
                                     <div class="flex shrink-0 flex-col items-end gap-1">
@@ -137,8 +137,8 @@
                                 <p class="whitespace-pre-line text-sm font-semibold leading-7 text-slate-700 dark:text-slate-200">{{ $answer->essay_text }}</p>
                             @endif
                             @if ($answer->essay_image)
-                                <a href="{{ Storage::url($answer->essay_image) }}" target="_blank" rel="noopener">
-                                    <img src="{{ Storage::url($answer->essay_image) }}" alt="صورة حلك"
+                                <a href="{{ $answer->essay_image }}" target="_blank" rel="noopener">
+                                    <img src="{{ $answer->essay_image }}" alt="صورة حلك"
                                          class="mt-3 max-h-72 rounded-lg border border-slate-300 object-contain dark:border-slate-700">
                                 </a>
                             @endif
@@ -156,7 +156,7 @@
                                 <p class="whitespace-pre-line font-semibold leading-7 text-slate-700 dark:text-slate-200">{{ $question->explanation }}</p>
                             @endif
                             @if ($question->explanation_image)
-                                <img src="{{ Storage::url($question->explanation_image) }}" alt="شرح بالصورة" class="mt-3 max-h-72 rounded-lg object-contain">
+                                <img src="{{ $question->explanation_image }}" alt="شرح بالصورة" class="mt-3 max-h-72 rounded-lg object-contain">
                             @endif
                             @if ($question->explanation_video_url)
                                 <a href="{{ $question->explanation_video_url }}" target="_blank" rel="noopener" class="btn-secondary btn-sm mt-3">🎬 اتفرج على فيديو الشرح</a>

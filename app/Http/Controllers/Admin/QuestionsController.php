@@ -118,18 +118,21 @@ class QuestionsController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $payload['image_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/questions', $request->file('image'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('questions', $request->file('image'));
+            $payload['image_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         if ($request->hasFile('audio')) {
-            $payload['audio_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/questions/audio', $request->file('audio'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('questions/audio', $request->file('audio'));
+            $payload['audio_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         if ($request->hasFile('explanation_image')) {
-            $payload['explanation_image'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/questions', $request->file('explanation_image'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('questions', $request->file('explanation_image'));
+            $payload['explanation_image'] = Storage::disk('supabase_public')->url($path);
         }
 
         return $payload;
@@ -146,13 +149,15 @@ class QuestionsController extends Controller
             $audioPath = null;
 
             if ($request->hasFile("options.{$i}.image")) {
-                $imagePath = Storage::disk('supabase_public')
-                    ->putFile('public-uploads/questions/options', $request->file("options.{$i}.image"));
+                $path = Storage::disk('supabase_public')
+                    ->putFile('questions/options', $request->file("options.{$i}.image"));
+                $imagePath = Storage::disk('supabase_public')->url($path);
             }
 
             if ($request->hasFile("options.{$i}.audio")) {
-                $audioPath = Storage::disk('supabase_public')
-                    ->putFile('public-uploads/questions/options', $request->file("options.{$i}.audio"));
+                $path = Storage::disk('supabase_public')
+                    ->putFile('questions/options', $request->file("options.{$i}.audio"));
+                $audioPath = Storage::disk('supabase_public')->url($path);
             }
 
             if (($option['body'] ?? null) === null && $imagePath === null && $audioPath === null) {

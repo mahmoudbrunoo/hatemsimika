@@ -9,7 +9,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-4">
                 @if ($user->avatar_path)
-                    <img src="{{ Storage::url($user->avatar_path) }}" alt="{{ $user->name }}" class="size-16 rounded-2xl object-cover">
+                    <img src="{{ $user->avatar_path }}" alt="{{ $user->name }}" class="size-16 rounded-2xl object-cover">
                 @else
                     <div class="grid size-16 place-items-center rounded-2xl bg-brand-50 text-2xl font-black text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
                         {{ mb_substr($user->name, 0, 1) }}

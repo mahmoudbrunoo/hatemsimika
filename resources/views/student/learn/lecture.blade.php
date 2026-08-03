@@ -174,7 +174,7 @@
                         <p class="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $thread->body }}</p>
 
                         @if ($thread->image_path)
-                            <img src="{{ Storage::url($thread->image_path) }}" alt="صورة السؤال" class="mt-3 max-h-64 rounded-xl border border-slate-300/60 dark:border-slate-800">
+                            <img src="{{ $thread->image_path }}" alt="صورة السؤال" class="mt-3 max-h-64 rounded-xl border border-slate-300/60 dark:border-slate-800">
                         @endif
 
                         {{-- الردود --}}

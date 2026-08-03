@@ -42,8 +42,8 @@
                                         <p class="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $submission->answer_text }}</p>
                                     @endif
                                     @if ($submission->file_path)
-                                        <a href="{{ \Illuminate\Support\Facades\Storage::url($submission->file_path) }}" target="_blank" class="mt-2 inline-block">
-                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($submission->file_path) }}"
+                                        <a href="{{ $submission->file_path }}" target="_blank" class="mt-2 inline-block">
+                                            <img src="{{ $submission->file_path }}"
                                                  alt="حل الواجب" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                                             <span class="mt-1 block text-xs font-bold text-brand-600 dark:text-brand-400">اضغط لفتح الصورة بالحجم الكامل</span>
                                         </a>
@@ -115,8 +115,8 @@
                                         <p class="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $answer->essay_text }}</p>
                                     @endif
                                     @if ($answer->essay_image)
-                                        <a href="{{ \Illuminate\Support\Facades\Storage::url($answer->essay_image) }}" target="_blank" class="mt-2 inline-block">
-                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($answer->essay_image) }}"
+                                        <a href="{{ $answer->essay_image }}" target="_blank" class="mt-2 inline-block">
+                                            <img src="{{ $answer->essay_image }}"
                                                  alt="إجابة الطالب" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                                             <span class="mt-1 block text-xs font-bold text-brand-600 dark:text-brand-400">اضغط لفتح الصورة بالحجم الكامل</span>
                                         </a>

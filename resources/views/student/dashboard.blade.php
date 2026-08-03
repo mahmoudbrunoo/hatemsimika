@@ -230,7 +230,7 @@
                                 <button data-menu-button type="button" class="p-1 smooth" aria-haspopup="menu" aria-expanded="false">
                                     <span class="sr-only">فتح قائمة المستخدم</span>
                                     @if ($user->avatar_path)
-                                        <img class="h-8 w-8 rounded-full object-cover" src="{{ Storage::url($user->avatar_path) }}" alt="{{ $user->shortName() }}">
+                                        <img class="h-8 w-8 rounded-full object-cover" src="{{ $user->avatar_path }}" alt="{{ $user->shortName() }}">
                                     @else
                                         <span class="h-8 w-8 rounded-full flex-center-both bg-primary-600 text-primary-100 font-w-bold">{{ mb_substr($user->name, 0, 1) }}</span>
                                     @endif
@@ -498,7 +498,7 @@
                                                                 <div class="bg-third-container clr-text-primary border-2 border-third-container smooth rounded-xl p-4 flex flex-col space-y-4 h-full">
                                                                     <div class="rounded-xl relative overflow-hidden">
                                                                         @if ($course->thumbnail_path)
-                                                                            <img src="{{ Storage::url($course->thumbnail_path) }}" alt="{{ $course->title }}" class="w-full h-full max-h-[600px] object-cover">
+                                                                            <img src="{{ $course->thumbnail_path }}" alt="{{ $course->title }}" class="w-full h-full max-h-[600px] object-cover">
                                                                         @else
                                                                             <div class="w-full flex-center-both bg-secondary-500 dark:bg-secondary-700 text-white font-h1 font-w-bold" style="height: 180px;">{{ mb_substr($course->title, 0, 1) }}</div>
                                                                         @endif

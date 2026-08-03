@@ -107,7 +107,7 @@
         <aside class="lg:order-first lg:col-start-2">
             <div class="card overflow-hidden lg:sticky lg:top-24">
                 @if ($image)
-                    <img src="{{ \Illuminate\Support\Facades\Storage::url($image) }}" alt="{{ $item->title }}" class="aspect-video w-full object-cover">
+                    <img src="{{ $image }}" alt="{{ $item->title }}" class="aspect-video w-full object-cover">
                 @else
                     <div class="grid aspect-video w-full place-items-center bg-brand-50 text-4xl dark:bg-slate-800">{{ $type === 'course' ? '🎓' : '📕' }}</div>
                 @endif

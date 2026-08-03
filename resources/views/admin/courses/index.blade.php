@@ -28,7 +28,7 @@
                     <tr>
                         <td>
                             @if ($course->thumbnail_path)
-                                <img src="{{ \Illuminate\Support\Facades\Storage::url($course->thumbnail_path) }}"
+                                <img src="{{ $course->thumbnail_path }}"
                                      alt="{{ $course->title }}" class="h-10 w-16 rounded-lg object-cover">
                             @else
                                 <div class="grid h-10 w-16 place-items-center rounded-lg bg-slate-100 text-lg dark:bg-slate-800">📚</div>

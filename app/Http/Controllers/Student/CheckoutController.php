@@ -87,8 +87,9 @@ class CheckoutController extends Controller
         $extra = ['sender_phone' => $request->validated('sender_phone')];
 
         if ($request->hasFile('receipt')) {
-            $extra['receipt_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/receipts', $request->file('receipt'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('receipts', $request->file('receipt'));
+            $extra['receipt_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         try {

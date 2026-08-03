@@ -39,15 +39,18 @@ class HomeworkController extends Controller
             return back()->withErrors(['answer_text' => 'تم تسليم الواجب بالفعل.']);
         }
 
-        $filePath = $request->hasFile('file')
-            ? Storage::disk('supabase_public')->putFile('public-uploads/homework', $request->file('file'))
-            : null;
+        $fileUrl = null;
+
+        if ($request->hasFile('file')) {
+            $path = Storage::disk('supabase_public')->putFile('homework', $request->file('file'));
+            $fileUrl = Storage::disk('supabase_public')->url($path);
+        }
 
         AssignmentSubmission::create([
             'assignment_id' => $assignment->id,
             'user_id' => $request->user()->id,
             'answer_text' => $request->validated('answer_text'),
-            'file_path' => $filePath,
+            'file_path' => $fileUrl,
             'status' => 'submitted',
         ]);
 

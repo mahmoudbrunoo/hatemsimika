@@ -16,13 +16,18 @@ class QaController extends Controller
     {
         abort_unless($request->user()->isEnrolledIn($lecture->course), 403);
 
+        $imageUrl = null;
+
+        if ($request->hasFile('image')) {
+            $path = Storage::disk('supabase_public')->putFile('qa-images', $request->file('image'));
+            $imageUrl = Storage::disk('supabase_public')->url($path);
+        }
+
         QaThread::create([
             'lecture_id' => $lecture->id,
             'user_id' => $request->user()->id,
             'body' => $request->validated('body'),
-            'image_path' => $request->hasFile('image')
-                ? Storage::disk('supabase_public')->putFile('public-uploads/qa-images', $request->file('image'))
-                : null,
+            'image_path' => $imageUrl,
             'status' => QaThread::STATUS_PENDING,
         ]);
 

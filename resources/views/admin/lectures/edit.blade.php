@@ -238,7 +238,7 @@
                             <span class="text-2xl">📄</span>
                             <div>
                                 <p class="font-bold text-slate-900 dark:text-white">{{ $attachment->title }}</p>
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($attachment->file_path) }}" target="_blank" rel="noopener"
+                                <a href="{{ $attachment->file_path }}" target="_blank" rel="noopener"
                                    class="text-xs font-bold text-brand-600 hover:underline dark:text-brand-400">فتح الملف</a>
                             </div>
                         </div>
@@ -318,7 +318,7 @@
                         <label for="assignment_file" class="label">ملف الواجب PDF (اختياري)</label>
                         <input id="assignment_file" name="file" type="file" accept="application/pdf" class="input">
                         @if ($lecture->assignment?->file_path)
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($lecture->assignment->file_path) }}" target="_blank" rel="noopener"
+                            <a href="{{ $lecture->assignment->file_path }}" target="_blank" rel="noopener"
                                class="mt-1 inline-block text-xs font-bold text-brand-600 hover:underline dark:text-brand-400">الملف الحالي</a>
                         @endif
                         @error('file')<p class="error">{{ $message }}</p>@enderror

@@ -34,7 +34,7 @@
             @if ($video->source === 'file' && $video->file_path)
                 <video controls playsinline preload="metadata" controlslist="nodownload"
                        oncontextmenu="return false"
-                       src="{{ Storage::url($video->file_path) }}"></video>
+                       src="{{ $video->file_path }}"></video>
             @elseif ($embedSrc)
                 <iframe src="{{ $embedSrc }}"
                         title="{{ $video->title }}"

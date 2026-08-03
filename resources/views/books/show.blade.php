@@ -8,7 +8,7 @@
             <div class="card overflow-hidden">
                 <div class="aspect-[3/4] bg-slate-100 dark:bg-slate-800">
                     @if ($book->cover_path)
-                        <img src="{{ Storage::url($book->cover_path) }}" alt="{{ $book->title }}" class="size-full object-cover">
+                        <img src="{{ $book->cover_path }}" alt="{{ $book->title }}" class="size-full object-cover">
                     @else
                         <div class="grid size-full place-items-center bg-gradient-to-br from-amber-400 to-amber-700 text-8xl">📕</div>
                     @endif
@@ -51,7 +51,7 @@
                     @endif
 
                     @if ($book->preview_pdf_path)
-                        <a href="{{ Storage::url($book->preview_pdf_path) }}" target="_blank" class="btn-secondary px-6 py-3 text-base">معاينة الكتاب</a>
+                        <a href="{{ $book->preview_pdf_path }}" target="_blank" class="btn-secondary px-6 py-3 text-base">معاينة الكتاب</a>
                     @endif
                 </div>
             </div>

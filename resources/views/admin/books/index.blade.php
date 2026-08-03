@@ -31,7 +31,7 @@
                         <tr>
                             <td>
                                 @if ($book->cover_path)
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($book->cover_path) }}"
+                                    <img src="{{ $book->cover_path }}"
                                          alt="{{ $book->title }}" class="h-16 w-12 rounded-lg border border-slate-300 object-cover dark:border-slate-700">
                                 @else
                                     <div class="grid h-16 w-12 place-items-center rounded-lg bg-slate-100 text-xl dark:bg-slate-800">📕</div>
@@ -40,7 +40,7 @@
                             <td>
                                 <p class="font-bold text-slate-900 dark:text-white">{{ $book->title }}</p>
                                 @if ($book->preview_pdf_path)
-                                    <a href="{{ \Illuminate\Support\Facades\Storage::url($book->preview_pdf_path) }}" target="_blank"
+                                    <a href="{{ $book->preview_pdf_path }}" target="_blank"
                                        class="text-xs font-bold text-brand-600 hover:text-brand-700 dark:text-brand-400">ملف المعاينة (PDF)</a>
                                 @endif
                             </td>

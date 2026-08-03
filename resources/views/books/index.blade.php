@@ -15,7 +15,7 @@
                     <a href="{{ route('books.show', $book) }}" class="card group flex flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-lg">
                         <div class="relative aspect-[3/4] bg-slate-100 dark:bg-slate-800">
                             @if ($book->cover_path)
-                                <img src="{{ Storage::url($book->cover_path) }}" alt="{{ $book->title }}" class="size-full object-cover">
+                                <img src="{{ $book->cover_path }}" alt="{{ $book->title }}" class="size-full object-cover">
                             @else
                                 <div class="grid size-full place-items-center bg-gradient-to-br from-amber-400 to-amber-700 text-5xl">📕</div>
                             @endif

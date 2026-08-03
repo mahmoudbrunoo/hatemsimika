@@ -37,12 +37,12 @@
                     <p class="mt-4 whitespace-pre-line text-base font-bold leading-8 text-slate-900 dark:text-white">{{ $question->body }}</p>
 
                     @if ($question->image_path)
-                        <img src="{{ Storage::url($question->image_path) }}" alt="صورة السؤال"
+                        <img src="{{ $question->image_path }}" alt="صورة السؤال"
                              class="mt-3 max-h-80 rounded-xl border border-slate-300 object-contain dark:border-slate-700">
                     @endif
 
                     @if ($question->audio_path)
-                        <audio controls class="mt-3 w-full" src="{{ Storage::url($question->audio_path) }}"></audio>
+                        <audio controls class="mt-3 w-full" src="{{ $question->audio_path }}"></audio>
                     @endif
 
                     {{-- التلميح (لو الامتحان مفعّل التلميحات) --}}
@@ -76,11 +76,11 @@
                                             <span class="block text-sm font-semibold leading-7 text-slate-800 dark:text-slate-200">{{ $option->body }}</span>
                                         @endif
                                         @if ($option->image_path)
-                                            <img src="{{ Storage::url($option->image_path) }}" alt="صورة الاختيار"
+                                            <img src="{{ $option->image_path }}" alt="صورة الاختيار"
                                                  class="mt-2 max-h-48 rounded-lg border border-slate-300 object-contain dark:border-slate-700">
                                         @endif
                                         @if ($option->audio_path)
-                                            <audio controls class="mt-2 w-full" src="{{ Storage::url($option->audio_path) }}"></audio>
+                                            <audio controls class="mt-2 w-full" src="{{ $option->audio_path }}"></audio>
                                         @endif
                                     </span>
                                 </label>

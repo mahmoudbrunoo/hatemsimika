@@ -76,8 +76,8 @@
                             </td>
                             <td>
                                 @if ($order->receipt_path)
-                                    <a href="{{ \Illuminate\Support\Facades\Storage::url($order->receipt_path) }}" target="_blank" title="فتح الإيصال بالحجم الكامل">
-                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($order->receipt_path) }}"
+                                    <a href="{{ $order->receipt_path }}" target="_blank" title="فتح الإيصال بالحجم الكامل">
+                                        <img src="{{ $order->receipt_path }}"
                                              alt="إيصال التحويل" class="h-14 w-14 rounded-lg border border-slate-300 object-cover dark:border-slate-700">
                                     </a>
                                 @else

@@ -59,7 +59,7 @@
                 <label for="image" class="label">صورة السؤال {{ $question->image_path ? '(ارفع صورة جديدة للاستبدال)' : '(اختياري)' }}</label>
                 <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
                 @if ($question->image_path)
-                    <img src="{{ \Illuminate\Support\Facades\Storage::url($question->image_path) }}" alt="صورة السؤال"
+                    <img src="{{ $question->image_path }}" alt="صورة السؤال"
                          class="mt-2 h-24 rounded-xl border border-slate-300 object-contain dark:border-slate-800">
                 @endif
                 @error('image')<p class="error">{{ $message }}</p>@enderror
@@ -69,7 +69,7 @@
                 <label for="audio" class="label">تسجيل صوتي للسؤال {{ $question->audio_path ? '(ارفع ملفاً جديداً للاستبدال)' : '(اختياري)' }}</label>
                 <input id="audio" name="audio" type="file" accept="audio/mpeg,audio/wav,audio/ogg,audio/mp4,.mp3,.wav,.ogg,.m4a" class="input">
                 @if ($question->audio_path)
-                    <audio controls class="mt-2 w-full" src="{{ \Illuminate\Support\Facades\Storage::url($question->audio_path) }}"></audio>
+                    <audio controls class="mt-2 w-full" src="{{ $question->audio_path }}"></audio>
                 @endif
                 @error('audio')<p class="error">{{ $message }}</p>@enderror
             </div>
@@ -116,11 +116,11 @@
                                 <div class="mt-3 flex flex-wrap items-center gap-4 border-t border-slate-300/60 pt-3 dark:border-slate-800">
                                     <span class="text-xs font-bold text-slate-400">الوسائط الحالية:</span>
                                     @if ($option->image_path)
-                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($option->image_path) }}" alt="صورة الاختيار"
+                                        <img src="{{ $option->image_path }}" alt="صورة الاختيار"
                                              class="h-14 rounded-lg border border-slate-300 object-contain dark:border-slate-800">
                                     @endif
                                     @if ($option->audio_path)
-                                        <audio controls class="h-9" src="{{ \Illuminate\Support\Facades\Storage::url($option->audio_path) }}"></audio>
+                                        <audio controls class="h-9" src="{{ $option->audio_path }}"></audio>
                                     @endif
                                 </div>
                             @endif
@@ -145,7 +145,7 @@
                 <label for="explanation_image" class="label">صورة شرح الإجابة {{ $question->explanation_image ? '(ارفع صورة جديدة للاستبدال)' : '(اختياري)' }}</label>
                 <input id="explanation_image" name="explanation_image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
                 @if ($question->explanation_image)
-                    <img src="{{ \Illuminate\Support\Facades\Storage::url($question->explanation_image) }}" alt="صورة الشرح"
+                    <img src="{{ $question->explanation_image }}" alt="صورة الشرح"
                          class="mt-2 h-24 rounded-xl border border-slate-300 object-contain dark:border-slate-800">
                 @endif
                 @error('explanation_image')<p class="error">{{ $message }}</p>@enderror

@@ -97,7 +97,7 @@
                 @if ($editing && $book->cover_path)
                     <div x-show="!preview" class="mt-3">
                         <p class="mb-1 text-xs font-bold text-slate-400">الغلاف الحالي</p>
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($book->cover_path) }}"
+                        <img src="{{ $book->cover_path }}"
                              alt="الغلاف الحالي" class="h-32 w-24 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                     </div>
                 @endif
@@ -110,7 +110,7 @@
                 <p class="mt-1 text-xs font-medium text-slate-400">عينة من الكتاب يشوفها الطالب قبل الشراء — بحد أقصى 20 ميجا</p>
                 @error('preview_pdf')<p class="error">{{ $message }}</p>@enderror
                 @if ($editing && $book->preview_pdf_path)
-                    <a href="{{ \Illuminate\Support\Facades\Storage::url($book->preview_pdf_path) }}" target="_blank"
+                    <a href="{{ $book->preview_pdf_path }}" target="_blank"
                        class="mt-2 inline-block text-xs font-bold text-brand-600 hover:text-brand-700 dark:text-brand-400">
                         الملف الحالي (PDF)
                     </a>

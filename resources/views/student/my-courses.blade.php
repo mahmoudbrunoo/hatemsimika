@@ -37,7 +37,7 @@
                 <div class="card flex flex-col overflow-hidden">
                     <div class="relative aspect-video bg-slate-100 dark:bg-slate-800">
                         @if ($course->thumbnail_path)
-                            <img src="{{ Storage::url($course->thumbnail_path) }}" alt="{{ $course->title }}" class="size-full object-cover">
+                            <img src="{{ $course->thumbnail_path }}" alt="{{ $course->title }}" class="size-full object-cover">
                         @else
                             <div class="grid size-full place-items-center bg-gradient-to-br from-brand-500 to-brand-800 text-4xl font-black text-white/90">
                                 {{ mb_substr($course->title, 0, 1) }}

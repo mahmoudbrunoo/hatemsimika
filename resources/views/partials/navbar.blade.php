@@ -60,7 +60,7 @@
             <div class="relative" @click.outside="menu = false">
                 <button type="button" @click="menu = !menu" title="حسابي" class="flex items-center">
                     @if (auth()->user()->avatar_path)
-                        <img src="{{ Storage::url(auth()->user()->avatar_path) }}" class="size-10 rounded-full object-cover ring-2 ring-slate-300 dark:ring-night-700" alt="">
+                        <img src="{{ auth()->user()->avatar_path }}" class="size-10 rounded-full object-cover ring-2 ring-slate-300 dark:ring-night-700" alt="">
                     @else
                         <span class="grid size-10 place-items-center rounded-full bg-rose-300/80 text-sm font-extrabold text-white ring-2 ring-slate-300 dark:ring-night-700">
                             {{ mb_substr(auth()->user()->name, 0, 1) }}
@@ -139,7 +139,7 @@
                     <div class="relative" @click.outside="menu = false">
                         <button type="button" @click="menu = !menu" class="flex items-center gap-2 rounded-full p-1 hover:bg-slate-100 dark:hover:bg-night-800">
                             @if (auth()->user()->avatar_path)
-                                <img src="{{ Storage::url(auth()->user()->avatar_path) }}" class="size-10 rounded-full object-cover" alt="">
+                                <img src="{{ auth()->user()->avatar_path }}" class="size-10 rounded-full object-cover" alt="">
                             @else
                                 <span class="grid size-10 place-items-center rounded-full bg-flame-100 text-sm font-extrabold text-flame-700 dark:bg-flame-500/20 dark:text-flame-300">
                                     {{ mb_substr(auth()->user()->name, 0, 1) }}

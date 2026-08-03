@@ -57,8 +57,8 @@
                     <div class="mt-4 rounded-xl bg-slate-50 p-4 dark:bg-slate-950/50">
                         <p class="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $thread->body }}</p>
                         @if ($thread->image_path)
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($thread->image_path) }}" target="_blank" class="mt-2 inline-block">
-                                <img src="{{ \Illuminate\Support\Facades\Storage::url($thread->image_path) }}"
+                            <a href="{{ $thread->image_path }}" target="_blank" class="mt-2 inline-block">
+                                <img src="{{ $thread->image_path }}"
                                      alt="صورة مرفقة بالسؤال" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
                             </a>
                         @endif

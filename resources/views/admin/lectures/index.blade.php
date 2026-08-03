@@ -14,7 +14,7 @@
     {{-- بطاقة بيانات الكورس --}}
     <div class="card-pad mb-6 flex flex-wrap items-center gap-5">
         @if ($course->thumbnail_path)
-            <img src="{{ \Illuminate\Support\Facades\Storage::url($course->thumbnail_path) }}" alt="{{ $course->title }}"
+            <img src="{{ $course->thumbnail_path }}" alt="{{ $course->title }}"
                  class="h-16 w-24 rounded-xl object-cover">
         @else
             <div class="grid h-16 w-24 place-items-center rounded-xl bg-slate-100 text-2xl dark:bg-slate-800">📚</div>

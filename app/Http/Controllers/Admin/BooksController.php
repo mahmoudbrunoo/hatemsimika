@@ -78,13 +78,15 @@ class BooksController extends Controller
         }
 
         if ($request->hasFile('cover')) {
-            $data['cover_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/books', $request->file('cover'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('books', $request->file('cover'));
+            $data['cover_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         if ($request->hasFile('preview_pdf')) {
-            $data['preview_pdf_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/books/previews', $request->file('preview_pdf'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('books/previews', $request->file('preview_pdf'));
+            $data['preview_pdf_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         unset($data['cover'], $data['preview_pdf']);

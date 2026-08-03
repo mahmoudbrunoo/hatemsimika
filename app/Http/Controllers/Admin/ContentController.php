@@ -45,10 +45,12 @@ class ContentController extends Controller
             'file' => ['required', 'file', 'mimes:pdf', 'max:51200'],
         ], [], ['title' => 'اسم الملف', 'file' => 'ملف PDF']);
 
+        $path = Storage::disk('supabase_public')
+            ->putFile('attachments', $request->file('file'));
+
         $lecture->attachments()->create([
             'title' => $data['title'],
-            'file_path' => Storage::disk('supabase_public')
-                ->putFile('public-uploads/attachments', $request->file('file')),
+            'file_path' => Storage::disk('supabase_public')->url($path),
             'type' => 'pdf',
             'position' => $lecture->attachments()->max('position') + 1,
         ]);
@@ -75,8 +77,9 @@ class ContentController extends Controller
         ], [], ['title' => 'عنوان الواجب', 'max_score' => 'الدرجة الكلية']);
 
         if ($request->hasFile('file')) {
-            $data['file_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/assignments', $request->file('file'));
+            $path = Storage::disk('supabase_public')
+                ->putFile('assignments', $request->file('file'));
+            $data['file_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         unset($data['file']);
