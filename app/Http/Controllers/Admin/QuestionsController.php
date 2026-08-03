@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
 use App\Models\Question;
+use App\Services\QuestionImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -41,6 +43,45 @@ class QuestionsController extends Controller
         });
 
         return back()->with('status', 'تم إضافة السؤال.');
+    }
+
+    /** استيراد أسئلة بالجملة من ملف CSV أو Excel */
+    public function import(Request $request, Exam $exam, QuestionImportService $importer): RedirectResponse
+    {
+        $request->validateWithBag('bulkImport', [
+            'file' => ['required', 'file', 'mimes:csv,txt,xlsx,xls', 'max:10240'],
+        ], [
+            'file.mimes' => 'الملف يجب أن يكون بصيغة CSV أو Excel (xlsx/xls).',
+        ], ['file' => 'ملف الأسئلة']);
+
+        try {
+            $result = $importer->import($exam, $request->file('file'));
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        $failed = count($result['errors']);
+
+        if ($result['imported'] > 0) {
+            $message = "تم استيراد {$result['imported']} سؤال بنجاح."
+                .($failed > 0 ? " فشل استيراد {$failed} سطر — التفاصيل بالأسفل." : '');
+            session()->flash('status', $message);
+        } else {
+            session()->flash('error', $failed > 0
+                ? 'لم يتم استيراد أي سؤال — راجع الأخطاء بالأسفل.'
+                : 'الملف لا يحتوي على أي أسئلة.');
+        }
+
+        return back()->with('import_errors', $result['errors']);
+    }
+
+    /** تنزيل القالب الجاهز sample_questions.csv */
+    public function template(QuestionImportService $importer): Response
+    {
+        return response($importer->templateCsv(), 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="sample_questions.csv"',
+        ]);
     }
 
     public function edit(Question $question): View

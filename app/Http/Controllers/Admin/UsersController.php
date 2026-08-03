@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminUpdateStudentRequest;
 use App\Models\AuditLog;
 use App\Models\Course;
 use App\Models\User;
@@ -10,6 +11,7 @@ use App\Services\EnrollmentService;
 use App\Services\WalletService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +21,7 @@ class UsersController extends Controller
     public function __construct(
         protected WalletService $wallet,
         protected EnrollmentService $enrollment,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): View
     {
@@ -92,6 +93,55 @@ class UsersController extends Controller
         abort(404);
     }
 
+    /** تعديل بيانات الطالب الأساسية من لوحة التحكم */
+    public function update(AdminUpdateStudentRequest $request, User $user): RedirectResponse
+    {
+        // تعديل حسابات الإدارة مقصور على السوبر أدمن
+        abort_if($user->isStaff() && ! $request->user()->hasRole('super_admin'), 403);
+
+        $data = $request->validated();
+
+        // تغيير الحالة من هنا يطبق نفس سلوك أزرار الموافقة/الحظر
+        if ($data['status'] === User::STATUS_APPROVED && ! $user->isApproved()) {
+            $data['approved_at'] = now();
+            $data['approved_by'] = $request->user()->id;
+            $data['rejection_reason'] = null;
+        }
+
+        if ($data['status'] === User::STATUS_BANNED && $user->status !== User::STATUS_BANNED) {
+            $data['current_session_id'] = null;
+        }
+
+        $user->fill($data);
+        $changed = array_keys($user->getDirty());
+        $user->save();
+
+        AuditLog::record('user.update', $user, ['fields' => $changed]);
+
+        return back()->with('status', 'تم حفظ بيانات الطالب بنجاح.');
+    }
+
+    /** تعيين كلمة مرور جديدة للطالب مباشرة — بدون الحاجة لكلمة المرور القديمة */
+    public function resetPassword(Request $request, User $user): RedirectResponse
+    {
+        // تغيير كلمة مرور حسابات الإدارة مقصور على السوبر أدمن
+        abort_if($user->isStaff() && ! $request->user()->hasRole('super_admin'), 403);
+
+        $data = $request->validateWithBag('resetPassword', [
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [], ['password' => 'كلمة المرور الجديدة']);
+
+        $user->update([
+            'password' => Hash::make($data['password']),
+            // إنهاء الجلسة القديمة حتى يدخل الطالب فوراً بكلمة المرور الجديدة
+            'current_session_id' => null,
+        ]);
+
+        AuditLog::record('user.password_reset', $user);
+
+        return back()->with('status', 'تم تغيير كلمة مرور الطالب — يمكنه الدخول الآن بكلمة المرور الجديدة.');
+    }
+
     /** الموافقة على الحساب بعد مراجعة صورة البطاقة والبيانات */
     public function approve(Request $request, User $user): RedirectResponse
     {
@@ -104,7 +154,7 @@ class UsersController extends Controller
 
         AuditLog::record('user.approve', $user);
 
-        return back()->with('status', 'تم تفعيل حساب: ' . $user->name);
+        return back()->with('status', 'تم تفعيل حساب: '.$user->name);
     }
 
     public function reject(Request $request, User $user): RedirectResponse

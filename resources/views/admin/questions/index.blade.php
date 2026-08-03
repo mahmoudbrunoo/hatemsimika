@@ -31,6 +31,62 @@
         </div>
     </div>
 
+    {{-- رفع أسئلة بالجملة من ملف CSV/Excel --}}
+    <div class="card-pad mb-6"
+         x-data="{ bulkOpen: {{ (! empty(session('import_errors')) || $errors->bulkImport->isNotEmpty()) ? 'true' : 'false' }} }">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+                <h2 class="font-extrabold text-slate-900 dark:text-white">رفع أسئلة بالجملة</h2>
+                <p class="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                    استورد عدة أسئلة مرة واحدة من ملف CSV أو Excel بدلاً من إضافتها سؤالاً سؤالاً.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('admin.questions.template') }}" class="btn-secondary btn-sm">تنزيل القالب الجاهز (CSV)</a>
+                <button type="button" @click="bulkOpen = !bulkOpen" class="btn-primary btn-sm">
+                    <span x-text="bulkOpen ? 'إخفاء نموذج الرفع' : 'رفع ملف أسئلة'"></span>
+                </button>
+            </div>
+        </div>
+
+        <div x-show="bulkOpen" style="display: none;" x-transition class="mt-5">
+            <form method="POST" action="{{ route('admin.questions.import', $exam) }}" enctype="multipart/form-data"
+                  class="flex flex-wrap items-end gap-3">
+                @csrf
+                <div class="min-w-64 flex-1">
+                    <label for="import_file" class="label">ملف الأسئلة (CSV / XLSX / XLS)</label>
+                    <input id="import_file" name="file" type="file" class="input"
+                           accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                           required>
+                    @error('file', 'bulkImport')<p class="error">{{ $message }}</p>@enderror
+                </div>
+                <button type="submit" class="btn-primary">استيراد الأسئلة</button>
+            </form>
+
+            <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold leading-6 text-slate-500 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400">
+                <p class="font-bold text-slate-700 dark:text-slate-300">تعليمات الملف:</p>
+                <ul class="mt-1 list-inside list-disc space-y-0.5">
+                    <li>حمّل القالب الجاهز واملأ الأعمدة بنفس أسماء العناوين — السطر الأول هو سطر العناوين دائماً.</li>
+                    <li><span dir="ltr">question_text</span> إجباري، ونوع السؤال <span dir="ltr">type</span> إما <span dir="ltr">mcq</span> (اختياري) أو <span dir="ltr">essay</span> (مقالي).</li>
+                    <li>الاختيارات في الأعمدة <span dir="ltr">option_a … option_f</span> (اختياران على الأقل للسؤال الاختياري) — والإجابة الصحيحة في <span dir="ltr">correct_answer</span> بحرف <span dir="ltr">A-F</span> أو رقم <span dir="ltr">1-6</span> أو نص الاختيار نفسه.</li>
+                    <li>روابط الصور والصوت (<span dir="ltr">question_image_url</span> وغيرها) اختيارية — اتركها فارغة إن لم توجد.</li>
+                    <li>الدرجة في عمود <span dir="ltr">points</span> (الافتراضي 1) — والتلميح والشرح اختياريان.</li>
+                </ul>
+            </div>
+
+            @if (! empty(session('import_errors')))
+                <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+                    <p>أسطر لم يتم استيرادها:</p>
+                    <ul class="mt-2 list-inside list-disc space-y-1 text-xs font-semibold">
+                        @foreach (session('import_errors') as $importError)
+                            <li>{{ $importError }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+    </div>
+
     {{-- إضافة سؤال جديد --}}
     <div class="card-pad mb-6" x-data="{ qtype: '{{ old('type', 'mcq') }}' }">
         <h2 class="mb-4 font-extrabold text-slate-900 dark:text-white">إضافة سؤال جديد</h2>

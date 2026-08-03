@@ -91,6 +91,117 @@
                 </dl>
             </div>
 
+            {{-- تعديل بيانات الطالب --}}
+            <div class="card-pad" x-data="{ editOpen: {{ $errors->editStudent->isNotEmpty() ? 'true' : 'false' }} }">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">تعديل بيانات الطالب</h2>
+                    <button type="button" @click="editOpen = !editOpen" class="btn-secondary btn-sm">
+                        <span x-text="editOpen ? 'إخفاء النموذج' : 'فتح نموذج التعديل'"></span>
+                    </button>
+                </div>
+
+                <form x-show="editOpen" style="display: none;" x-transition method="POST"
+                      action="{{ route('admin.users.update', $user) }}" class="mt-5 grid gap-4 sm:grid-cols-2">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="sm:col-span-2">
+                        <label for="edit_name" class="label">الاسم رباعي</label>
+                        <input id="edit_name" name="name" type="text" value="{{ old('name', $user->name) }}" class="input" required>
+                        @error('name', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_email" class="label">البريد الإلكتروني</label>
+                        <input id="edit_email" name="email" type="email" value="{{ old('email', $user->email) }}" class="input" dir="ltr" required>
+                        @error('email', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_phone" class="label">موبايل الطالب</label>
+                        <input id="edit_phone" name="phone" type="text" value="{{ old('phone', $user->phone) }}" class="input" dir="ltr" required>
+                        @error('phone', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_father_phone" class="label">موبايل الأب</label>
+                        <input id="edit_father_phone" name="father_phone" type="text" value="{{ old('father_phone', $user->father_phone) }}" class="input" dir="ltr">
+                        @error('father_phone', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_mother_phone" class="label">موبايل الأم</label>
+                        <input id="edit_mother_phone" name="mother_phone" type="text" value="{{ old('mother_phone', $user->mother_phone) }}" class="input" dir="ltr">
+                        @error('mother_phone', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_national_id" class="label">الرقم القومي</label>
+                        <input id="edit_national_id" name="national_id" type="text" value="{{ old('national_id', $user->national_id) }}" class="input" dir="ltr" maxlength="14">
+                        @error('national_id', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_governorate" class="label">المحافظة</label>
+                        <select id="edit_governorate" name="governorate" class="input">
+                            <option value="">—</option>
+                            @foreach (\App\Models\User::GOVERNORATES as $governorate)
+                                <option value="{{ $governorate }}" @selected(old('governorate', $user->governorate) === $governorate)>{{ $governorate }}</option>
+                            @endforeach
+                        </select>
+                        @error('governorate', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_school" class="label">المدرسة</label>
+                        <input id="edit_school" name="school" type="text" value="{{ old('school', $user->school) }}" class="input">
+                        @error('school', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_academic_year" class="label">الصف الدراسي</label>
+                        <select id="edit_academic_year" name="academic_year" class="input">
+                            <option value="">—</option>
+                            @foreach (\App\Models\User::YEARS as $year => $label)
+                                <option value="{{ $year }}" @selected((string) old('academic_year', $user->academic_year) === (string) $year)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('academic_year', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_gender" class="label">النوع</label>
+                        <select id="edit_gender" name="gender" class="input">
+                            <option value="">—</option>
+                            <option value="male" @selected(old('gender', $user->gender) === 'male')>ذكر</option>
+                            <option value="female" @selected(old('gender', $user->gender) === 'female')>أنثى</option>
+                        </select>
+                        @error('gender', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_status" class="label">حالة الحساب</label>
+                        <select id="edit_status" name="status" class="input" required>
+                            @foreach (\App\Models\User::STATUSES as $statusValue => $statusLabel)
+                                <option value="{{ $statusValue }}" @selected(old('status', $user->status) === $statusValue)>{{ $statusLabel }}</option>
+                            @endforeach
+                        </select>
+                        @error('status', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="edit_center_id" class="label">ID طالب السنتر (اختياري)</label>
+                        <input id="edit_center_id" name="center_id" type="text" value="{{ old('center_id', $user->center_id) }}" class="input" dir="ltr" maxlength="30">
+                        @error('center_id', 'editStudent')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <button type="submit" class="btn-primary w-full sm:w-auto"
+                                onclick="return confirm('هل أنت متأكد من حفظ التعديلات على بيانات الطالب؟')">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+
             {{-- صورة البطاقة --}}
             <div class="card-pad" x-data="{ idOpen: false }">
                 <h2 class="mb-4 text-lg font-extrabold text-slate-900 dark:text-white">صورة البطاقة / الكارنيه</h2>
@@ -249,6 +360,32 @@
                         @error('note')<p class="error">{{ $message }}</p>@enderror
                     </div>
                     <button type="submit" class="btn-secondary w-full">تعديل الرصيد</button>
+                </form>
+            </div>
+
+            {{-- تغيير كلمة المرور --}}
+            <div class="card-pad">
+                <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">تغيير كلمة المرور</h3>
+                <p class="mb-4 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                    عيّن كلمة مرور جديدة للطالب مباشرة — بدون الحاجة لكلمة المرور القديمة.
+                </p>
+                <form method="POST" action="{{ route('admin.users.password', $user) }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="new_password" class="label">كلمة المرور الجديدة</label>
+                        <input id="new_password" name="password" type="password" class="input" dir="ltr"
+                               minlength="8" autocomplete="new-password" placeholder="8 أحرف على الأقل" required>
+                        @error('password', 'resetPassword')<p class="error">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_password_confirmation" class="label">تأكيد كلمة المرور</label>
+                        <input id="new_password_confirmation" name="password_confirmation" type="password" class="input" dir="ltr"
+                               minlength="8" autocomplete="new-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary w-full"
+                            onclick="return confirm('سيتم تغيير كلمة مرور الطالب وإنهاء جلسته الحالية. متابعة؟')">
+                        حفظ كلمة المرور الجديدة
+                    </button>
                 </form>
             </div>
 
