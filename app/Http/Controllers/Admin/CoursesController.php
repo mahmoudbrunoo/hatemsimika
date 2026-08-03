@@ -85,8 +85,8 @@ class CoursesController extends Controller
         }
 
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail_path'] = Storage::disk('supabase_public')
-                ->putFile('public-uploads/courses', $request->file('thumbnail'));
+            $path = Storage::disk('supabase_public')->putFile('courses', $request->file('thumbnail'));
+            $data['thumbnail_path'] = Storage::disk('supabase_public')->url($path);
         }
 
         unset($data['thumbnail']);
