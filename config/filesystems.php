@@ -63,11 +63,11 @@ return [
         // الأصول العامة (أغلفة الكورسات/الكتب، الصور، الواجبات...) — روابط عامة مباشرة
         'supabase_public' => [
             'driver' => 's3',
-            'key' => env('SUPABASE_STORAGE_ACCESS_KEY_ID'),
-            'secret' => env('SUPABASE_STORAGE_SECRET_ACCESS_KEY'),
+            'key' => env('SUPABASE_STORAGE_ACCESS_KEY_ID', env('SUPABASE_ACCESS_KEY_ID')),
+            'secret' => env('SUPABASE_STORAGE_SECRET_ACCESS_KEY', env('SUPABASE_SECRET_ACCESS_KEY')),
             'region' => env('SUPABASE_STORAGE_REGION', 'eu-west-2'),
             'bucket' => env('SUPABASE_PUBLIC_BUCKET', 'platform-uploads'),
-            'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
+            'endpoint' => env('SUPABASE_STORAGE_ENDPOINT', env('SUPABASE_ENDPOINT')),
             'use_path_style_endpoint' => true,
             // Supabase public-object URL — bucket visibility is what makes it readable
             'url' => rtrim(env('SUPABASE_URL', ''), '/')
