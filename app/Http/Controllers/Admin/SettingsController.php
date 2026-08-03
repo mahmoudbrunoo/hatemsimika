@@ -33,8 +33,12 @@ class SettingsController extends Controller
                     "settings_files.{$setting->key}" => ['image:allow_svg', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
                 ]);
 
-                $setting->update(['value' => Storage::disk('supabase_public')
-                    ->putFile('settings', $files[$setting->key])]);
+                // ✅ بعد
+                $path = Storage::disk('supabase_public')->putFile('settings', $files[$setting->key]);
+                $url = Storage::disk('supabase_public')->url($path);
+
+                $setting->update(['value' => $url]);
+                
                 continue;
             }
 
