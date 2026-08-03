@@ -38,7 +38,6 @@ class SettingsController extends Controller
                 $url = Storage::disk('supabase_public')->url($path);
 
                 $setting->update(['value' => $url]);
-                
                 continue;
             }
 
