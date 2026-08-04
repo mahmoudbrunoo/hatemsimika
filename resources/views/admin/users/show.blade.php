@@ -91,7 +91,8 @@
                 </dl>
             </div>
 
-            {{-- تعديل بيانات الطالب --}}
+            {{-- تعديل بيانات الطالب — يتطلب users.update، وحسابات الأدمن يعدلها السوبر أدمن فقط --}}
+            @if (auth()->user()->can('users.update') && (! $user->isAdminLevel() || auth()->user()->isSuperAdmin()))
             <div class="card-pad" x-data="{ editOpen: {{ $errors->editStudent->isNotEmpty() ? 'true' : 'false' }} }">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">تعديل بيانات الطالب</h2>
@@ -201,6 +202,97 @@
                     </div>
                 </form>
             </div>
+            @endif
+
+            {{-- الدور والصلاحيات --}}
+            @can('roles.manage')
+                @php
+                    $editorIsSuperAdmin = auth()->user()->isSuperAdmin();
+                    $roleLocked = $user->isSuperAdmin()
+                        || $user->is(auth()->user())
+                        || ($user->hasRole(\App\Support\Rbac::ADMIN) && ! $editorIsSuperAdmin);
+                @endphp
+
+                <div class="card-pad"
+                     x-data="{
+                        rolesOpen: {{ $errors->editRoles->isNotEmpty() ? 'true' : 'false' }},
+                        role: @js(old('role', $user->roleName())),
+                        perms: @js(old('permissions', $user->permissions->pluck('name')->values()->all())),
+                        defaults: @js(\App\Support\Rbac::defaults()),
+                        applyDefaults() { this.perms = [...(this.defaults[this.role] ?? [])]; },
+                     }">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">الدور والصلاحيات</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="{{ ['super_admin' => 'badge-red', 'admin' => 'badge-sky', 'teacher' => 'badge-green'][$user->roleName()] ?? 'badge-gray' }}">{{ $user->roleLabel() }}</span>
+                            @unless ($roleLocked)
+                                <button type="button" @click="rolesOpen = !rolesOpen" class="btn-secondary btn-sm">
+                                    <span x-text="rolesOpen ? 'إخفاء الإدارة' : 'إدارة الدور والصلاحيات'"></span>
+                                </button>
+                            @endunless
+                        </div>
+                    </div>
+
+                    @if ($user->isSuperAdmin())
+                        <p class="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                            🔒 هذا حساب السوبر أدمن (مالك المنصة) — يملك كل الصلاحيات بشكل دائم، ولا يمكن لأي شخص تعديل دوره أو تقييد صلاحياته.
+                        </p>
+                    @elseif ($user->is(auth()->user()))
+                        <p class="mt-4 text-sm font-semibold text-slate-500 dark:text-slate-400">لا يمكنك تعديل دورك أو صلاحياتك بنفسك — يعدلها لك مسؤول آخر يملك صلاحية إدارة الأدوار.</p>
+                    @elseif ($roleLocked)
+                        <p class="mt-4 text-sm font-semibold text-slate-500 dark:text-slate-400">تعديل دور وصلاحيات حسابات الأدمن مقصور على السوبر أدمن.</p>
+                    @else
+                        <form x-show="rolesOpen" style="display: none;" x-transition method="POST"
+                              action="{{ route('admin.users.roles', $user) }}" class="mt-5 space-y-5">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="max-w-xs">
+                                <label for="role" class="label">الدور الأساسي</label>
+                                <select id="role" name="role" class="input" x-model="role" @change="applyDefaults()">
+                                    @foreach (\App\Support\Rbac::ASSIGNABLE_ROLES as $roleValue => $roleOptionLabel)
+                                        {{-- منح دور الأدمن مقصور على السوبر أدمن --}}
+                                        @if ($roleValue !== \App\Support\Rbac::ADMIN || $editorIsSuperAdmin)
+                                            <option value="{{ $roleValue }}">{{ $roleOptionLabel }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('role', 'editRoles')<p class="error">{{ $message }}</p>@enderror
+                                <p class="mt-2 text-xs font-semibold text-slate-400">
+                                    تغيير الدور يعيد ضبط المربعات على القالب الافتراضي للدور — وتقدر تخصصها فردياً (منح أو سحب) قبل الحفظ.
+                                </p>
+                            </div>
+
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                @foreach (\App\Support\Rbac::GROUPS as $groupLabel => $groupPermissions)
+                                    <fieldset class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                                        <legend class="px-2 text-sm font-extrabold text-slate-900 dark:text-white">{{ $groupLabel }}</legend>
+                                        <div class="space-y-2.5">
+                                            @foreach ($groupPermissions as $permissionName => $permissionLabel)
+                                                <label class="flex items-start gap-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permissionName }}" x-model="perms"
+                                                           class="mt-0.5 size-4 rounded border-slate-300 dark:border-slate-700">
+                                                    <span>
+                                                        {{ $permissionLabel }}
+                                                        <span class="block text-[11px] font-medium text-slate-400" dir="ltr">{{ $permissionName }}</span>
+                                                    </span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </fieldset>
+                                @endforeach
+                            </div>
+                            @error('permissions', 'editRoles')<p class="error">{{ $message }}</p>@enderror
+                            @error('permissions.*', 'editRoles')<p class="error">{{ $message }}</p>@enderror
+
+                            <button type="submit" class="btn-primary w-full sm:w-auto"
+                                    onclick="return confirm('سيتم تطبيق الدور والصلاحيات المحددة على هذا الحساب فوراً. متابعة؟')">
+                                حفظ الدور والصلاحيات
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            @endcan
 
             {{-- صورة البطاقة --}}
             <div class="card-pad" x-data="{ idOpen: false }">
@@ -313,7 +405,7 @@
         <div class="space-y-6">
 
             {{-- الموافقة --}}
-            @if ($user->status !== \App\Models\User::STATUS_APPROVED)
+            @if (auth()->user()->can('users.approve') && $user->status !== \App\Models\User::STATUS_APPROVED)
                 <div class="card-pad">
                     <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">تفعيل الحساب</h3>
                     <p class="mb-4 text-sm font-semibold text-slate-500 dark:text-slate-400">راجع بيانات الطالب وصورة البطاقة قبل التفعيل.</p>
@@ -325,7 +417,7 @@
             @endif
 
             {{-- الرفض --}}
-            @if ($user->status !== \App\Models\User::STATUS_REJECTED)
+            @if (auth()->user()->can('users.approve') && $user->status !== \App\Models\User::STATUS_REJECTED)
                 <div class="card-pad">
                     <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">رفض الحساب</h3>
                     <form method="POST" action="{{ route('admin.users.reject', $user) }}">
@@ -343,6 +435,7 @@
             @endif
 
             {{-- تعديل الرصيد --}}
+            @can('wallet.adjust')
             <div class="card-pad">
                 <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">تعديل رصيد المحفظة</h3>
                 <form method="POST" action="{{ route('admin.users.wallet', $user) }}">
@@ -362,8 +455,10 @@
                     <button type="submit" class="btn-secondary w-full">تعديل الرصيد</button>
                 </form>
             </div>
+            @endcan
 
-            {{-- تغيير كلمة المرور --}}
+            {{-- تغيير كلمة المرور — حسابات الأدمن للسوبر أدمن فقط --}}
+            @if (auth()->user()->can('users.password') && (! $user->isAdminLevel() || auth()->user()->isSuperAdmin()))
             <div class="card-pad">
                 <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">تغيير كلمة المرور</h3>
                 <p class="mb-4 text-sm font-semibold text-slate-500 dark:text-slate-400">
@@ -388,8 +483,10 @@
                     </button>
                 </form>
             </div>
+            @endif
 
             {{-- فتح كورس يدوياً --}}
+            @can('enrollments.manage')
             <div class="card-pad">
                 <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">فتح كورس للطالب</h3>
                 <form method="POST" action="{{ route('admin.users.enroll', $user) }}">
@@ -409,10 +506,11 @@
                     <button type="submit" class="btn-primary w-full">فتح الكورس</button>
                 </form>
             </div>
+            @endcan
 
             @unless ($user->isStaff())
                 {{-- الدخول كحساب الطالب --}}
-                @if (auth()->user()->hasRole('super_admin'))
+                @can('users.impersonate')
                     <div class="card-pad">
                         <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">الدعم الفني</h3>
                         <form method="POST" action="{{ route('admin.users.impersonate', $user) }}">
@@ -423,10 +521,10 @@
                             </button>
                         </form>
                     </div>
-                @endif
+                @endcan
 
                 {{-- الحظر --}}
-                @if ($user->status !== \App\Models\User::STATUS_BANNED)
+                @if (auth()->user()->can('users.ban') && $user->status !== \App\Models\User::STATUS_BANNED)
                     <div class="card-pad">
                         <h3 class="mb-3 font-extrabold text-slate-900 dark:text-white">حظر الحساب</h3>
                         <p class="mb-4 text-sm font-semibold text-slate-500 dark:text-slate-400">سيتم إنهاء جميع جلسات الطالب فوراً.</p>

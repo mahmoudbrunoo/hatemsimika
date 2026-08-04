@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\QaModerationController;
 use App\Http\Controllers\Admin\QuestionsController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -119,79 +120,102 @@ Route::middleware(['auth', 'approved'])->prefix('me')->name('student.')->group(f
 });
 
 // ------------------------------------------------------------------ لوحة التحكم
-Route::middleware(['auth', 'role:super_admin|assistant'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+// الدخول للوحة بصلاحية admin.access — وكل قسم مقيد بصلاحيته الحبيبية،
+// والسوبر أدمن يتجاوز كل الفحوص تلقائياً (Gate::before في AppServiceProvider)
+Route::middleware(['auth', 'permission:admin.access'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])
+        ->middleware('permission:dashboard.view')->name('dashboard');
 
     // المستخدمون والموافقات
-    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
-    Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
-    Route::get('/users/{user}/id-photo', [UsersController::class, 'idPhoto'])->name('users.idphoto');
-    Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
-    Route::post('/users/{user}/password', [UsersController::class, 'resetPassword'])->name('users.password');
-    Route::post('/users/{user}/approve', [UsersController::class, 'approve'])->name('users.approve');
-    Route::post('/users/{user}/reject', [UsersController::class, 'reject'])->name('users.reject');
-    Route::post('/users/{user}/ban', [UsersController::class, 'ban'])->name('users.ban');
-    Route::post('/users/{user}/wallet', [UsersController::class, 'adjustWallet'])->name('users.wallet');
-    Route::post('/users/{user}/enroll', [UsersController::class, 'enroll'])->name('users.enroll');
-    Route::post('/users/{user}/impersonate', [ImpersonationController::class, 'start'])->name('users.impersonate');
+    Route::middleware('permission:users.view')->group(function () {
+        Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
+        Route::get('/users/{user}/id-photo', [UsersController::class, 'idPhoto'])->name('users.idphoto');
+    });
+    Route::put('/users/{user}', [UsersController::class, 'update'])->middleware('permission:users.update')->name('users.update');
+    Route::post('/users/{user}/password', [UsersController::class, 'resetPassword'])->middleware('permission:users.password')->name('users.password');
+    Route::post('/users/{user}/approve', [UsersController::class, 'approve'])->middleware('permission:users.approve')->name('users.approve');
+    Route::post('/users/{user}/reject', [UsersController::class, 'reject'])->middleware('permission:users.approve')->name('users.reject');
+    Route::post('/users/{user}/ban', [UsersController::class, 'ban'])->middleware('permission:users.ban')->name('users.ban');
+    Route::post('/users/{user}/wallet', [UsersController::class, 'adjustWallet'])->middleware('permission:wallet.adjust')->name('users.wallet');
+    Route::post('/users/{user}/enroll', [UsersController::class, 'enroll'])->middleware('permission:enrollments.manage')->name('users.enroll');
+    Route::post('/users/{user}/impersonate', [ImpersonationController::class, 'start'])->middleware('permission:users.impersonate')->name('users.impersonate');
+
+    // الدور والصلاحيات الفردية لكل مستخدم
+    Route::put('/users/{user}/roles', [UserRoleController::class, 'update'])->middleware('permission:roles.manage')->name('users.roles');
 
     // الكورسات والمحاضرات والمحتوى
-    Route::resource('courses', CoursesController::class)->except(['show']);
-    Route::get('/courses/{course}/lectures', [LecturesController::class, 'index'])->name('lectures.index');
-    Route::post('/courses/{course}/lectures', [LecturesController::class, 'store'])->name('lectures.store');
-    Route::get('/lectures/{lecture}', [LecturesController::class, 'edit'])->name('lectures.edit');
-    Route::put('/lectures/{lecture}', [LecturesController::class, 'update'])->name('lectures.update');
-    Route::delete('/lectures/{lecture}', [LecturesController::class, 'destroy'])->name('lectures.destroy');
+    Route::middleware('permission:courses.manage')->group(function () {
+        Route::resource('courses', CoursesController::class)->except(['show']);
+        Route::get('/courses/{course}/lectures', [LecturesController::class, 'index'])->name('lectures.index');
+        Route::post('/courses/{course}/lectures', [LecturesController::class, 'store'])->name('lectures.store');
+        Route::get('/lectures/{lecture}', [LecturesController::class, 'edit'])->name('lectures.edit');
+        Route::put('/lectures/{lecture}', [LecturesController::class, 'update'])->name('lectures.update');
+        Route::delete('/lectures/{lecture}', [LecturesController::class, 'destroy'])->name('lectures.destroy');
 
-    Route::post('/lectures/{lecture}/videos', [ContentController::class, 'storeVideo'])->name('videos.store');
-    Route::put('/videos/{video}', [ContentController::class, 'updateVideo'])->name('videos.update');
-    Route::delete('/videos/{video}', [ContentController::class, 'destroyVideo'])->name('videos.destroy');
-    Route::post('/lectures/{lecture}/attachments', [ContentController::class, 'storeAttachment'])->name('attachments.store');
-    Route::delete('/attachments/{attachment}', [ContentController::class, 'destroyAttachment'])->name('attachments.destroy');
-    Route::post('/lectures/{lecture}/assignment', [ContentController::class, 'saveAssignment'])->name('assignments.save');
+        Route::post('/lectures/{lecture}/videos', [ContentController::class, 'storeVideo'])->name('videos.store');
+        Route::put('/videos/{video}', [ContentController::class, 'updateVideo'])->name('videos.update');
+        Route::delete('/videos/{video}', [ContentController::class, 'destroyVideo'])->name('videos.destroy');
+        Route::post('/lectures/{lecture}/attachments', [ContentController::class, 'storeAttachment'])->name('attachments.store');
+        Route::delete('/attachments/{attachment}', [ContentController::class, 'destroyAttachment'])->name('attachments.destroy');
+        Route::post('/lectures/{lecture}/assignment', [ContentController::class, 'saveAssignment'])->name('assignments.save');
+    });
 
     // الامتحانات وبنك الأسئلة
-    Route::resource('exams', ExamsController::class)->except(['show']);
-    Route::get('/exams/{exam}/questions', [QuestionsController::class, 'index'])->name('questions.index');
-    Route::post('/exams/{exam}/questions', [QuestionsController::class, 'store'])->name('questions.store');
-    Route::post('/exams/{exam}/questions/import', [QuestionsController::class, 'import'])->name('questions.import');
-    Route::get('/questions/import-template', [QuestionsController::class, 'template'])->name('questions.template');
-    Route::get('/questions/{question}', [QuestionsController::class, 'edit'])->name('questions.edit');
-    Route::put('/questions/{question}', [QuestionsController::class, 'update'])->name('questions.update');
-    Route::delete('/questions/{question}', [QuestionsController::class, 'destroy'])->name('questions.destroy');
+    Route::resource('exams', ExamsController::class)->except(['show'])->middleware('permission:exams.manage');
+    Route::middleware('permission:exams.import')->group(function () {
+        Route::post('/exams/{exam}/questions/import', [QuestionsController::class, 'import'])->name('questions.import');
+        Route::get('/questions/import-template', [QuestionsController::class, 'template'])->name('questions.template');
+    });
+    Route::middleware('permission:questions.manage')->group(function () {
+        Route::get('/exams/{exam}/questions', [QuestionsController::class, 'index'])->name('questions.index');
+        Route::post('/exams/{exam}/questions', [QuestionsController::class, 'store'])->name('questions.store');
+        Route::get('/questions/{question}', [QuestionsController::class, 'edit'])->name('questions.edit');
+        Route::put('/questions/{question}', [QuestionsController::class, 'update'])->name('questions.update');
+        Route::delete('/questions/{question}', [QuestionsController::class, 'destroy'])->name('questions.destroy');
+    });
 
     // التصحيح
-    Route::get('/grading', [GradingController::class, 'index'])->name('grading.index');
-    Route::post('/grading/homework/{submission}', [GradingController::class, 'gradeHomework'])->name('grading.homework');
-    Route::post('/grading/essay/{answer}', [GradingController::class, 'gradeEssay'])->name('grading.essay');
+    Route::middleware('permission:grading.manage')->group(function () {
+        Route::get('/grading', [GradingController::class, 'index'])->name('grading.index');
+        Route::post('/grading/homework/{submission}', [GradingController::class, 'gradeHomework'])->name('grading.homework');
+        Route::post('/grading/essay/{answer}', [GradingController::class, 'gradeEssay'])->name('grading.essay');
+    });
 
     // الطلبات والإيصالات
-    Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
-    Route::post('/orders/{order}/approve', [OrdersController::class, 'approve'])->name('orders.approve');
-    Route::post('/orders/{order}/reject', [OrdersController::class, 'reject'])->name('orders.reject');
+    Route::middleware('permission:orders.manage')->group(function () {
+        Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+        Route::post('/orders/{order}/approve', [OrdersController::class, 'approve'])->name('orders.approve');
+        Route::post('/orders/{order}/reject', [OrdersController::class, 'reject'])->name('orders.reject');
+    });
 
     // الكوبونات والكتب وأكواد السنتر
-    Route::resource('coupons', CouponsController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('books', BooksController::class)->except(['show']);
-    Route::get('/center-codes', [CenterCodesController::class, 'index'])->name('codes.index');
-    Route::post('/center-codes', [CenterCodesController::class, 'generate'])->name('codes.generate');
+    Route::resource('coupons', CouponsController::class)->only(['index', 'store', 'update', 'destroy'])->middleware('permission:coupons.manage');
+    Route::resource('books', BooksController::class)->except(['show'])->middleware('permission:books.manage');
+    Route::middleware('permission:codes.manage')->group(function () {
+        Route::get('/center-codes', [CenterCodesController::class, 'index'])->name('codes.index');
+        Route::post('/center-codes', [CenterCodesController::class, 'generate'])->name('codes.generate');
+    });
 
-    // مراجعة أسئلة الطلاب
-    Route::get('/qa', [QaModerationController::class, 'index'])->name('qa.index');
-    Route::post('/qa/{thread}/approve', [QaModerationController::class, 'approve'])->name('qa.approve');
-    Route::post('/qa/{thread}/reject', [QaModerationController::class, 'reject'])->name('qa.reject');
-    Route::post('/qa/{thread}/answer', [QaModerationController::class, 'answer'])->name('qa.answer');
+    // مراجعة أسئلة الطلاب — عرض القائمة / الموافقة والرفض / الرد كل منها بصلاحيته
+    Route::get('/qa', [QaModerationController::class, 'index'])->middleware('permission:qa.view')->name('qa.index');
+    Route::post('/qa/{thread}/approve', [QaModerationController::class, 'approve'])->middleware('permission:qa.moderate')->name('qa.approve');
+    Route::post('/qa/{thread}/reject', [QaModerationController::class, 'reject'])->middleware('permission:qa.moderate')->name('qa.reject');
+    Route::post('/qa/{thread}/answer', [QaModerationController::class, 'answer'])->middleware('permission:qa.answer')->name('qa.answer');
 
     // إدارة محتوى الموقع (نصوص وصور كل الصفحات) + الأسئلة الشائعة
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
-    Route::resource('faqs', FaqsController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::middleware('permission:settings.manage')->group(function () {
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    });
+    Route::resource('faqs', FaqsController::class)->only(['index', 'store', 'update', 'destroy'])->middleware('permission:faqs.manage');
 
     // شجرة الشات بوت التفاعلي (أسئلة رئيسية وفرعية بلا حدود)
     Route::resource('chatbot', ChatbotOptionsController::class)
         ->only(['index', 'store', 'update', 'destroy'])
-        ->parameters(['chatbot' => 'option']);
+        ->parameters(['chatbot' => 'option'])
+        ->middleware('permission:chatbot.manage');
 
     // سجل التدقيق
-    Route::get('/audit', [AuditLogsController::class, 'index'])->name('audit.index');
+    Route::get('/audit', [AuditLogsController::class, 'index'])->middleware('permission:audit.view')->name('audit.index');
 });

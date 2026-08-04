@@ -5,24 +5,19 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * بذر النظام: الأدوار + حساب السوبر أدمن.
+     * بذر النظام: الأدوار والصلاحيات + حساب السوبر أدمن.
      * آمن لإعادة التشغيل — لا يكرر بيانات موجودة.
      */
     public function run(): void
     {
-        // ------------------------------------------------------------ الأدوار
-        // super_admin: تحكم كامل | assistant: مساعد المدرس (تصحيح ومراجعة) | student: طالب
-        foreach (['super_admin', 'assistant', 'student'] as $role) {
-            Role::findOrCreate($role, 'web');
-        }
-
-        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        // ------------------------------------------------------------ الأدوار والصلاحيات
+        // super_admin: المالك (يتجاوز كل الفحوص) | admin: إدارة كاملة قابلة للتقييد
+        // teacher: الدعم التعليمي (أسئلة الطلاب) | student: طالب
+        $this->call(RolesAndPermissionsSeeder::class);
 
         // ------------------------------------------------------------ السوبر أدمن
         $admin = User::firstOrCreate(

@@ -27,9 +27,12 @@ class UsersController extends Controller
     {
         $status = $request->string('status')->toString() ?: null;
         $search = $request->string('q')->toString() ?: null;
+        $role = $request->string('role')->toString() ?: null;
 
         $users = User::query()
+            ->with('roles')
             ->when($status, fn ($q) => $q->where('status', $status))
+            ->when($role && array_key_exists($role, \App\Support\Rbac::ROLE_LABELS), fn ($q) => $q->role($role))
             ->when($search, fn ($q) => $q->where(fn ($qq) => $qq
                 ->where('name', 'like', "%{$search}%")
                 ->orWhere('phone', 'like', "%{$search}%")
@@ -39,12 +42,12 @@ class UsersController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'status', 'search'));
+        return view('admin.users.index', compact('users', 'status', 'search', 'role'));
     }
 
     public function show(Request $request, User $user): View
     {
-        $user->load(['enrollments.course', 'orders' => fn ($q) => $q->latest()->take(10)]);
+        $user->load(['roles', 'permissions', 'enrollments.course', 'orders' => fn ($q) => $q->latest()->take(10)]);
 
         return view('admin.users.show', [
             'user' => $user,
@@ -59,7 +62,7 @@ class UsersController extends Controller
      */
     protected function idPhotoUrl(Request $request, User $user): ?string
     {
-        if (! $user->id_photo_path || ! $request->user()?->isStaff()) {
+        if (! $user->id_photo_path || ! $request->user()?->can('users.view')) {
             return null;
         }
 
@@ -75,7 +78,7 @@ class UsersController extends Controller
      */
     public function idPhoto(Request $request, User $user): Response
     {
-        abort_unless($request->user()?->isStaff(), 403);
+        abort_unless($request->user()?->can('users.view'), 403);
         abort_unless($user->id_photo_path, 404);
 
         if (str_starts_with($user->id_photo_path, 'student-ids/')) {
@@ -96,8 +99,8 @@ class UsersController extends Controller
     /** تعديل بيانات الطالب الأساسية من لوحة التحكم */
     public function update(AdminUpdateStudentRequest $request, User $user): RedirectResponse
     {
-        // تعديل حسابات الإدارة مقصور على السوبر أدمن
-        abort_if($user->isStaff() && ! $request->user()->hasRole('super_admin'), 403);
+        // تعديل حسابات الأدمن مقصور على السوبر أدمن (المدرس يعدله من يملك users.update)
+        abort_if($user->isAdminLevel() && ! $request->user()->isSuperAdmin(), 403);
 
         $data = $request->validated();
 
@@ -124,8 +127,8 @@ class UsersController extends Controller
     /** تعيين كلمة مرور جديدة للطالب مباشرة — بدون الحاجة لكلمة المرور القديمة */
     public function resetPassword(Request $request, User $user): RedirectResponse
     {
-        // تغيير كلمة مرور حسابات الإدارة مقصور على السوبر أدمن
-        abort_if($user->isStaff() && ! $request->user()->hasRole('super_admin'), 403);
+        // تغيير كلمة مرور حسابات الأدمن مقصور على السوبر أدمن
+        abort_if($user->isAdminLevel() && ! $request->user()->isSuperAdmin(), 403);
 
         $data = $request->validateWithBag('resetPassword', [
             'password' => ['required', 'string', 'min:8', 'confirmed'],

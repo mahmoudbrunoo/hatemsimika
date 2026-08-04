@@ -41,8 +41,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(function (Request $request) {
             $user = $request->user();
 
-            if ($user->isStaff()) {
-                return route('admin.dashboard');
+            // الموظف يذهب لأول صفحة يملك صلاحيتها في لوحة التحكم (الأدمن للوحة الإحصائيات، المدرس لأسئلة الطلاب...)
+            if ($adminHome = $user->adminHomeRoute()) {
+                return $adminHome;
             }
 
             return $user->isApproved()

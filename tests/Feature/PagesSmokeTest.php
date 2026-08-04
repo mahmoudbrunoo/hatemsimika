@@ -30,8 +30,8 @@ use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoView;
 use App\Models\WalletTransaction;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 /**
@@ -69,9 +69,7 @@ class PagesSmokeTest extends TestCase
     {
         parent::setUp();
 
-        foreach (['super_admin', 'assistant', 'student'] as $role) {
-            Role::findOrCreate($role, 'web');
-        }
+        $this->seed(RolesAndPermissionsSeeder::class);
 
         $this->admin = User::factory()->create(['academic_year' => null]);
         $this->admin->assignRole('super_admin');
@@ -414,6 +412,16 @@ class PagesSmokeTest extends TestCase
             $response = $this->actingAs($this->admin)->get($url);
             $this->assertSame(200, $response->status(), "فشل عرض الصفحة: {$url} (status {$response->status()})");
         }
+    }
+
+    public function test_teacher_qa_queue_renders(): void
+    {
+        $teacher = User::factory()->create(['academic_year' => null]);
+        $teacher->assignRole(\App\Support\Rbac::TEACHER);
+        $teacher->syncPermissions(\App\Support\Rbac::defaultsFor(\App\Support\Rbac::TEACHER));
+
+        $this->actingAs($teacher)->get('/admin/qa')->assertOk();
+        $this->actingAs($teacher)->get('/admin/qa?status=APPROVED')->assertOk();
     }
 
     public function test_pending_student_is_blocked_from_dashboard(): void

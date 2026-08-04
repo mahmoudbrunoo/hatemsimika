@@ -3,8 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Support\Rbac;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 /**
@@ -18,9 +19,7 @@ class AuthRedirectAndProfileLockTest extends TestCase
     {
         parent::setUp();
 
-        foreach (['super_admin', 'assistant', 'student'] as $role) {
-            Role::findOrCreate($role, 'web');
-        }
+        $this->seed(RolesAndPermissionsSeeder::class);
     }
 
     protected function student(array $attributes = []): User
@@ -66,9 +65,19 @@ class AuthRedirectAndProfileLockTest extends TestCase
     public function test_staff_is_redirected_from_landing_to_admin_dashboard(): void
     {
         $admin = User::factory()->create(['academic_year' => null]);
-        $admin->assignRole('super_admin');
+        $admin->assignRole(Rbac::SUPER_ADMIN);
 
         $this->actingAs($admin)->get('/')->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_teacher_is_redirected_from_landing_to_qa_queue(): void
+    {
+        // المدرس لا يملك dashboard.view — فيتوجه لأول صفحة يملك صلاحيتها: أسئلة الطلاب
+        $teacher = User::factory()->create(['academic_year' => null]);
+        $teacher->assignRole(Rbac::TEACHER);
+        $teacher->syncPermissions(Rbac::defaultsFor(Rbac::TEACHER));
+
+        $this->actingAs($teacher)->get('/')->assertRedirect(route('admin.qa.index'));
     }
 
     public function test_logged_in_student_is_redirected_away_from_login_and_register(): void

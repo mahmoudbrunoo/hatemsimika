@@ -71,36 +71,53 @@
                                 {{ $reply->user->name }} {{ $reply->is_official_answer ? '— الإجابة المعتمدة ✅' : '' }}
                             </p>
                             <p class="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $reply->body }}</p>
+                            @if ($reply->image_path)
+                                <a href="{{ $reply->image_path }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-block">
+                                    <img src="{{ $reply->image_path }}"
+                                         alt="صورة مرفقة بالإجابة" class="max-h-48 rounded-xl border border-slate-300 object-cover dark:border-slate-700">
+                                </a>
+                            @endif
                         </div>
                     @endforeach
 
-                    {{-- إجراءات --}}
-                    @if ($thread->status === \App\Models\QaThread::STATUS_PENDING)
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <form method="POST" action="{{ route('admin.qa.approve', $thread) }}">
-                                @csrf
-                                <button type="submit" class="btn-success btn-sm">نشر السؤال</button>
-                            </form>
-                            <form method="POST" action="{{ route('admin.qa.reject', $thread) }}"
-                                  onsubmit="return confirm('رفض السؤال؟ مش هيظهر لباقي الطلاب.')">
-                                @csrf
-                                <button type="submit" class="btn-danger btn-sm">رفض</button>
-                            </form>
-                        </div>
-                    @endif
-
-                    @if (! $thread->is_locked && $thread->status !== \App\Models\QaThread::STATUS_REJECTED)
-                        <form method="POST" action="{{ route('admin.qa.answer', $thread) }}" class="mt-4 space-y-2">
-                            @csrf
-                            <label for="body-{{ $thread->id }}" class="label">الإجابة الرسمية</label>
-                            <textarea id="body-{{ $thread->id }}" name="body" rows="3" maxlength="5000" class="input"
-                                      placeholder="اكتب الإجابة هنا..." required>{{ old('body') }}</textarea>
-                            <div class="flex flex-wrap items-center gap-3">
-                                <button type="submit" class="btn-primary btn-sm">إرسال الإجابة</button>
-                                <p class="text-xs font-semibold text-slate-400">بعد الإجابة الموضوع بيتقفل تلقائياً كمرجع معتمد.</p>
+                    {{-- الموافقة أو الرفض — تتطلب صلاحية qa.moderate --}}
+                    @can('qa.moderate')
+                        @if ($thread->status === \App\Models\QaThread::STATUS_PENDING)
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <form method="POST" action="{{ route('admin.qa.approve', $thread) }}">
+                                    @csrf
+                                    <button type="submit" class="btn-success btn-sm">نشر السؤال</button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.qa.reject', $thread) }}"
+                                      onsubmit="return confirm('رفض السؤال؟ مش هيظهر لباقي الطلاب.')">
+                                    @csrf
+                                    <button type="submit" class="btn-danger btn-sm">رفض</button>
+                                </form>
                             </div>
-                        </form>
-                    @endif
+                        @endif
+                    @endcan
+
+                    {{-- الرد الرسمي — يتطلب صلاحية qa.answer --}}
+                    @can('qa.answer')
+                        @if (! $thread->is_locked && $thread->status !== \App\Models\QaThread::STATUS_REJECTED)
+                            <form method="POST" action="{{ route('admin.qa.answer', $thread) }}" enctype="multipart/form-data" class="mt-4 space-y-2">
+                                @csrf
+                                <label for="body-{{ $thread->id }}" class="label">الإجابة الرسمية</label>
+                                <textarea id="body-{{ $thread->id }}" name="body" rows="3" maxlength="5000" class="input"
+                                          placeholder="اكتب الإجابة هنا..." required>{{ old('body') }}</textarea>
+                                @error('body')<p class="error">{{ $message }}</p>@enderror
+
+                                <label for="image-{{ $thread->id }}" class="label">صورة مرفقة (اختياري)</label>
+                                <input id="image-{{ $thread->id }}" name="image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
+                                @error('image')<p class="error">{{ $message }}</p>@enderror
+
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <button type="submit" class="btn-primary btn-sm">إرسال الإجابة</button>
+                                    <p class="text-xs font-semibold text-slate-400">بعد الإجابة الموضوع بيتقفل تلقائياً كمرجع معتمد.</p>
+                                </div>
+                            </form>
+                        @endif
+                    @endcan
                 </div>
             @endforeach
         </div>

@@ -187,6 +187,9 @@
                                     @endif
                                 </div>
                                 <p class="mt-1.5 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $reply->body }}</p>
+                                @if ($reply->image_path)
+                                    <img src="{{ $reply->image_path }}" alt="صورة مرفقة بالإجابة" class="mt-2 max-h-64 rounded-xl border border-slate-300/60 dark:border-slate-800">
+                                @endif
                             </div>
                         @endforeach
 

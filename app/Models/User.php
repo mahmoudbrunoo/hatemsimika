@@ -127,9 +127,54 @@ class User extends Authenticatable
         return $this->status === self::STATUS_PENDING;
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(\App\Support\Rbac::SUPER_ADMIN);
+    }
+
+    /** موظف لوحة التحكم = يملك صلاحية دخولها (سوبر أدمن / أدمن / مدرس / تخصيص فردي) */
     public function isStaff(): bool
     {
-        return $this->hasAnyRole(['super_admin', 'assistant']);
+        return $this->isSuperAdmin() || $this->can('admin.access');
+    }
+
+    /** حساب بمستوى إداري كامل — تعديل بياناته أو صلاحياته مقصور على السوبر أدمن */
+    public function isAdminLevel(): bool
+    {
+        return $this->hasAnyRole([\App\Support\Rbac::SUPER_ADMIN, \App\Support\Rbac::ADMIN]);
+    }
+
+    public function roleName(): string
+    {
+        return $this->roles->first()?->name ?? \App\Support\Rbac::STUDENT;
+    }
+
+    public function roleLabel(): string
+    {
+        return \App\Support\Rbac::roleLabel($this->roleName());
+    }
+
+    /** أول صفحة في لوحة التحكم يملك المستخدم صلاحيتها — أو null إذا لم يكن موظفاً */
+    public function adminHomeRoute(): ?string
+    {
+        if (! $this->isStaff()) {
+            return null;
+        }
+
+        foreach ([
+            'dashboard.view' => 'admin.dashboard',
+            'qa.view' => 'admin.qa.index',
+            'users.view' => 'admin.users.index',
+            'grading.manage' => 'admin.grading.index',
+            'courses.manage' => 'admin.courses.index',
+            'orders.manage' => 'admin.orders.index',
+        ] as $permission => $route) {
+            if ($this->can($permission)) {
+                return route($route);
+            }
+        }
+
+        return null;
     }
 
     public function statusLabel(): string

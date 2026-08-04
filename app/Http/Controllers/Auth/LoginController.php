@@ -71,8 +71,9 @@ class LoginController extends Controller
             'last_activity_at' => now(),
         ] + DeviceParser::parse($request->userAgent()));
 
-        if ($user->isStaff()) {
-            return redirect()->intended(route('admin.dashboard'));
+        // الموظف يذهب لأول صفحة يملك صلاحيتها في لوحة التحكم
+        if ($adminHome = $user->adminHomeRoute()) {
+            return redirect()->intended($adminHome);
         }
 
         return $user->isApproved()

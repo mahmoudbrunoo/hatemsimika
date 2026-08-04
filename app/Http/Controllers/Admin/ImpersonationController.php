@@ -18,7 +18,8 @@ class ImpersonationController extends Controller
     {
         $admin = Auth::user();
 
-        abort_unless($admin->hasRole('super_admin'), 403);
+        // صلاحية مستقلة — السوبر أدمن يملكها تلقائياً ويمكنه منحها فردياً لغيره
+        abort_unless($admin->can('users.impersonate'), 403);
         abort_if($user->isStaff(), 403, 'لا يمكن انتحال حساب مسؤول آخر');
 
         AuditLog::record('impersonate.start', $user, [

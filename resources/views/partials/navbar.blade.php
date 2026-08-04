@@ -72,8 +72,8 @@
                      class="absolute left-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-300 bg-surface py-2 shadow-xl dark:border-night-700 dark:bg-night-850">
                     <p class="px-4 py-2 text-sm font-extrabold text-slate-900 dark:text-white">{{ auth()->user()->shortName() }}</p>
                     <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
-                    @if (auth()->user()->isStaff())
-                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-sm font-bold text-brand-600 hover:bg-slate-50 dark:text-brand-300 dark:hover:bg-night-800">لوحة التحكم</a>
+                    @if ($adminHome = auth()->user()->adminHomeRoute())
+                        <a href="{{ $adminHome }}" class="block px-4 py-2.5 text-sm font-bold text-brand-600 hover:bg-slate-50 dark:text-brand-300 dark:hover:bg-night-800">لوحة التحكم</a>
                         <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                     @endif
                     <a href="{{ route('student.dashboard') }}" class="block px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-night-800">الرئيسية</a>
@@ -150,8 +150,8 @@
 
                         <div x-show="menu" x-cloak x-transition
                              class="absolute left-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-300 bg-surface py-2 shadow-xl dark:border-night-700 dark:bg-night-850">
-                            @if (auth()->user()->isStaff())
-                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-sm font-bold text-flame-600 hover:bg-slate-50 dark:text-flame-400 dark:hover:bg-night-800">لوحة التحكم</a>
+                            @if ($adminHome = auth()->user()->adminHomeRoute())
+                                <a href="{{ $adminHome }}" class="block px-4 py-2.5 text-sm font-bold text-flame-600 hover:bg-slate-50 dark:text-flame-400 dark:hover:bg-night-800">لوحة التحكم</a>
                                 <div class="my-1 border-t border-slate-300/60 dark:border-night-800"></div>
                             @endif
                             @if (auth()->user()->isApproved() || auth()->user()->isStaff())

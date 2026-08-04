@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\QaThread;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -64,14 +65,26 @@ class QaModerationController extends Controller
     public function answer(Request $request, QaThread $thread): RedirectResponse
     {
         $data = $request->validate(
-            ['body' => ['required', 'string', 'max:5000']],
+            [
+                'body' => ['required', 'string', 'max:5000'],
+                'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            ],
             [],
-            ['body' => 'نص الإجابة'],
+            ['body' => 'نص الإجابة', 'image' => 'الصورة المرفقة'],
         );
+
+        // مرفق الإجابة يُرفع لنفس مسار صور أسئلة الطلاب على الباكت العام
+        $imageUrl = null;
+
+        if ($request->hasFile('image')) {
+            $path = Storage::disk('supabase_public')->putFile('qa-images', $request->file('image'));
+            $imageUrl = Storage::disk('supabase_public')->url($path);
+        }
 
         $thread->replies()->create([
             'user_id' => $request->user()->id,
             'body' => $data['body'],
+            'image_path' => $imageUrl,
             'is_official_answer' => true,
         ]);
 

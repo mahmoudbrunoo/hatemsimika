@@ -20,7 +20,7 @@ class AdminUpdateStudentRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()?->isStaff() ?? false;
+        return $this->user()?->can('users.update') ?? false;
     }
 
     protected function prepareForValidation(): void

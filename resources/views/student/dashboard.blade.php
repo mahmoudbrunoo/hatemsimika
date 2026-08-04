@@ -238,8 +238,8 @@
                                 <div data-menu-panel class="hidden absolute left-0 mt-2 rounded-md bg-inner-container clr-text-primary smooth shadow-md border-2 border-third-container overflow-hidden z-50 font-taj">
                                     <div class="px-4 py-3 font-w-bold">{{ $user->shortName() }}</div>
                                     <div class="menu-sep"></div>
-                                    @if ($user->isStaff())
-                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 smooth text-primary-500 font-w-bold hover:bg-slate-200 dark:hover:bg-slate-800">لوحة التحكم</a>
+                                    @if ($adminHome = $user->adminHomeRoute())
+                                        <a href="{{ $adminHome }}" class="block px-4 py-3 smooth text-primary-500 font-w-bold hover:bg-slate-200 dark:hover:bg-slate-800">لوحة التحكم</a>
                                         <div class="menu-sep"></div>
                                     @endif
                                     <a href="{{ route('student.dashboard') }}" class="block px-4 py-3 smooth hover:bg-slate-200 dark:hover:bg-slate-800">الرئيسية</a>
