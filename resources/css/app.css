@@ -1,8 +1,11 @@
-@import url('https://fonts.bunny.net/css?family=almarai:400,700,800|tajawal:400,500,700,800');
+@import url('https://fonts.bunny.net/css?family=almarai:400,700,800|tajawal:400,500,700,800|comfortaa:400,700');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+
+/* ملفات التصميم المرجعي الخام — للقراءة فقط، ممنوع مسحها كمصدر كلاسات */
+@source not '../../exam_page';
 
 /* الوضع الليلي بكلاس .dark على عنصر html (متزامن مع localStorage وقاعدة البيانات) */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -219,6 +222,11 @@
    الأساسات — كل الصفحات ترث نظام الحقول والأزرار تلقائياً
    ============================================================ */
 @layer base {
+    /* عناصر Alpine المخفية قبل التهيئة — يمنع وميض المحتوى المخفي */
+    [x-cloak] {
+        display: none !important;
+    }
+
     body {
         background-color: var(--color-primary-container);
         color: var(--color-text-primary);
@@ -343,6 +351,18 @@
     @apply flex items-center;
 }
 
+@utility font-alm {
+    font-family: 'Almarai', sans-serif;
+}
+
+@utility font-com {
+    font-family: 'Comfortaa', 'Cairo', sans-serif;
+}
+
+@utility bg-text-secondary {
+    background-color: var(--color-text-secondary);
+}
+
 @utility font-h1 {
     font-size: var(--font-size-h1);
 }
@@ -421,6 +441,20 @@
 
 @utility shadow-small {
     box-shadow: 0 0 var(--shadow-small);
+}
+
+/* ============================================================
+   محاكي الامتحان — مفردات المرجع المفعّلة داخل نطاق الصفحة فقط
+   (كلاسات en / font-smaller موجودة بأسمائها في صفحات قديمة بلا
+   تفعيل، فتعريفها هنا مقيّد بالحاوية حتى لا يتسرب لأي صفحة أخرى)
+   ============================================================ */
+.exam-simulator .en {
+    direction: ltr;
+    text-align: left;
+}
+
+.exam-simulator .font-smaller {
+    font-size: var(--font-size-smaller);
 }
 
 /* ظل عند المرور مع تكبير طفيف — سلوك كروت المرجع */

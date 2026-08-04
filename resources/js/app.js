@@ -145,6 +145,212 @@ Alpine.data('examTimer', (seconds, formId) => ({
     },
 }));
 
+// ------------------------------------------------------------------ محاكي الامتحان (واجهة المرجع)
+// سؤال واحد في كل شاشة + لوحة تنقل ملونة بحالة كل سؤال + مؤقت تنازلي:
+// أزرق = محلول، وردي = اتفتح من غير حل، رمادي = لسه متفتحش، إطار أزرق = الحالي.
+// الاختيارات بتتحفظ في localStorage باستمرار عشان زر "استكمال الاختبار لاحقًا"،
+// والتسليم النهائي بيعدّي بنفس نموذج POST القديم بلا أي تغيير في الباك إند.
+Alpine.data('examSimulator', ({ seconds, formId, storageKey, exitUrl, questionIds }) => ({
+    remaining: seconds,
+    current: 0,
+    opened: [0],
+    answeredIds: [],
+    timer: null,
+    submitting: false,
+
+    init() {
+        this.restoreDraft();
+        this.$nextTick(() => this.refreshAnswered());
+
+        const form = document.getElementById(formId);
+        form?.addEventListener('change', () => this.sync());
+        form?.addEventListener('input', () => this.sync());
+
+        this.timer = setInterval(() => {
+            this.remaining -= 1;
+
+            if (this.remaining <= 0) {
+                clearInterval(this.timer);
+                this.submitForm();
+            }
+        }, 1000);
+    },
+
+    destroy() {
+        clearInterval(this.timer);
+    },
+
+    get count() {
+        return questionIds.length;
+    },
+
+    get answeredCount() {
+        return this.answeredIds.length;
+    },
+
+    get openedCount() {
+        return this.opened.length;
+    },
+
+    // غير المحلولة = اللي اتفتحت وسابها من غير إجابة (نفس منطق المرجع)
+    get unsolvedCount() {
+        return this.opened.filter((i) => !this.answeredIds.includes(questionIds[i])).length;
+    },
+
+    // المؤقت بصيغة المرجع: إجمالي الدقائق (ممكن تعدي 60) : الثواني
+    get minutesDisplay() {
+        return String(Math.max(0, Math.floor(this.remaining / 60)));
+    },
+
+    get secondsDisplay() {
+        return String(Math.max(0, this.remaining % 60)).padStart(2, '0');
+    },
+
+    isOpened(i) {
+        return this.opened.includes(i);
+    },
+
+    isAnswered(i) {
+        return this.answeredIds.includes(questionIds[i]);
+    },
+
+    paletteClass(i) {
+        if (this.isAnswered(i)) return 'bg-blue-500';
+        if (this.isOpened(i)) return 'bg-rose-500';
+        return 'bg-slate-400';
+    },
+
+    go(i) {
+        if (i < 0 || i >= this.count) return;
+        this.current = i;
+        if (!this.opened.includes(i)) this.opened.push(i);
+        this.saveDraft();
+        this.$root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+
+    prev() {
+        this.go(this.current - 1);
+    },
+
+    next() {
+        this.go(this.current + 1);
+    },
+
+    sync() {
+        this.refreshAnswered();
+        this.saveDraft();
+    },
+
+    refreshAnswered() {
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        this.answeredIds = questionIds.filter((qid) => {
+            if (form.querySelector(`input[name="answers[${qid}]"]:checked`)) return true;
+
+            const essay = form.querySelector(`[name="essays[${qid}]"]`);
+            if (essay && essay.value.trim() !== '') return true;
+
+            const file = form.querySelector(`input[name="essay_images[${qid}]"]`);
+            return !!(file && file.files.length);
+        });
+    },
+
+    saveDraft() {
+        if (this.submitting) return;
+
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        const answers = {};
+        const essays = {};
+
+        questionIds.forEach((qid) => {
+            const checked = form.querySelector(`input[name="answers[${qid}]"]:checked`);
+            if (checked) answers[qid] = checked.value;
+
+            const essay = form.querySelector(`[name="essays[${qid}]"]`);
+            if (essay && essay.value.trim() !== '') essays[qid] = essay.value;
+        });
+
+        try {
+            localStorage.setItem(
+                storageKey,
+                JSON.stringify({ answers, essays, current: this.current, opened: this.opened }),
+            );
+        } catch {
+            // التخزين ممتلئ أو متعطل — الامتحان يكمل عادي بدون حفظ مؤقت
+        }
+    },
+
+    restoreDraft() {
+        let draft = null;
+
+        try {
+            draft = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
+        } catch {
+            draft = null;
+        }
+
+        if (!draft) return;
+
+        const form = document.getElementById(formId);
+
+        Object.entries(draft.answers ?? {}).forEach(([qid, value]) => {
+            const input = form?.querySelector(`input[name="answers[${qid}]"][value="${value}"]`);
+            if (input) input.checked = true;
+        });
+
+        Object.entries(draft.essays ?? {}).forEach(([qid, text]) => {
+            const essay = form?.querySelector(`[name="essays[${qid}]"]`);
+            if (essay) essay.value = text;
+        });
+
+        if (Array.isArray(draft.opened)) {
+            this.opened = [...new Set([0, ...draft.opened.filter((i) => i >= 0 && i < this.count)])];
+        }
+
+        if (Number.isInteger(draft.current) && draft.current >= 0 && draft.current < this.count) {
+            this.current = draft.current;
+        }
+    },
+
+    submitForm() {
+        this.submitting = true;
+        localStorage.removeItem(storageKey);
+        document.getElementById(formId)?.submit();
+    },
+
+    finish() {
+        if (confirm('متأكد إنك عايز تسلم الامتحان؟ مش هتقدر تعدل إجاباتك بعد كده.')) {
+            this.submitForm();
+        }
+    },
+
+    later() {
+        this.saveDraft();
+        window.location.href = exitUrl;
+    },
+
+    showAnswers() {
+        alert('الإجابات النموذجية بتظهر بعد تسليم الامتحان مباشرةً في صفحة النتيجة.');
+    },
+
+    share() {
+        const data = { title: document.title, url: window.location.href };
+
+        if (navigator.share) {
+            navigator.share(data).catch(() => {});
+            return;
+        }
+
+        navigator.clipboard
+            ?.writeText(data.url)
+            .then(() => alert('اتنسخ لينك الصفحة.'))
+            .catch(() => {});
+    },
+}));
+
 // ------------------------------------------------------------------ مسجل الرسائل الصوتية
 // تسجيل مباشر من المتصفح (MediaRecorder) لأسئلة الدروس وردودها — زي فويس الواتساب:
 // تسجيل/إيقاف + عداد مدة حي + معاينة قبل الإرسال، والتسجيل يتحول لملف داخل
