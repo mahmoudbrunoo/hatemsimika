@@ -145,6 +145,118 @@ Alpine.data('examTimer', (seconds, formId) => ({
     },
 }));
 
+// ------------------------------------------------------------------ مسجل الرسائل الصوتية
+// تسجيل مباشر من المتصفح (MediaRecorder) لأسئلة الدروس وردودها — زي فويس الواتساب:
+// تسجيل/إيقاف + عداد مدة حي + معاينة قبل الإرسال، والتسجيل يتحول لملف داخل
+// حقل الرفع العادي نفسه (name="audio") فيترفع مع النموذج بلا أي كود إضافي.
+Alpine.data('qaRecorder', () => ({
+    supported: !!(navigator.mediaDevices?.getUserMedia && window.MediaRecorder),
+    recording: false,
+    seconds: 0,
+    timer: null,
+    recorder: null,
+    chunks: [],
+    audioUrl: null,
+    fileLabel: '',
+    error: '',
+
+    init() {
+        // منع إرسال النموذج أثناء التسجيل — لازم يقف الأول عشان الملف يتولّد
+        this.$root.closest('form')?.addEventListener('submit', (e) => {
+            if (this.recording) {
+                e.preventDefault();
+                this.error = 'أوقف التسجيل الأول قبل الإرسال.';
+            }
+        });
+    },
+
+    // أفضل صيغة يدعمها المتصفح: كروم/فايرفوكس webm|ogg — سفاري mp4 (m4a)
+    pickMime() {
+        return ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus']
+            .find((t) => MediaRecorder.isTypeSupported(t)) ?? '';
+    },
+
+    async start() {
+        this.error = '';
+
+        if (!this.supported) {
+            this.error = 'المتصفح لا يدعم التسجيل المباشر — ارفع ملف صوتي من جهازك بدلاً منه.';
+            return;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mime = this.pickMime();
+
+            this.recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+            this.chunks = [];
+            this.recorder.ondataavailable = (e) => e.data.size && this.chunks.push(e.data);
+            this.recorder.onstop = () => {
+                stream.getTracks().forEach((t) => t.stop());
+                this.attachRecording();
+            };
+
+            this.recorder.start();
+            this.recording = true;
+            this.seconds = 0;
+            this.timer = setInterval(() => this.seconds++, 1000);
+        } catch {
+            this.error = 'تعذر الوصول للمايك — اسمح بالإذن من المتصفح أو ارفع ملف صوتي.';
+        }
+    },
+
+    stop() {
+        if (!this.recording) return;
+        clearInterval(this.timer);
+        this.recording = false;
+        this.recorder?.stop();
+    },
+
+    // التسجيل المكتمل يوضع كملف داخل input الرفع نفسه ليُرسل مع النموذج
+    attachRecording() {
+        const type = this.recorder?.mimeType || 'audio/webm';
+        const ext = type.includes('mp4') ? 'm4a' : type.includes('ogg') ? 'ogg' : 'webm';
+        const file = new File([new Blob(this.chunks, { type })], `voice-note.${ext}`, { type });
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        this.$refs.input.files = dt.files;
+
+        this.preview(file, `🎙️ تسجيل صوتي (${this.display})`);
+    },
+
+    // اختيار ملف صوتي يدوياً من الجهاز (البديل الاحتياطي)
+    filePicked() {
+        const file = this.$refs.input.files?.[0];
+        file ? this.preview(file, `📎 ${file.name}`) : this.clear();
+    },
+
+    preview(file, label) {
+        if (this.audioUrl) URL.revokeObjectURL(this.audioUrl);
+        this.audioUrl = URL.createObjectURL(file);
+        this.fileLabel = label;
+    },
+
+    clear() {
+        if (this.audioUrl) URL.revokeObjectURL(this.audioUrl);
+        this.audioUrl = null;
+        this.fileLabel = '';
+        this.error = '';
+        if (this.$refs.input) this.$refs.input.value = '';
+    },
+
+    destroy() {
+        clearInterval(this.timer);
+        if (this.recording) this.recorder?.stop();
+        if (this.audioUrl) URL.revokeObjectURL(this.audioUrl);
+    },
+
+    get display() {
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${pad(Math.floor(this.seconds / 60))}:${pad(this.seconds % 60)}`;
+    },
+}));
+
 // ------------------------------------------------------------------ الشات بوت التفاعلي
 // شجرة أسئلة بالأزرار (بلا حدود للتداخل) + بحث بالكلمات المفتاحية للرسائل المكتوبة.
 Alpine.data('chatbot', ({ url, welcome, tree }) => ({

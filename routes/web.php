@@ -115,8 +115,9 @@ Route::middleware(['auth', 'approved'])->prefix('me')->name('student.')->group(f
     Route::get('/checkout/book/{book:slug}', [CheckoutController::class, 'book'])->name('checkout.book');
     Route::post('/checkout/{type}/{id}', [CheckoutController::class, 'store'])->name('checkout.store');
 
-    // أسئلة الدروس
+    // أسئلة الدروس — التعليق محكوم بسياسة القفل (QaThreadPolicy@reply)
     Route::post('/lectures/{lecture}/questions', [QaController::class, 'store'])->name('qa.store');
+    Route::post('/questions/{thread}/replies', [QaController::class, 'reply'])->name('qa.reply');
 });
 
 // ------------------------------------------------------------------ لوحة التحكم
@@ -201,6 +202,7 @@ Route::middleware(['auth', 'permission:admin.access'])->prefix('admin')->name('a
     Route::get('/qa', [QaModerationController::class, 'index'])->middleware('permission:qa.view')->name('qa.index');
     Route::post('/qa/{thread}/approve', [QaModerationController::class, 'approve'])->middleware('permission:qa.moderate')->name('qa.approve');
     Route::post('/qa/{thread}/reject', [QaModerationController::class, 'reject'])->middleware('permission:qa.moderate')->name('qa.reject');
+    Route::post('/qa/{thread}/toggle-lock', [QaModerationController::class, 'toggleLock'])->middleware('permission:qa.moderate')->name('qa.toggle-lock');
     Route::post('/qa/{thread}/answer', [QaModerationController::class, 'answer'])->middleware('permission:qa.answer')->name('qa.answer');
 
     // إدارة محتوى الموقع (نصوص وصور كل الصفحات) + الأسئلة الشائعة

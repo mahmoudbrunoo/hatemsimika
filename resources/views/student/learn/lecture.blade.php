@@ -142,7 +142,7 @@
         {{-- أسئلة الدرس --}}
         @php
             $qaThreads = $lecture->qaThreads()
-                ->with(['user', 'replies.user'])
+                ->with(['user', 'replies.user', 'lecture.course'])
                 ->where(fn ($q) => $q->where('status', \App\Models\QaThread::STATUS_APPROVED)->orWhere('user_id', auth()->id()))
                 ->latest()
                 ->take(20)
@@ -171,10 +171,19 @@
                             @endif
                         </div>
 
-                        <p class="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $thread->body }}</p>
+                        @if ($thread->body)
+                            <p class="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $thread->body }}</p>
+                        @endif
 
                         @if ($thread->image_path)
                             <img src="{{ $thread->image_path }}" alt="صورة السؤال" class="mt-3 max-h-64 rounded-xl border border-slate-300/60 dark:border-slate-800">
+                        @endif
+
+                        @if ($thread->audio_path)
+                            <div class="mt-3 flex items-center gap-2 rounded-xl bg-slate-50 p-2.5 dark:bg-slate-800/50">
+                                <span class="shrink-0 text-lg">🎙️</span>
+                                <audio controls preload="metadata" src="{{ $thread->audio_path }}" dir="ltr" class="h-10 w-full min-w-0"></audio>
+                            </div>
                         @endif
 
                         {{-- الردود --}}
@@ -186,16 +195,60 @@
                                         <span class="badge-sky">إجابة المدرس</span>
                                     @endif
                                 </div>
-                                <p class="mt-1.5 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $reply->body }}</p>
+                                @if ($reply->body)
+                                    <p class="mt-1.5 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-300">{{ $reply->body }}</p>
+                                @endif
                                 @if ($reply->image_path)
                                     <img src="{{ $reply->image_path }}" alt="صورة مرفقة بالإجابة" class="mt-2 max-h-64 rounded-xl border border-slate-300/60 dark:border-slate-800">
+                                @endif
+                                @if ($reply->audio_path)
+                                    <div class="mt-2 flex items-center gap-2 rounded-xl bg-white/60 p-2.5 dark:bg-slate-900/40">
+                                        <span class="shrink-0 text-lg">🎙️</span>
+                                        <audio controls preload="metadata" src="{{ $reply->audio_path }}" dir="ltr" class="h-10 w-full min-w-0"></audio>
+                                    </div>
                                 @endif
                             </div>
                         @endforeach
 
                         @if ($thread->is_locked)
-                            <p class="mt-3 text-xs font-bold text-slate-400">🔒 الموضوع مقفول بعد إجابة المدرس</p>
+                            <p class="mt-3 text-xs font-bold text-slate-400">
+                                🔒 الموضوع مقفول — التعليقات متاحة فقط للمدرسين وصاحب السؤال
+                            </p>
                         @endif
+
+                        {{-- تعليق على السؤال — محكوم بسياسة القفل (المقفول: صاحب السؤال فقط) --}}
+                        @can('reply', $thread)
+                            @php $replyFailed = old('_reply_thread') == $thread->id; @endphp
+                            <form method="POST" action="{{ route('student.qa.reply', $thread) }}" enctype="multipart/form-data"
+                                  x-data="{ open: {{ $replyFailed ? 'true' : 'false' }} }"
+                                  class="mt-3 border-t border-slate-300/60 pt-3 dark:border-slate-800">
+                                @csrf
+                                <input type="hidden" name="_reply_thread" value="{{ $thread->id }}">
+
+                                <button type="button" x-show="!open" @click="open = true" class="btn-secondary btn-sm">💬 أضف تعليقاً</button>
+
+                                <div x-show="open" x-cloak class="space-y-3">
+                                    <div>
+                                        <label for="reply-body-{{ $thread->id }}" class="label">تعليقك</label>
+                                        <textarea id="reply-body-{{ $thread->id }}" name="body" rows="2" minlength="5" maxlength="5000"
+                                                  class="input" placeholder="اكتب تعليقك أو استفسارك...">{{ $replyFailed ? old('body') : '' }}</textarea>
+                                        @if ($replyFailed) @error('body') <p class="error">{{ $message }}</p> @enderror @endif
+                                    </div>
+
+                                    <div>
+                                        <label for="reply-image-{{ $thread->id }}" class="label">صورة توضيحية (اختياري)</label>
+                                        <input id="reply-image-{{ $thread->id }}" type="file" name="image" accept="image/jpeg,image/png,image/webp"
+                                               class="input file:ml-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-brand-700 dark:file:bg-brand-500/10 dark:file:text-brand-300">
+                                        @if ($replyFailed) @error('image') <p class="error">{{ $message }}</p> @enderror @endif
+                                    </div>
+
+                                    <x-qa-audio-recorder name="audio" :show-error="false" />
+                                    @if ($replyFailed) @error('audio') <p class="error">{{ $message }}</p> @enderror @endif
+
+                                    <button type="submit" class="btn-primary btn-sm">إرسال التعليق</button>
+                                </div>
+                            </form>
+                        @endcan
                     </div>
                 @empty
                     <p class="rounded-xl border border-dashed border-slate-300 p-5 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
@@ -204,19 +257,23 @@
                 @endforelse
             </div>
 
-            {{-- نموذج سؤال جديد --}}
+            {{-- نموذج سؤال جديد: نص، نص بصورة، أو رسالة صوتية --}}
+            @php $questionFailed = old('_reply_thread') === null; @endphp
             <form method="POST" action="{{ route('student.qa.store', $lecture) }}" enctype="multipart/form-data" class="mt-6 border-t border-slate-300/60 pt-5 dark:border-slate-800">
                 @csrf
 
                 <label for="qa-body" class="label">سؤالك</label>
-                <textarea id="qa-body" name="body" rows="3" required minlength="5" maxlength="5000"
-                          class="input" placeholder="اكتب سؤالك عن الدرس هنا...">{{ old('body') }}</textarea>
-                @error('body') <p class="error">{{ $message }}</p> @enderror
+                <textarea id="qa-body" name="body" rows="3" minlength="5" maxlength="5000"
+                          class="input" placeholder="اكتب سؤالك عن الدرس هنا — أو سجّل رسالة صوتية تحت...">{{ $questionFailed ? old('body') : '' }}</textarea>
+                @if ($questionFailed) @error('body') <p class="error">{{ $message }}</p> @enderror @endif
 
                 <label for="qa-image" class="label mt-4">صورة توضيحية (اختياري)</label>
                 <input id="qa-image" type="file" name="image" accept="image/jpeg,image/png,image/webp"
                        class="input file:ml-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-brand-700 dark:file:bg-brand-500/10 dark:file:text-brand-300">
-                @error('image') <p class="error">{{ $message }}</p> @enderror
+                @if ($questionFailed) @error('image') <p class="error">{{ $message }}</p> @enderror @endif
+
+                <x-qa-audio-recorder name="audio" :show-error="false" class="mt-4" />
+                @if ($questionFailed) @error('audio') <p class="error">{{ $message }}</p> @enderror @endif
 
                 <button type="submit" class="btn-primary mt-4">إرسال السؤال</button>
             </form>
