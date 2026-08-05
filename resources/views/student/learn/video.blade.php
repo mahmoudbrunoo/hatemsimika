@@ -30,24 +30,47 @@
             };
         @endphp
 
-        <div class="player-frame" x-data="videoTracker('{{ route('student.learn.progress', $video) }}', {{ (int) $view->last_position }})">
-            @if ($video->source === 'file' && $video->file_path)
-                <video controls playsinline preload="metadata" controlslist="nodownload"
-                       oncontextmenu="return false"
-                       src="{{ $video->file_path }}"></video>
-            @elseif ($embedSrc)
-                <iframe src="{{ $embedSrc }}"
-                        title="{{ $video->title }}"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        allowfullscreen></iframe>
-            @else
-                <div class="grid size-full place-items-center text-sm font-bold text-white/70">
-                    الفيديو غير متاح حالياً — كلمنا لو المشكلة استمرت.
-                </div>
-            @endif
+        {{-- الغلاف الخارجي هو هدف ملء الشاشة المخصص: يضم الفيديو + العلامة المائية + زر التكبير،
+             فتظل العلامة المائية ظاهرة فوق يوتيوب/Bunny حتى في وضع ملء الشاشة --}}
+        <div class="player-shell" x-data="playerFullscreen" :class="{ 'fs-fallback': fallback }">
+            <div class="player-frame" x-data="videoTracker('{{ route('student.learn.progress', $video) }}', {{ (int) $view->last_position }})">
+                @if ($video->source === 'file' && $video->file_path)
+                    <video controls playsinline preload="metadata" controlslist="nodownload nofullscreen"
+                           oncontextmenu="return false"
+                           src="{{ $video->file_path }}"></video>
+                @elseif ($embedSrc)
+                    {{-- ملء الشاشة ممنوع على الإطار الداخلي عمداً: زر المشغل الأصلي كان يكبّر
+                         الإطار وحده فتختفي العلامة المائية — التكبير من زرنا المخصص فقط --}}
+                    <iframe src="{{ $embedSrc }}"
+                            title="{{ $video->title }}"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                @else
+                    <div class="grid size-full place-items-center text-sm font-bold text-white/70">
+                        الفيديو غير متاح حالياً — كلمنا لو المشكلة استمرت.
+                    </div>
+                @endif
 
-            {{-- العلامة المائية المتحركة: اسم الطالب + رقم موبايله --}}
-            <span x-data="watermark" class="watermark" :style="`top:${top};right:${right};opacity:${opacity}`">{{ auth()->user()->name }} — {{ auth()->user()->phone }}</span>
+                {{-- العلامة المائية المتحركة: اسم الطالب + رقم موبايله --}}
+                <span x-data="watermark" class="watermark" :style="`top:${top};right:${right};opacity:${opacity}`">{{ auth()->user()->name }} — {{ auth()->user()->phone }}</span>
+            </div>
+
+            {{-- زر ملء الشاشة المخصص --}}
+            <button type="button" class="player-fs-btn" @click="toggle()"
+                    :aria-label="active ? 'الخروج من ملء الشاشة' : 'ملء الشاشة'"
+                    :title="active ? 'الخروج من ملء الشاشة (Esc)' : 'ملء الشاشة'">
+                <svg x-show="!active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                    <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+                    <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+                    <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+                </svg>
+                <svg x-cloak x-show="active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 3v3a2 2 0 0 1-2 2H3" />
+                    <path d="M21 8h-3a2 2 0 0 1-2-2V3" />
+                    <path d="M3 16h3a2 2 0 0 1 2 2v3" />
+                    <path d="M16 21v-3a2 2 0 0 1 2-2h3" />
+                </svg>
+            </button>
         </div>
 
         {{-- بيانات الفيديو --}}

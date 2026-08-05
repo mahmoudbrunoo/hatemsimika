@@ -43,6 +43,11 @@ window.addEventListener('scroll', updateScrollProgress, { passive: true });
 window.addEventListener('resize', updateScrollProgress, { passive: true });
 document.addEventListener('DOMContentLoaded', updateScrollProgress);
 
+// ------------------------------------------------------------------ تفعيل تأثيرات الضغط على أجهزة اللمس
+// سفاري iOS لا يفعّل حالة :active إلا بوجود مستمع لمس على المستند —
+// مستمع فارغ يكفي لتظهر تغذية الضغط الفورية على الأزرار والكروت.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 // ------------------------------------------------------------------ العلامة المائية الديناميكية
 // اسم الطالب + رقم موبايله يطفو فوق الفيديو في مواضع عشوائية بشفافية متغيرة.
 Alpine.data('watermark', () => ({
@@ -64,6 +69,105 @@ Alpine.data('watermark', () => ({
         this.top = 5 + Math.random() * 80 + '%';
         this.right = 5 + Math.random() * 70 + '%';
         this.opacity = (0.25 + Math.random() * 0.45).toFixed(2);
+    },
+}));
+
+// ------------------------------------------------------------------ ملء الشاشة المخصص للمشغل
+// نكبّر غلاف المشغل كاملاً (الفيديو + العلامة المائية) بدل الإطار الداخلي،
+// فتظل العلامة المائية ظاهرة فوق يوتيوب/Bunny أثناء ملء الشاشة.
+// دوال موحدة عبر المتصفحات: القياسي أولاً ثم بادئات webkit/moz/ms.
+const fullscreenElement = () =>
+    document.fullscreenElement ??
+    document.webkitFullscreenElement ??
+    document.mozFullScreenElement ??
+    document.msFullscreenElement ??
+    null;
+
+const fullscreenSupported = () =>
+    document.fullscreenEnabled ??
+    document.webkitFullscreenEnabled ??
+    document.mozFullScreenEnabled ??
+    document.msFullscreenEnabled ??
+    false;
+
+const exitFullscreen = () => {
+    const exit =
+        document.exitFullscreen ??
+        document.webkitExitFullscreen ??
+        document.mozCancelFullScreen ??
+        document.msExitFullscreen;
+
+    if (exit) exit.call(document);
+};
+
+const FULLSCREEN_EVENTS = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+
+Alpine.data('playerFullscreen', () => ({
+    native: false, // ملء شاشة حقيقي عبر Fullscreen API
+    fallback: false, // وضع CSS البديل — الآيفون لا يدعم ملء الشاشة لغير عنصر <video>
+
+    get active() {
+        return this.native || this.fallback;
+    },
+
+    init() {
+        // زر Esc في الوضع الأصلي يطلق fullscreenchange تلقائياً؛
+        // أما الوضع البديل فنلتقط Esc بأنفسنا.
+        this.onFsChange = () => {
+            this.native = fullscreenElement() === this.$root;
+        };
+        this.onKeydown = (e) => {
+            if (e.key === 'Escape' && this.fallback) this.exitFallback();
+        };
+
+        FULLSCREEN_EVENTS.forEach((ev) => document.addEventListener(ev, this.onFsChange));
+        document.addEventListener('keydown', this.onKeydown);
+    },
+
+    destroy() {
+        FULLSCREEN_EVENTS.forEach((ev) => document.removeEventListener(ev, this.onFsChange));
+        document.removeEventListener('keydown', this.onKeydown);
+        if (this.fallback) this.exitFallback();
+    },
+
+    toggle() {
+        if (this.active) this.exit();
+        else this.enter();
+    },
+
+    enter() {
+        const request =
+            this.$root.requestFullscreen ??
+            this.$root.webkitRequestFullscreen ??
+            this.$root.mozRequestFullScreen ??
+            this.$root.msRequestFullscreen;
+
+        if (!request || !fullscreenSupported()) {
+            this.enterFallback();
+            return;
+        }
+
+        try {
+            const result = request.call(this.$root);
+            if (typeof result?.catch === 'function') result.catch(() => this.enterFallback());
+        } catch {
+            this.enterFallback();
+        }
+    },
+
+    exit() {
+        if (fullscreenElement() === this.$root) exitFullscreen();
+        if (this.fallback) this.exitFallback();
+    },
+
+    enterFallback() {
+        this.fallback = true;
+        document.documentElement.style.overflow = 'hidden'; // منع تمرير الصفحة خلف المشغل
+    },
+
+    exitFallback() {
+        this.fallback = false;
+        document.documentElement.style.overflow = '';
     },
 }));
 
