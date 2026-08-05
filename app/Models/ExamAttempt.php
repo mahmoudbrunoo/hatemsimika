@@ -43,11 +43,21 @@ class ExamAttempt extends Model
         return $this->submitted_at !== null;
     }
 
-    /** الوقت المتبقي بالثواني */
+    /** الوقت المتبقي بالثواني — محسوب من السيرفر دايماً، فالعداد ميقفش أبداً حتى لو الصفحة اتقفلت */
     public function remainingSeconds(): int
     {
-        $deadline = $this->started_at->copy()->addMinutes($this->exam->duration_minutes);
+        return max(0, (int) now()->diffInSeconds($this->expiresAt(), false));
+    }
 
-        return max(0, (int) now()->diffInSeconds($deadline, false));
+    /** موعد انتهاء المحاولة = وقت البدء + مدة الامتحان */
+    public function expiresAt(): \Illuminate\Support\Carbon
+    {
+        return $this->started_at->copy()->addMinutes($this->exam->duration_minutes);
+    }
+
+    /** محاولة جارية عدّى وقتها ولسه متسلمتش — لازم تتسلم تلقائياً */
+    public function isExpired(): bool
+    {
+        return ! $this->isSubmitted() && $this->remainingSeconds() <= 0;
     }
 }

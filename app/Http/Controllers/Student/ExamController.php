@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\ExamAttempt;
 use App\Services\ExamService;
 use App\Services\ProgressionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -25,8 +26,18 @@ class ExamController extends Controller
     {
         $this->authorizeExam($request, $exam);
 
+        // محاولة جارية عدّى وقتها والطالب برة الامتحان؟ بتتسلم تلقائياً بآخر مسودة محفوظة
+        $openAttempt = $exam->attemptsFor($request->user())->whereNull('submitted_at')->first();
+
+        if ($openAttempt !== null && $openAttempt->isExpired()) {
+            $this->examService->submitAttempt($openAttempt, []);
+            session()->now('status', 'انتهى وقت الاختبار وتم تسليم إجاباتك تلقائياً');
+            $openAttempt = null;
+        }
+
         return view('student.exams.show', [
             'exam' => $exam,
+            'openAttempt' => $openAttempt,
             'attempts' => $exam->attemptsFor($request->user())->whereNotNull('submitted_at')->latest()->get(),
             'questionsCount' => $exam->questions()->count(),
         ]);
@@ -54,17 +65,71 @@ class ExamController extends Controller
             return redirect()->route('student.exams.result', $attempt);
         }
 
+        // الوقت خلص والطالب بيحاول يستكمل — ممنوع الدخول والتسليم بيتم تلقائياً بآخر مسودة
         if ($attempt->remainingSeconds() <= 0) {
             $this->examService->submitAttempt($attempt, []);
 
-            return redirect()->route('student.exams.result', $attempt);
+            return redirect()->route('student.exams.result', $attempt)
+                ->with('status', 'انتهى وقت الاختبار وتم تسليم إجاباتك تلقائياً');
         }
 
         return view('student.exams.take', [
             'attempt' => $attempt,
             'exam' => $attempt->exam,
             'questions' => $attempt->exam->questions()->with('options')->get(),
+            // المسودة المحفوظة على السيرفر — بترجع اختيارات الطالب زي ما سابها بالظبط
+            'savedAnswers' => $this->examService->draftAnswers($attempt),
         ]);
+    }
+
+    /**
+     * الحفظ التلقائي الفوري للمسودة (fetch/sendBeacon) — ده اللي بيخلي أي خروج مفاجئ
+     * (قفل التاب/كراش/فصل نت) يتعامل تماماً كأنه "استكمال الاختبار لاحقاً".
+     */
+    public function saveDraft(Request $request, ExamAttempt $attempt): JsonResponse
+    {
+        abort_unless($attempt->user_id === $request->user()->id, 403);
+
+        if ($attempt->isSubmitted()) {
+            return response()->json(['status' => 'submitted']);
+        }
+
+        // الوقت خلص أثناء الحل — تسليم تلقائي فوري بآخر مسودة
+        if ($attempt->remainingSeconds() <= 0) {
+            $this->examService->submitAttempt($attempt, []);
+
+            return response()->json(['status' => 'expired']);
+        }
+
+        $this->examService->saveDraft(
+            $attempt,
+            (array) $request->input('answers', []),
+            (array) $request->input('essays', []),
+        );
+
+        // العميل بيظبط مؤقته على الرقم ده — فالعداد دايماً حقيقي من السيرفر
+        return response()->json([
+            'status' => 'ok',
+            'remaining_seconds' => $attempt->remainingSeconds(),
+        ]);
+    }
+
+    /** إنهاء وتسليم محاولة جارية من سجل المحاولات — بآخر إجابات محفوظة */
+    public function finalize(Request $request, ExamAttempt $attempt): RedirectResponse
+    {
+        abort_unless($attempt->user_id === $request->user()->id, 403);
+
+        if ($attempt->isSubmitted()) {
+            return redirect()->route('student.exams.result', $attempt);
+        }
+
+        $expired = $attempt->remainingSeconds() <= 0;
+        $this->examService->submitAttempt($attempt, []);
+
+        return redirect()->route('student.exams.result', $attempt)
+            ->with('status', $expired
+                ? 'انتهى وقت الاختبار وتم تسليم إجاباتك تلقائياً'
+                : 'تم تسليم الاختبار وحساب نتيجتك بآخر إجابات محفوظة');
     }
 
     public function submit(Request $request, ExamAttempt $attempt): RedirectResponse

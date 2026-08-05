@@ -46,8 +46,95 @@ class ExamService
     }
 
     /**
+     * حفظ مسودة الإجابات أولاً بأول أثناء الحل (الحفظ التلقائي الفوري).
+     * بتتخزن في attempt_answers نفسها (is_correct = null لحد التسليم) بدون أي تصحيح،
+     * فلو النت فصل أو الجهاز اتقفل — آخر اختيارات الطالب محفوظة على السيرفر.
+     * $answers: [question_id => option_id] · $essays: [question_id => text]
+     */
+    public function saveDraft(ExamAttempt $attempt, array $answers, array $essays = []): void
+    {
+        if ($attempt->isSubmitted()) {
+            return;
+        }
+
+        $questions = $attempt->exam->questions()->with('options')->get()->keyBy('id');
+
+        foreach ($answers as $questionId => $optionId) {
+            $question = $questions->get((int) $questionId);
+
+            // نتجاهل أي سؤال أو اختيار مش تابع للامتحان (حماية من عبث الطلبات)
+            if ($question === null || ! $question->isMcq()) {
+                continue;
+            }
+
+            if ($optionId !== null && ! $question->options->contains('id', (int) $optionId)) {
+                continue;
+            }
+
+            AttemptAnswer::updateOrCreate(
+                ['exam_attempt_id' => $attempt->id, 'question_id' => $question->id],
+                ['question_option_id' => $optionId !== null ? (int) $optionId : null],
+            );
+        }
+
+        foreach ($essays as $questionId => $text) {
+            $question = $questions->get((int) $questionId);
+
+            if ($question === null || $question->isMcq()) {
+                continue;
+            }
+
+            AttemptAnswer::updateOrCreate(
+                ['exam_attempt_id' => $attempt->id, 'question_id' => $question->id],
+                ['essay_text' => $text !== '' ? $text : null],
+            );
+        }
+    }
+
+    /** المسودة المحفوظة بصيغة submitAttempt: [question_id => ['option_id', 'essay_text', 'essay_image']] */
+    public function draftAnswers(ExamAttempt $attempt): array
+    {
+        return $attempt->answers()
+            ->get()
+            ->mapWithKeys(fn (AttemptAnswer $answer) => [
+                $answer->question_id => [
+                    'option_id' => $answer->question_option_id,
+                    'essay_text' => $answer->essay_text,
+                    'essay_image' => $answer->essay_image,
+                ],
+            ])
+            ->all();
+    }
+
+    /**
+     * تسليم كل المحاولات اللي انتهى وقتها لمستخدم معيّن (أو للجميع) بآخر مسودة محفوظة.
+     * بتتنادى قبل عرض السجل وبأمر مجدول — فالمحاولة المنتهية بتتقفل تلقائياً حتى لو الطالب مرجعش.
+     */
+    public function submitExpired(?User $user = null): int
+    {
+        $query = ExamAttempt::whereNull('submitted_at')->with('exam');
+
+        if ($user !== null) {
+            $query->where('user_id', $user->id);
+        }
+
+        $count = 0;
+
+        foreach ($query->get() as $attempt) {
+            if ($attempt->exam !== null && $attempt->isExpired()) {
+                $this->submitAttempt($attempt, []);
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
      * تسليم المحاولة وتصحيح الاختياري فوراً.
      * $answers: [question_id => ['option_id' => ?, 'essay_text' => ?, 'essay_image' => ?]]
+     * الإجابات المرسلة بتتدمج فوق المسودة المحفوظة — فالتسليم التلقائي (بمصفوفة فاضية)
+     * بيحتسب آخر اختيارات اتحفظت قبل الخروج أو انقطاع النت.
      */
     public function submitAttempt(ExamAttempt $attempt, array $answers): ExamAttempt
     {
@@ -57,11 +144,12 @@ class ExamService
 
         return DB::transaction(function () use ($attempt, $answers) {
             $exam = $attempt->exam;
+            $drafts = $this->draftAnswers($attempt);
             $score = 0.0;
             $hasEssay = false;
 
             foreach ($exam->questions as $question) {
-                $given = $answers[$question->id] ?? [];
+                $given = ($answers[$question->id] ?? []) + ($drafts[$question->id] ?? []);
                 $optionId = $given['option_id'] ?? null;
                 $isCorrect = null;
                 $points = 0.0;
@@ -77,15 +165,17 @@ class ExamService
                     $hasEssay = true; // المقالي يتصحح يدوياً
                 }
 
-                AttemptAnswer::create([
-                    'exam_attempt_id' => $attempt->id,
-                    'question_id' => $question->id,
-                    'question_option_id' => $question->isMcq() ? $optionId : null,
-                    'essay_text' => $given['essay_text'] ?? null,
-                    'essay_image' => $given['essay_image'] ?? null,
-                    'is_correct' => $isCorrect,
-                    'points_awarded' => $points,
-                ]);
+                // updateOrCreate: صف المسودة المحفوظ أثناء الحل بيتحوّل لإجابة نهائية مصححة
+                AttemptAnswer::updateOrCreate(
+                    ['exam_attempt_id' => $attempt->id, 'question_id' => $question->id],
+                    [
+                        'question_option_id' => $question->isMcq() ? $optionId : null,
+                        'essay_text' => $given['essay_text'] ?? null,
+                        'essay_image' => $given['essay_image'] ?? null,
+                        'is_correct' => $isCorrect,
+                        'points_awarded' => $points,
+                    ],
+                );
             }
 
             $total = (float) $attempt->total ?: $exam->totalPoints();

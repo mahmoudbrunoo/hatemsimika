@@ -107,6 +107,8 @@ Route::middleware(['auth', 'approved'])->prefix('me')->name('student.')->group(f
     Route::post('/exams/{exam}/start', [ExamController::class, 'start'])->name('exams.start');
     Route::get('/attempts/{attempt}', [ExamController::class, 'take'])->name('exams.take');
     Route::post('/attempts/{attempt}/submit', [ExamController::class, 'submit'])->name('exams.submit');
+    Route::post('/attempts/{attempt}/draft', [ExamController::class, 'saveDraft'])->name('exams.draft');
+    Route::post('/attempts/{attempt}/finalize', [ExamController::class, 'finalize'])->name('exams.finalize');
     Route::get('/attempts/{attempt}/result', [ExamController::class, 'result'])->name('exams.result');
 
     // الشراء

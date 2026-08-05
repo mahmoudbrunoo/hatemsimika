@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
+use App\Services\ExamService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ResultsController extends Controller
 {
+    public function __construct(protected ExamService $examService)
+    {
+    }
+
     /** نتائج الامتحانات (كويزات وشوامل) */
     public function exams(Request $request): View
     {
@@ -56,10 +61,14 @@ class ResultsController extends Controller
 
     protected function attemptsQuery(Request $request, array $types)
     {
+        // المحاولات اللي انتهى وقتها بتتسلم تلقائياً قبل العرض — فـ"جاري الحل" في السجل حقيقي دايماً
+        $this->examService->submitExpired($request->user());
+
+        // السجل بيشمل المحاولات الجارية (غير المسلّمة) في الأول ومعاها أزرار الاستكمال/التسليم
         return $request->user()->examAttempts()
-            ->whereNotNull('submitted_at')
             ->whereHas('exam', fn ($q) => $q->whereIn('type', $types))
             ->with('exam')
+            ->orderByRaw('(submitted_at is null) desc')
             ->latest('submitted_at')
             ->paginate(10);
     }

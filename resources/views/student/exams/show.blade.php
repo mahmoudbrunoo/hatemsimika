@@ -78,9 +78,55 @@
         </ul>
     </div>
 
+    {{-- محاولة جارية: استكمال أو إنهاء وتسليم --}}
+    @if ($openAttempt)
+        <div class="card-pad mt-6" x-data="{ confirmingFinalize: false }">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">⏳ عندك محاولة جارية</h2>
+                    <p class="mt-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
+                        العداد شغال من ساعة ما بدأت ومش بيقف —
+                        باقي من الزمن:
+                        <span class="badge-amber" dir="ltr">{{ intdiv($openAttempt->remainingSeconds(), 60) }}:{{ str_pad($openAttempt->remainingSeconds() % 60, 2, '0', STR_PAD_LEFT) }}</span>
+                    </p>
+                    <p class="mt-1 text-xs font-medium text-slate-400 dark:text-slate-500">إجاباتك المحفوظة هترجع زي ما سيبتها بالظبط.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="{{ route('student.exams.take', $openAttempt) }}" class="btn-primary">استكمال الاختبار</a>
+                    <button type="button" @click="confirmingFinalize = true" class="btn-danger">إنهاء وتسليم الاختبار</button>
+                </div>
+            </div>
+
+            {{-- تأكيد التسليم النهائي بآخر إجابات محفوظة --}}
+            <div x-show="confirmingFinalize" x-cloak @keydown.escape.window="confirmingFinalize = false"
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-black/60" @click="confirmingFinalize = false"></div>
+                <div class="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl dark:border-night-700 dark:bg-night-850"
+                     role="alertdialog" aria-modal="true" aria-label="تأكيد تسليم الاختبار">
+                    <div class="text-4xl">📤</div>
+                    <h3 class="mt-3 text-lg font-extrabold text-slate-900 dark:text-white">إنهاء وتسليم الاختبار</h3>
+                    <p class="mt-2 text-sm font-semibold leading-7 text-slate-600 dark:text-slate-300">
+                        هيتم تسليم الاختبار وحساب نتيجتك فوراً بآخر إجابات محفوظة، ومش هتقدر تعدل بعدها. متأكد؟
+                    </p>
+                    <div class="mt-5 flex items-center justify-center gap-3">
+                        <form method="POST" action="{{ route('student.exams.finalize', $openAttempt) }}">
+                            @csrf
+                            <button type="submit" class="btn-danger">تأكيد التسليم</button>
+                        </form>
+                        <button type="button" @click="confirmingFinalize = false" class="btn-secondary">إلغاء</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- بدء الامتحان --}}
     <div class="card-pad mt-6 text-center">
-        @if ($canStart)
+        @if ($openAttempt)
+            <p class="text-sm font-bold text-slate-600 dark:text-slate-300">
+                عندك محاولة جارية فوق — كمّلها أو سلّمها قبل ما تبدأ محاولة جديدة.
+            </p>
+        @elseif ($canStart)
             <form method="POST" action="{{ route('student.exams.start', $exam) }}">
                 @csrf
                 <button type="submit" class="btn-primary px-10 py-3 text-base">🚀 ابدأ الامتحان</button>
